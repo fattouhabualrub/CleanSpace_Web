@@ -2,15 +2,123 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <title>CleanSpace — حرّر مساحة جهازك</title>
+  <title>CleanSpace — حرّر مساحة جهازك | Smart private storage cleaner</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CleanSpace — منظّف مساحة ذكي وآمن لجهازك. يكتشف الصور المكررة والمتشابهة، يضغط الفيديو، وكل المعالجة على جهازك. A smart, private storage cleaner for your device.">
-  <meta name="theme-color" content="#0c0f16">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Primary meta -->
+  <meta name="description" content="CleanSpace — منظّف مساحة ذكي وآمن لجهازك. يكتشف الصور المكررة والمتشابهة، يضغط الفيديو، وكل المعالجة على جهازك. A smart, private storage cleaner: find duplicate & similar photos, compress videos, merge contacts — all processed on-device.">
+  <meta name="keywords" content="CleanSpace, storage cleaner, duplicate photos, similar photos, video compression, iPhone cleaner, private, on-device, منظف مساحة, حذف الصور المكررة, ضغط الفيديو">
+  <meta name="author" content="CleanSpace">
+  <meta name="theme-color" content="#F4F5F2">
+  <meta name="robots" content="index, follow">
+
+  <!-- NOTE (owner): replace https://cleanspace.app everywhere below + in
+       robots.txt / sitemap.xml with the real production domain before deploy. -->
+  <link rel="canonical" href="https://cleanspace.app/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CleanSpace">
+  <meta property="og:title" content="CleanSpace — Free up your space in seconds">
+  <meta property="og:description" content="Find duplicate & similar photos, compress videos, and tidy your library — all processed entirely on your device. Private by design.">
+  <meta property="og:url" content="https://cleanspace.app/">
+  <meta property="og:image" content="https://cleanspace.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CleanSpace — smart, private storage cleaner">
+  <meta property="og:locale" content="ar_AR">
+  <meta property="og:locale:alternate" content="en_US">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CleanSpace — Free up your space in seconds">
+  <meta name="twitter:description" content="Find duplicate & similar photos, compress videos, and tidy your library — all on-device. Private by design.">
+  <meta name="twitter:image" content="https://cleanspace.app/og-image.png">
+
+  <!-- Apple / PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CleanSpace">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+  <link rel="manifest" href="site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- impeccable-disable single-font -- two families ARE paired (Space Grotesk display + Cairo body); they're applied via SCSS tokens the static HTML scan can't see -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Structured data: the app itself -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "CleanSpace",
+    "operatingSystem": "iOS 16.0 or later",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "A smart, private storage cleaner for iPhone. Find duplicate and similar photos, compress videos, merge duplicate contacts, and clean up files — all processed entirely on-device.",
+    "url": "https://cleanspace.app/",
+    "installUrl": "https://apps.apple.com/jo/app/cleanspace-storage-photos/id6790139624",
+    "image": "https://cleanspace.app/og-image.png",
+    "inLanguage": ["ar", "en", "ckb", "de", "es", "fa", "fr", "hi", "id", "it", "ja", "nl", "pt-BR", "ru", "tr", "ur", "zh-Hans"],
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free — scan & analyze" },
+      { "@type": "Offer", "price": "6.99", "priceCurrency": "USD", "name": "Pro Weekly" },
+      { "@type": "Offer", "price": "39.99", "priceCurrency": "USD", "name": "Pro Yearly" },
+      { "@type": "Offer", "price": "99.99", "priceCurrency": "USD", "name": "Pro Lifetime" }
+    ],
+    "featureList": [
+      "Duplicate & similar photo detection",
+      "Video compression and Live-to-Still conversion",
+      "Swipe-to-clean review mode",
+      "Encrypted private vault",
+      "Duplicate contact merging",
+      "Home Screen widgets",
+      "17 languages",
+      "Fully on-device — no uploads"
+    ]
+  }
+  </script>
+
+  <!-- Structured data: FAQ (mirrors the on-page FAQ) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Are my photos uploaded to the internet?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. All scanning and deleting happen entirely on your device, and the app works even offline. We never upload or see your photos." }
+      },
+      {
+        "@type": "Question",
+        "name": "What do I get for free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A full scan, library analysis, and finding duplicates and look-alikes are free. Bulk deleting, video compression and the vault unlock with Pro." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a free trial?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no trial period, but you can scan and analyze for free before subscribing to see how much space you can reclaim." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I cancel anytime?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Subscriptions are managed from your App Store settings, and you can turn off renewal at any time." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is deleting safe?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Deleted items pass through the Photos app Recently Deleted album for 30 days, so you can restore them easily." }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>
