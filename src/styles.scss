@@ -985,4 +985,31 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
 .support__form--done h3 { font-size: 20px; }
 .support__form--done p { color: var(--muted); font-size: 14.5px; line-height: 1.7; max-width: 42ch; }
 
+/* ---- Download smart-link page ---- */
+.dl {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 22px; padding: 40px 30px 32px;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  max-width: 520px; margin: 6px auto 0;
+}
+.dl__icon { width: 88px; height: 88px; border-radius: 22px; box-shadow: var(--shadow-sm); }
+.dl h1 { font-size: clamp(24px, 3.4vw, 32px); letter-spacing: -0.02em; }
+.dl__lede { color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 40ch; display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.dl__hint { color: var(--faint); font-size: 13px; line-height: 1.65; max-width: 40ch; }
+.dl__cta { margin-top: 4px; }
+.dl__cta .ico { fill: currentColor; stroke: none; }
+.dl__badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 2px; }
+.dl__foot { color: var(--faint); font-size: 13px; margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--line); width: 100%; }
+.dl__foot a { color: var(--accent-2); font-weight: 700; }
+
+.dl__spinner {
+  width: 17px; height: 17px; flex-shrink: 0;
+  border: 2.2px solid var(--jade-tint); border-top-color: var(--jade);
+  border-radius: 50%;
+  animation: dl-spin 0.75s linear infinite;
+}
+@keyframes dl-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .dl__spinner { animation-duration: 2.4s; } }
+
 @media (max-width: 820px) { .support { grid-template-columns: 1fr; gap: 30px; } }

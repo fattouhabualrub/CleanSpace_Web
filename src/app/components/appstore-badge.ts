@@ -1,5 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { I18n } from '../services/i18n';
+import { APP_STORE_URL } from '../services/app-links';
 
 /** Self-contained "Download on the App Store" badge (inline Apple-logo SVG). */
 @Component({
@@ -8,7 +9,7 @@ import { I18n } from '../services/i18n';
   standalone: true,
   template: `
     <a class="store-badge"
-       href="https://apps.apple.com/jo/app/cleanspace-storage-photos/id6790139624"
+       [href]="APP_STORE_URL"
        target="_blank"
        rel="noopener noreferrer"
        [attr.aria-label]="i18n.t('حمّل من App Store', 'Download on the App Store')">
@@ -24,4 +25,5 @@ import { I18n } from '../services/i18n';
 })
 export class AppStoreBadgeComponent {
   i18n = inject(I18n);
+  readonly APP_STORE_URL = APP_STORE_URL;
 }

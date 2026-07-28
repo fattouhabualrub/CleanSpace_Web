@@ -1,6 +1,7 @@
 import { Component, inject, signal, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
+import { APP_STORE_URL } from '../services/app-links';
 import { LanguagePickerComponent } from './language-picker';
 
 @Component({
@@ -30,7 +31,7 @@ import { LanguagePickerComponent } from './language-picker';
         <div class="nav__actions">
           <app-language-picker />
           <a class="btn btn--primary"
-             href="https://apps.apple.com/jo/app/cleanspace-storage-photos/id6790139624"
+             [href]="APP_STORE_URL"
              target="_blank"
              rel="noopener noreferrer">
             {{ i18n.t('حمّل الآن', 'Get the App') }}
@@ -42,6 +43,7 @@ import { LanguagePickerComponent } from './language-picker';
 })
 export class HeaderComponent {
   i18n = inject(I18n);
+  readonly APP_STORE_URL = APP_STORE_URL;
   readonly scrolled = signal(false);
 
   @HostListener('window:scroll')

@@ -26,6 +26,7 @@ import { AppStoreBadgeComponent } from './appstore-badge';
         </div>
         <nav class="footer__col">
           <h4>{{ i18n.t('المنتج', 'Product') }}</h4>
+          <a routerLink="/download">{{ i18n.t('تحميل التطبيق', 'Download the app') }}</a>
           <a routerLink="/" fragment="features">{{ i18n.t('الميزات', 'Features') }}</a>
           <a routerLink="/" fragment="compare">{{ i18n.t('المقارنة', 'Compare') }}</a>
           <a routerLink="/" fragment="plans">{{ i18n.t('الأسعار', 'Plans') }}</a>
