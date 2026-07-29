@@ -1,6 +1,8 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
+import { APP_STORE_URL } from '../services/app-links';
+import { GoogleAnalyticsService } from '../core/services/google-analytics.service';
 import { RevealDirective } from '../directives/reveal';
 import { SpotlightDirective } from '../directives/spotlight';
 import { AppStoreBadgeComponent } from '../components/appstore-badge';
@@ -211,9 +213,10 @@ interface Plan { arName: string; enName: string; price: string; arPer: string; e
                 }
               </ul>
               <a class="btn btn--primary btn--block plan__cta"
-                 href="https://apps.apple.com/jo/app/cleanspace-storage-photos/id6790139624"
+                 [href]="APP_STORE_URL"
                  target="_blank"
-                 rel="noopener noreferrer">
+                 rel="noopener noreferrer"
+                 (click)="analytics.downloadClick('plans_' + p.enName.toLowerCase().replace(' ', '_'))">
                 {{ i18n.t('اشترك', 'Subscribe') }}
               </a>
             </div>
@@ -292,7 +295,7 @@ interface Plan { arName: string; enName: string; price: string; arPer: string; e
           <p>{{ i18n.t('نزّل CleanSpace وابدأ التنظيف اليوم.', 'Download CleanSpace and start cleaning today.') }}</p>
           <div class="cta-band__actions">
             <div class="cta-band__badges">
-              <app-appstore-badge />
+              <app-appstore-badge placement="home_cta_band" />
               <app-googleplay-badge />
             </div>
             <span class="cta-band__note">{{ i18n.t('لـ iPhone • iOS 16 وأحدث', 'For iPhone • iOS 16 and later') }}</span>
@@ -304,6 +307,8 @@ interface Plan { arName: string; enName: string; price: string; arPer: string; e
 })
 export class HomeComponent {
   i18n = inject(I18n);
+  readonly analytics = inject(GoogleAnalyticsService);
+  readonly APP_STORE_URL = APP_STORE_URL;
   lang = this.i18n.lang;
   shotLang = this.i18n.shotLang;
 

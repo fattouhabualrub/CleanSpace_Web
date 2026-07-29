@@ -22,7 +22,7 @@ import { AppStoreBadgeComponent } from './appstore-badge';
             {{ i18n.t('منظّف ذكي وخاص لجهازك — كل المعالجة على جهازك.',
                       'A smart, private cleaner for your device — all processing stays on-device.') }}
           </p>
-          <app-appstore-badge />
+          <app-appstore-badge placement="footer" />
         </div>
         <nav class="footer__col">
           <h4>{{ i18n.t('المنتج', 'Product') }}</h4>

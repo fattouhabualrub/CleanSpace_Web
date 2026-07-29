@@ -4,9 +4,14 @@ The site UI is Arabic + English authored **inline** via `i18n.t('عربي', 'Eng
 The other **15 languages** are generated into a lazy-loaded dictionary keyed by the
 English source string, with automatic fallback to English for any missing key.
 
+A language can also be pinned in the URL — `/<lang>/<page>`, e.g. `/en/download`,
+`/ar/download`, `/pt-BR/support` (the prefix is case-insensitive). The prefix wins
+over the visitor's saved preference; without one, the saved language is used. See
+`src/app/services/lang-route.ts`.
+
 ## Files
-- `catalog.json` — the 168 unique English source strings (the dictionary keys).
-- `tr/<code>.json` — an array of 168 translations, **index-aligned** to `catalog.json`,
+- `catalog.json` — the 179 unique English source strings (the dictionary keys).
+- `tr/<code>.json` — an array of 179 translations, **index-aligned** to `catalog.json`,
   for each of: `de es fr it nl pt-BR ru tr id hi ja zh-Hans fa ur ckb`.
 - `build.js` — assembles the above into `src/app/services/i18n-translations.ts`.
 

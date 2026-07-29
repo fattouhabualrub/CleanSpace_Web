@@ -2,6 +2,7 @@ import { Component, inject, signal, HostListener, ChangeDetectionStrategy } from
 import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
 import { APP_STORE_URL } from '../services/app-links';
+import { GoogleAnalyticsService } from '../core/services/google-analytics.service';
 import { LanguagePickerComponent } from './language-picker';
 
 @Component({
@@ -33,7 +34,8 @@ import { LanguagePickerComponent } from './language-picker';
           <a class="btn btn--primary"
              [href]="APP_STORE_URL"
              target="_blank"
-             rel="noopener noreferrer">
+             rel="noopener noreferrer"
+             (click)="analytics.downloadClick('header')">
             {{ i18n.t('حمّل الآن', 'Get the App') }}
           </a>
         </div>
@@ -43,6 +45,7 @@ import { LanguagePickerComponent } from './language-picker';
 })
 export class HeaderComponent {
   i18n = inject(I18n);
+  readonly analytics = inject(GoogleAnalyticsService);
   readonly APP_STORE_URL = APP_STORE_URL;
   readonly scrolled = signal(false);
 

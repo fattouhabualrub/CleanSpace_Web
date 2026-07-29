@@ -1,5 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { I18n, Lang } from '../services/i18n';
+import { urlWithLang } from '../services/lang-route';
 
 /**
  * 17-language switcher. A transparent full-size native <select> overlays a styled
@@ -52,8 +54,15 @@ import { I18n, Lang } from '../services/i18n';
 })
 export class LanguagePickerComponent {
   i18n = inject(I18n);
+  private readonly router = inject(Router);
 
   onChange(e: Event): void {
-    this.i18n.setLang((e.target as HTMLSelectElement).value as Lang);
+    const code = (e.target as HTMLSelectElement).value as Lang;
+    this.i18n.setLang(code);
+    // On a /<lang>/… page the URL has to follow the picker, or the address bar
+    // would keep advertising a language the page no longer shows. Unprefixed
+    // pages are left alone.
+    const tree = urlWithLang(this.router, code);
+    if (tree) void this.router.navigateByUrl(tree, { replaceUrl: true });
   }
 }

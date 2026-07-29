@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 
 export type Lang =
   | 'ar' | 'en' | 'ckb' | 'de' | 'es' | 'fa' | 'fr' | 'hi' | 'id'
@@ -15,34 +15,38 @@ export interface LangInfo {
 
 const RTL_LANGS: ReadonlySet<Lang> = new Set<Lang>(['ar', 'ckb', 'fa', 'ur']);
 
+/** Module-level so the router's /:lang matcher can read it without the injector. */
+export const LANGUAGES: readonly LangInfo[] = [
+  { code: 'ar', native: 'العربية', flag: '🇸🇦', rtl: true },
+  { code: 'en', native: 'English', flag: '🇬🇧', rtl: false },
+  { code: 'ckb', native: 'کوردیی ناوەندی', flag: '', rtl: true },
+  { code: 'fa', native: 'فارسی', flag: '🇮🇷', rtl: true },
+  { code: 'ur', native: 'اردو', flag: '🇵🇰', rtl: true },
+  { code: 'tr', native: 'Türkçe', flag: '🇹🇷', rtl: false },
+  { code: 'de', native: 'Deutsch', flag: '🇩🇪', rtl: false },
+  { code: 'fr', native: 'Français', flag: '🇫🇷', rtl: false },
+  { code: 'es', native: 'Español', flag: '🇪🇸', rtl: false },
+  { code: 'it', native: 'Italiano', flag: '🇮🇹', rtl: false },
+  { code: 'nl', native: 'Nederlands', flag: '🇳🇱', rtl: false },
+  { code: 'pt-BR', native: 'Português (BR)', flag: '🇧🇷', rtl: false },
+  { code: 'ru', native: 'Русский', flag: '🇷🇺', rtl: false },
+  { code: 'id', native: 'Bahasa Indonesia', flag: '🇮🇩', rtl: false },
+  { code: 'hi', native: 'हिन्दी', flag: '🇮🇳', rtl: false },
+  { code: 'ja', native: '日本語', flag: '🇯🇵', rtl: false },
+  { code: 'zh-Hans', native: '简体中文', flag: '🇨🇳', rtl: false },
+];
+
 @Injectable({ providedIn: 'root' })
 export class I18n {
   /** ar & en are authored inline via t(ar, en); the other 15 come from TRANSLATIONS
    *  keyed by the English string, with a graceful fallback to English. */
-  readonly languages: readonly LangInfo[] = [
-    { code: 'ar', native: 'العربية', flag: '🇸🇦', rtl: true },
-    { code: 'en', native: 'English', flag: '🇬🇧', rtl: false },
-    { code: 'ckb', native: 'کوردیی ناوەندی', flag: '', rtl: true },
-    { code: 'fa', native: 'فارسی', flag: '🇮🇷', rtl: true },
-    { code: 'ur', native: 'اردو', flag: '🇵🇰', rtl: true },
-    { code: 'tr', native: 'Türkçe', flag: '🇹🇷', rtl: false },
-    { code: 'de', native: 'Deutsch', flag: '🇩🇪', rtl: false },
-    { code: 'fr', native: 'Français', flag: '🇫🇷', rtl: false },
-    { code: 'es', native: 'Español', flag: '🇪🇸', rtl: false },
-    { code: 'it', native: 'Italiano', flag: '🇮🇹', rtl: false },
-    { code: 'nl', native: 'Nederlands', flag: '🇳🇱', rtl: false },
-    { code: 'pt-BR', native: 'Português (BR)', flag: '🇧🇷', rtl: false },
-    { code: 'ru', native: 'Русский', flag: '🇷🇺', rtl: false },
-    { code: 'id', native: 'Bahasa Indonesia', flag: '🇮🇩', rtl: false },
-    { code: 'hi', native: 'हिन्दी', flag: '🇮🇳', rtl: false },
-    { code: 'ja', native: '日本語', flag: '🇯🇵', rtl: false },
-    { code: 'zh-Hans', native: '简体中文', flag: '🇨🇳', rtl: false },
-  ];
+  readonly languages = LANGUAGES;
 
-  readonly lang = signal<Lang>('ar');
+  /** English is the default; a saved preference or a /<lang>/ URL overrides it. */
+  readonly lang = signal<Lang>('en');
   readonly isRTL = computed(() => RTL_LANGS.has(this.lang()));
   readonly current = computed<LangInfo>(
-    () => this.languages.find((l) => l.code === this.lang()) ?? this.languages[0]
+    () => this.languages.find((l) => l.code === this.lang()) ?? this.languages[1]
   );
   /** Screenshots exist only in ar & en; every other language shows the English shots. */
   readonly shotLang = computed<'ar' | 'en'>(() => (this.lang() === 'ar' ? 'ar' : 'en'));
@@ -54,6 +58,9 @@ export class I18n {
    *  fallback for any missing key, t() returns English. */
   private readonly dict = signal<Record<string, Record<string, string>>>({});
   private dictLoading?: Promise<void>;
+
+  /** Injected, not the global: during prerendering there is no global `document`. */
+  private readonly doc = inject(DOCUMENT);
 
   constructor() {
     const saved = (typeof localStorage !== 'undefined'
@@ -72,18 +79,23 @@ export class I18n {
     return this.dict()[l]?.[en] ?? en;
   }
 
-  setLang(l: Lang): void {
-    if (!this.codes.has(l)) return;
+  /**
+   * Switches language, resolving once the copy is actually in place. Awaiting it
+   * is what lets the prerenderer serialize a fully translated page instead of
+   * racing the dictionary chunk.
+   */
+  setLang(l: Lang): Promise<void> {
+    if (!this.codes.has(l)) return Promise.resolve();
     if (l !== 'ar' && l !== 'en') {
       // Load the dictionary first so switching lands directly in the target language.
-      void this.ensureDict().then(() => {
+      return this.ensureDict().then(() => {
         this.lang.set(l);
         this.apply();
       });
-      return;
     }
     this.lang.set(l);
     this.apply();
+    return Promise.resolve();
   }
 
   private ensureDict(): Promise<void> {
@@ -99,10 +111,14 @@ export class I18n {
     this.setLang(this.lang() === 'ar' ? 'en' : 'ar');
   }
 
+  /** Writes lang/dir onto <html>. Runs on the server too, so the prerendered
+   *  bytes carry the right direction before a single line of JS executes. */
   private apply(): void {
-    if (typeof document === 'undefined') return;
-    document.documentElement.lang = this.lang();
-    document.documentElement.dir = this.isRTL() ? 'rtl' : 'ltr';
+    const root = this.doc.documentElement;
+    if (root) {
+      root.lang = this.lang();
+      root.dir = this.isRTL() ? 'rtl' : 'ltr';
+    }
     if (typeof localStorage !== 'undefined') localStorage.setItem('lang', this.lang());
   }
 }

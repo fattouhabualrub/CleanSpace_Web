@@ -1,0 +1,105 @@
+# CleanSpace — LiteSpeed/Apache rules for the prerendered site.
+#
+# The build emits one static folder per locale/route (/ar/download/index.html …).
+# These rules do three things:
+#   1. 301 the bare root to the visitor's language, from Accept-Language.
+#   2. Serve each prerendered index.html directly — a prefixed URL must return
+#      200 with no redirect chain, or crawlers waste budget and may loop.
+#   3. Fall back to the CSR shell only for URLs with no prerendered file.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # --- 1. Bare root → /<lang>/ -------------------------------------------------
+  # Longest/most specific first; zh-Hans and pt-BR must win over bare zh / pt.
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^zh-Hans [NC,OR]
+  RewriteCond %{HTTP:Accept-Language} ^zh-CN [NC]
+  RewriteRule ^$ /zh-Hans/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^pt-BR [NC]
+  RewriteRule ^$ /pt-BR/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^ar [NC]
+  RewriteRule ^$ /ar/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^ckb [NC]
+  RewriteRule ^$ /ckb/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^fa [NC]
+  RewriteRule ^$ /fa/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^ur [NC]
+  RewriteRule ^$ /ur/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^de [NC]
+  RewriteRule ^$ /de/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^es [NC]
+  RewriteRule ^$ /es/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^fr [NC]
+  RewriteRule ^$ /fr/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^hi [NC]
+  RewriteRule ^$ /hi/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^id [NC]
+  RewriteRule ^$ /id/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^it [NC]
+  RewriteRule ^$ /it/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^ja [NC]
+  RewriteRule ^$ /ja/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^nl [NC]
+  RewriteRule ^$ /nl/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^ru [NC]
+  RewriteRule ^$ /ru/ [R=301,L]
+
+  RewriteCond %{REQUEST_URI} ^/?$
+  RewriteCond %{HTTP:Accept-Language} ^tr [NC]
+  RewriteRule ^$ /tr/ [R=301,L]
+
+  # Anything else (including en) → English.
+  RewriteRule ^$ /en/ [R=301,L]
+
+  # --- 2. Serve the prerendered file ------------------------------------------
+  # /ar/download → /ar/download/index.html, returned 200 with no further hop.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*?)/?$ /$1/index.html [L]
+
+  # --- 3. Unknown URL → CSR shell, which routes client-side ---------------------
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ /index.csr.html [L]
+</IfModule>
+
+# Never cache HTML: a stale shell would pin visitors to an old bundle.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Hashed assets are immutable.
+  <FilesMatch "\-[A-Z0-9]{8}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

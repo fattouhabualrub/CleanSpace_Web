@@ -3,9 +3,13 @@
  * visitor need?". Used by the badges, the navbar CTA, and the /download
  * smart-link page.
  */
+import { environment } from '../../environments/environment';
 
-export const APP_STORE_URL =
-  'https://apps.apple.com/jo/app/cleanspace-storage-photos/id6790139624';
+/**
+ * Region-neutral App Store link: Apple redirects to the visitor's own storefront.
+ * The previous hardcoded value pinned every visitor to the Jordanian store (/jo/).
+ */
+export const APP_STORE_URL = environment.appStoreUrl;
 
 export type Platform = 'ios' | 'android' | 'desktop';
 

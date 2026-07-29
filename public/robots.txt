@@ -1,6 +1,4 @@
-# CleanSpace — robots
-# NOTE (owner): replace the Sitemap host below with your real production domain.
 User-agent: *
 Allow: /
 
-Sitemap: https://cleanspace.app/sitemap.xml
+Sitemap: https://cleaningspace.app/sitemap.xml
