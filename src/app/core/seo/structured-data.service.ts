@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { I18n, LANGUAGES, type Lang } from '../../services/i18n';
 import { APP_NAME, APP_SHORT_NAME, OG_IMAGE_PATH } from '../brand';
 import { SEO_COPY } from './seo-copy';
+import { FAQ } from '../content/faq';
 
 /** Marks the nodes this service owns, so it can replace exactly its own. */
 const OWNED = 'data-jsonld';
@@ -70,15 +71,16 @@ export class StructuredDataService {
       // review counts is a policy violation. Supply real App Store figures to add it.
     });
 
-    const faq = FAQ[lang];
-    if (faq) {
+    // Only ar and en are authored, and the schema must mirror the copy the page
+    // actually renders — an absent FAQPage block is fine, a mismatched one is not.
+    if (lang === 'ar' || lang === 'en') {
       this.emit('faq', {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
-        mainEntity: faq.map((q) => ({
+        mainEntity: FAQ.map((q) => ({
           '@type': 'Question',
-          name: q.q,
-          acceptedAnswer: { '@type': 'Answer', text: q.a },
+          name: lang === 'ar' ? q.arQ : q.enQ,
+          acceptedAnswer: { '@type': 'Answer', text: lang === 'ar' ? q.arA : q.enA },
         })),
       });
     }
@@ -96,76 +98,33 @@ export class StructuredDataService {
 /** Localized only where the page itself is localized; others fall back to English. */
 const FEATURE_LIST: Partial<Record<Lang, string[]>> = {
   en: [
-    'Duplicate & similar photo detection',
+    'Duplicate, similar, burst and blurry photo detection',
+    'Screenshot, large-video and similar-video cleanup',
     'Video compression and Live-to-Still conversion',
-    'Swipe-to-clean review mode',
-    'Encrypted private vault',
-    'Duplicate contact merging',
+    'Swipe-to-clean review mode with an undo bin',
+    'Encrypted Secret Vault',
+    'Duplicate contact merging and contact backup',
+    'Files & Documents folder scanning',
+    'Albums and smart collections',
+    'On This Day memories',
+    'Cleaning history',
     'Home Screen widgets',
     '21 languages',
     'Fully on-device — no uploads',
   ],
   ar: [
-    'اكتشاف الصور المكررة والمتشابهة',
+    'اكتشاف الصور المكررة والمتشابهة واللقطات المتتابعة وغير الواضحة',
+    'تنظيف السكرينشوت والفيديوهات الكبيرة والمتشابهة',
     'ضغط الفيديو وتحويل Live إلى صورة ثابتة',
-    'وضع المراجعة بالسحب',
-    'خزنة خاصة مشفّرة',
-    'دمج جهات الاتصال المكررة',
+    'وضع المراجعة بالسحب مع سلة للتراجع',
+    'الخزنة السرية المشفّرة',
+    'دمج جهات الاتصال المكررة والنسخ الاحتياطي لها',
+    'فحص مجلدات الملفات والوثائق',
+    'الألبومات والمجموعات الذكية',
+    'ذكريات «في مثل هذا اليوم»',
+    'سجلّ التنظيف',
     'أدوات الشاشة الرئيسية',
     '21 لغة',
     'كل المعالجة على الجهاز — بدون رفع',
-  ],
-};
-
-/**
- * FAQ schema must mirror the FAQ actually rendered in that language. Only ar and
- * en are authored inline in the app, so only those two are emitted; every other
- * locale gets no FAQPage block, which is correct — an absent block is fine, a
- * mismatched one is a violation.
- */
-const FAQ: Partial<Record<Lang, ReadonlyArray<{ q: string; a: string }>>> = {
-  en: [
-    {
-      q: 'Are my photos uploaded to the internet?',
-      a: 'No. All scanning and deleting happen entirely on your device, and the app works even offline. We never upload or see your photos.',
-    },
-    {
-      q: 'What do I get for free?',
-      a: 'A full scan, library analysis, and finding duplicates and look-alikes are free. Bulk deleting, video compression and the vault unlock with Pro.',
-    },
-    {
-      q: 'Is there a free trial?',
-      a: 'There is no trial period, but you can scan and analyze for free before subscribing to see how much space you can reclaim.',
-    },
-    {
-      q: 'Can I cancel anytime?',
-      a: 'Yes. Subscriptions are managed from your App Store settings, and you can turn off renewal at any time.',
-    },
-    {
-      q: 'Is deleting safe?',
-      a: 'Deleted items pass through the Photos app Recently Deleted album for 30 days, so you can restore them easily.',
-    },
-  ],
-  ar: [
-    {
-      q: 'هل يتم رفع صوري إلى الإنترنت؟',
-      a: 'لا. كل الفحص والحذف يتم بالكامل على جهازك، والتطبيق يعمل حتى بدون إنترنت. لا نرفع صورك ولا نطّلع عليها أبدًا.',
-    },
-    {
-      q: 'ما الذي أحصل عليه مجانًا؟',
-      a: 'الفحص الكامل وتحليل المكتبة والعثور على الصور المكررة والمتشابهة كلها مجانية. الحذف الجماعي وضغط الفيديو والخزنة تُفتح مع Pro.',
-    },
-    {
-      q: 'هل توجد فترة تجريبية؟',
-      a: 'لا توجد فترة تجريبية، لكن يمكنك الفحص والتحليل مجانًا قبل الاشتراك لترى كم مساحة يمكنك استعادتها.',
-    },
-    {
-      q: 'هل يمكنني الإلغاء في أي وقت؟',
-      a: 'نعم. تُدار الاشتراكات من إعدادات App Store، ويمكنك إيقاف التجديد في أي وقت.',
-    },
-    {
-      q: 'هل الحذف آمن؟',
-      a: 'العناصر المحذوفة تمر عبر ألبوم «المحذوفة مؤخرًا» في تطبيق الصور لمدة 30 يومًا، فيمكنك استعادتها بسهولة.',
-    },
   ],
 };

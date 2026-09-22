@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
 import { APP_STORE_URL, detectPlatform, type Platform } from '../services/app-links';
 import { AppStoreBadgeComponent } from '../components/appstore-badge';
+import { StorageBarComponent } from '../components/storage-bar';
 import { GoogleAnalyticsService } from '../core/services/google-analytics.service';
 
 /**
@@ -29,7 +30,7 @@ import { GoogleAnalyticsService } from '../core/services/google-analytics.servic
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-download',
-  imports: [RouterLink, AppStoreBadgeComponent],
+  imports: [RouterLink, AppStoreBadgeComponent, StorageBarComponent],
   template: `
     <section class="section" id="main-content">
       <div class="container container--narrow">
@@ -37,6 +38,9 @@ import { GoogleAnalyticsService } from '../core/services/google-analytics.servic
           <img class="dl__icon" src="icon-192.png" width="88" height="88" alt="CleanSpace">
           <h1>{{ i18n.t('حمّل CleanSpace', 'Get CleanSpace') }}</h1>
 
+          <!-- Lede, storage illustration, then the action. The bars are the reason
+               to tap, so they come first; splitting the platform branch in two is
+               what lets the button sit underneath them. -->
           @if (redirecting()) {
             <!-- Optimistic state: the store is (hopefully) opening right now. -->
             <p class="dl__lede" role="status">
@@ -52,29 +56,34 @@ import { GoogleAnalyticsService } from '../core/services/google-analytics.servic
               {{ i18n.t('ما فتح App Store تلقائيًا؟ اضغط الزر وبيفتح على طول.',
                         'The App Store did not open automatically? Tap the button below.') }}
             </p>
-            <a class="btn btn--primary btn--block dl__cta" [href]="APP_STORE_URL" rel="noopener"
-               (click)="analytics.downloadClick('download_page_fallback')">
-              <svg class="ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor" stroke="none" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.51 4.09l-.02-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-              </svg>
-              {{ i18n.t('افتح App Store', 'Open the App Store') }}
-            </a>
           } @else if (platform() === 'android') {
             <p class="dl__lede">
               {{ i18n.t('CleanSpace متوفر حاليًا على iPhone و iPad فقط.',
                         'CleanSpace is currently available on iPhone and iPad only.') }}
             </p>
-            <div class="dl__badges">
-              <app-appstore-badge placement="download_page_android" />
-            </div>
           } @else {
             <p class="dl__lede">
-              {{ i18n.t('CleanSpace تطبيق جوال. افتح هذي الصفحة من جوالك، أو حمّله من App Store:',
-                        'CleanSpace is a mobile app. Open this page on your phone, or grab it from the App Store:') }}
+              {{ i18n.t('CleanSpace تطبيق جوال. افتح هذي الصفحة من جوالك، أو حمّله من App Store.',
+                        'CleanSpace is a mobile app. Open this page on your phone, or grab it from the App Store.') }}
             </p>
-            <div class="dl__badges">
-              <app-appstore-badge placement="download_page_desktop" />
-            </div>
+          }
+
+          <app-storage-bar />
+
+          @if (!redirecting()) {
+            @if (platform() === 'ios') {
+              <a class="btn btn--primary btn--block dl__cta" [href]="APP_STORE_URL" rel="noopener"
+                 (click)="analytics.downloadClick('download_page_fallback')">
+                <svg class="ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" stroke="none" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.51 4.09l-.02-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                </svg>
+                {{ i18n.t('افتح App Store', 'Open the App Store') }}
+              </a>
+            } @else {
+              <div class="dl__badges">
+                <app-appstore-badge [placement]="platform() === 'android' ? 'download_page_android' : 'download_page_desktop'" />
+              </div>
+            }
           }
 
           <p class="dl__foot">

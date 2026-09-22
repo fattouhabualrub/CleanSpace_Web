@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build && node scripts/generate-sitemap.mjs && node scripts/root-index.mjs",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "screens": "python3 scripts/build-screens.py"
   },
   "private": true,
   "packageManager": "npm@10.9.8",

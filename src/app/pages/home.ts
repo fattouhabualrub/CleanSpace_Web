@@ -1,10 +1,16 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
 import { APP_STORE_URL } from '../services/app-links';
 import { GoogleAnalyticsService } from '../core/services/google-analytics.service';
+import { Theme } from '../core/theme';
+import { SCREEN_VARIANTS } from '../core/screen-variants';
+import { FAQ } from '../core/content/faq';
 import { RevealDirective } from '../directives/reveal';
 import { SpotlightDirective } from '../directives/spotlight';
+import { ParallaxDirective } from '../directives/parallax';
+import { TiltDirective } from '../directives/tilt';
+import { ScrollStepDirective } from '../directives/scroll-step';
 import { AppStoreBadgeComponent } from '../components/appstore-badge';
 import { GooglePlayBadgeComponent } from '../components/googleplay-badge';
 
@@ -16,12 +22,20 @@ interface Plan {
   /** Pre-discount price, struck through beside `price` when present. */
   wasPrice?: string;
   arPer: string; enPer: string; featured: boolean; arTag?: string; enTag?: string;
+  /** Carries App Store Connect's introductory offer. Only the weekly product has one. */
+  trial?: boolean;
 }
+/** One beat of the sticky scrollytelling tour; `shot` names a file in public/screens. */
+interface TourStep { shot: string; icon: string; arT: string; enT: string; arD: string; enD: string; }
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
-  imports: [RouterLink, RevealDirective, SpotlightDirective, AppStoreBadgeComponent, GooglePlayBadgeComponent],
+  imports: [
+    RouterLink, RevealDirective, SpotlightDirective, ParallaxDirective,
+    TiltDirective, ScrollStepDirective,
+    AppStoreBadgeComponent, GooglePlayBadgeComponent,
+  ],
   template: `
     <!-- impeccable-disable broken-image -- every <img> below uses an Angular [src] binding
          to a real, lazy-loaded screenshot resolved at runtime; the static scan reads the
@@ -45,37 +59,83 @@ interface Plan {
       <symbol id="i-noaccount" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M6 20a6 6 0 0 1 10.5-4"/><path d="M4 4l16 16"/></symbol>
       <symbol id="i-notrack" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.2 4.2"/><path d="M9.8 5.2A9.6 9.6 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.4 3.3M6.2 6.2A17.4 17.4 0 0 0 2 12s3.5 7 10 7a9.5 9.5 0 0 0 4-.9"/></symbol>
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="i-blur" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="3.4"/></symbol>
+      <symbol id="i-burst" viewBox="0 0 24 24"><rect x="3.5" y="6" width="12" height="12" rx="2.2"/><path d="M18 8.5v8"/><path d="M20.8 10.2v4.6"/></symbol>
+      <symbol id="i-album" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 15.5 8.2 11l4 3.4L15.8 11 21 15.5"/><circle cx="8.6" cy="9.1" r="1.3"/></symbol>
+      <symbol id="i-memory" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.6V12l3 1.8"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M21 20H3"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16S18 14 18 9Z"/><path d="M13.7 19a2 2 0 0 1-3.4 0"/></symbol>
+      <symbol id="i-video-dup" viewBox="0 0 24 24"><rect x="3" y="8" width="11" height="10" rx="2.2"/><path d="M14 11.2l4.2-2.5v8.6L14 14.8"/><path d="M6.5 5h9.2"/></symbol>
+      <symbol id="i-file-large" viewBox="0 0 24 24"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5Z"/><path d="M4 7.5 12 11l8-3.5"/><path d="M12 11v9"/></symbol>
     </svg>
 
-    <!-- Hero -->
+    <!-- ══ Hero ══ -->
     <section class="hero">
-      <div class="container hero__grid">
+      <!-- Aurora: three slow-drifting brand-blue washes. Purely decorative, and
+           the whole layer is removed under prefers-reduced-motion. -->
+      <div class="aurora" aria-hidden="true">
+        <span class="aurora__blob aurora__blob--1"></span>
+        <span class="aurora__blob aurora__blob--2"></span>
+        <span class="aurora__blob aurora__blob--3"></span>
+      </div>
+      <div class="hero__grid container">
         <div class="hero__copy">
-          <span class="eyebrow">{{ i18n.t('منظّف ذكي وآمن', 'Smart, private cleaner') }}</span>
-          <h1 class="h-title">{{ i18n.t('حرّر مساحة جهازك في ثوانٍ', 'Free up your space in seconds') }}</h1>
+          <span class="eyebrow">{{ i18n.t('منظّف صور يعمل على جهازك', 'On-device photo cleaner') }}</span>
+          <h1 class="h-title">{{ i18n.t('نظّف مساحة آيفونك بضغطة واحدة', 'Clean up your iPhone storage in one tap') }}</h1>
           <p class="h-sub">
             {{ i18n.t(
-              'CleanSpace يكتشف الصور المكررة والمتشابهة، يضغط الفيديو، ويرتّب مكتبتك — وكل المعالجة تتم على جهازك بالكامل.',
-              'CleanSpace finds duplicate & similar photos, compresses videos, and tidies your library — all processed entirely on your device.') }}
+              'يفحص CleanSpace مكتبتك ويجمع المكرر والمتشابه واللقطات المتتابعة والصور غير الواضحة والسكرينشوت والفيديوهات الكبيرة في مكان واحد — ثم يحذف ما لا تحتاجه بضغطة. كل ذلك على جهازك، بلا رفع ولا حساب.',
+              'CleanSpace scans your library and gathers duplicates, look-alikes, bursts, blurry shots, screenshots and oversized videos in one place — then clears what you don’t need in a tap. All on your device. No uploads, no account.') }}
           </p>
           <div class="hero__cta">
-            <a class="btn btn--primary" routerLink="/" fragment="plans">{{ i18n.t('ابدأ الآن', 'Get started') }}</a>
-            <a class="btn btn--ghost" routerLink="/" fragment="features">{{ i18n.t('اعرف أكثر', 'Learn more') }}</a>
+            <app-appstore-badge placement="hero" />
+            <a class="btn btn--ghost btn--lg" routerLink="/" fragment="tour">
+              {{ i18n.t('شاهده وهو يعمل', 'See it in action') }}
+              <svg class="btn__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M12 19l-6-6M12 19l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
           </div>
+          <ul class="trust-strip" [attr.aria-label]="i18n.t('لماذا تثق بنا', 'Why trust us')">
+            @for (t of trust; track t.en) {
+              <li class="trust-chip">
+                <svg class="trust-chip__ic" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 5 6v5.5c0 4.3 3 7.3 7 9 4-1.7 7-4.7 7-9V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  <path d="M9.2 12.2l1.9 1.9 3.8-3.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {{ i18n.t(t.ar, t.en) }}
+              </li>
+            }
+          </ul>
         </div>
+
         <div class="hero__art">
-          <img class="hero__device" [src]="'screens/home_' + shotLang() + '.png'"
-               [alt]="i18n.t('شاشة CleanSpace الرئيسية', 'CleanSpace home screen')">
-          <div class="float-card float-card--a">
+          <div class="hero__stage">
+            <img class="hero__device" appTilt="6" [appParallax]="-26"
+                 [src]="shot('home')" width="1040" height="2203" fetchpriority="high" decoding="async"
+                 [alt]="i18n.t('شاشة CleanSpace الرئيسية تعرض نتائج الفحص', 'The CleanSpace home screen showing scan results')">
+          </div>
+          <!-- Floating chips echo figures from the screenshot behind them, so the
+               composition reads as one continuous piece of UI. -->
+          <div class="float-card float-card--a" [appParallax]="34">
             <svg class="float-card__ic float-card__ic--up" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 19V5M12 5l-6 6M12 5l6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div class="float-card__body">
-              <b>12.4 GB</b>
-              <span>{{ i18n.t('حرّر المساحة', 'Free up space') }}</span>
+              <b>{{ heroFigures().freed }}</b>
+              <span>{{ i18n.t('يمكن تحريرها', 'Can be freed') }}</span>
             </div>
           </div>
-          <div class="float-card float-card--b">
+          <div class="float-card float-card--b" [appParallax]="-20">
+            <svg class="float-card__ic float-card__ic--dup" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-dup"/>
+            </svg>
+            <div class="float-card__body">
+              <b>{{ heroFigures().duplicates }}</b>
+              <span>{{ i18n.t('صورة مكررة', 'Duplicate photos') }}</span>
+            </div>
+          </div>
+          <div class="float-card float-card--c" [appParallax]="26">
             <svg class="float-card__ic float-card__ic--ok" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -83,39 +143,142 @@ interface Plan {
           </div>
         </div>
       </div>
-      <!-- trust band (below the hero, per editorial discipline) -->
+    </section>
+
+    <!-- ══ The idea, animated ══
+         Borrows the app's own onboarding idiom — a fanned stack where the
+         keeper takes a green check and the rest take a red cross — and plays it
+         out instead of drawing it once. The deck is illustration, so it is
+         hidden from assistive tech; the copy beside it carries the meaning. -->
+    <section class="section section--alt demo" id="demo">
+      <div class="container container--narrow">
+        <div class="section-head" appReveal>
+          <span class="eyebrow">{{ i18n.t('الفكرة', 'The idea') }}</span>
+          <h2>{{ i18n.t('خمس نسخ. واحدة تبقى.', 'Five copies. One keeper.') }}</h2>
+          <p>{{ i18n.t(
+            'يجمع CleanSpace النسخ المتطابقة، ويعلّم التي تستحق البقاء، ويمسح الباقي — وأنت فقط تؤكّد.',
+            'CleanSpace groups identical shots, marks the one worth keeping, and clears the rest — you just confirm.') }}</p>
+        </div>
+
+        <div class="demo__stage" appReveal>
+          <!-- Re-keying on the run counter throws the list away and rebuilds it,
+               which is what restarts the CSS animations; replaying them in place
+               would mean reaching into the DOM to force a reflow. -->
+          @for (r of [run()]; track r) {
+            <ol class="demo__deck" aria-hidden="true">
+              @for (c of deck; track c.slot) {
+                <li class="demo__card" [class.demo__card--keep]="c.keep"
+                    [style.--slot]="c.slot" [style.--i]="c.i" [style.z-index]="c.z">
+                  <svg class="demo__glyph" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect x="7" y="11" width="34" height="26" rx="4.5" fill="rgba(255,255,255,0.26)"/>
+                    <circle cx="18" cy="21" r="3.3" fill="#fff"/>
+                    <path d="M9.5 33.5 19 25l6.5 5.6L31 26l8 7.5H9.5Z" fill="#fff"/>
+                  </svg>
+                  <span class="demo__mark" [class.demo__mark--left]="c.slot < 0">
+                    @if (c.keep) {
+                      <svg viewBox="0 0 24 24"><path d="M20 6.5 9.4 17 4 11.6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    } @else {
+                      <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>
+                    }
+                  </span>
+                  @if (c.keep) { <span class="demo__best">{{ i18n.t('الأفضل', 'Best') }}</span> }
+                </li>
+              }
+            </ol>
+          }
+          <button type="button" class="demo__replay" (click)="replay()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 12a8 8 0 1 1-2.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M20 4v4.6h-4.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ i18n.t('أعد التشغيل', 'Replay') }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Guided tour (sticky scrollytelling) ══ -->
+    <section class="section section--alt tour" id="tour">
       <div class="container">
-        <ul class="trust-strip" [attr.aria-label]="i18n.t('لماذا تثق بنا', 'Why trust us')">
-          @for (t of trust; track t.en) {
-            <li class="trust-chip">
-              <svg class="trust-chip__ic" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3 5 6v5.5c0 4.3 3 7.3 7 9 4-1.7 7-4.7 7-9V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-                <path d="M9.2 12.2l1.9 1.9 3.8-3.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              {{ i18n.t(t.ar, t.en) }}
+        <div class="section-head" appReveal>
+          <span class="eyebrow">{{ i18n.t('جولة إرشادية', 'Guided tour') }}</span>
+          <h2>{{ i18n.t('مرّر لترى كيف يعمل', 'Scroll to see how it works') }}</h2>
+          <p>{{ i18n.t('لقطات حقيقية من CleanSpace — بلا تجميل.', 'Real screenshots from CleanSpace — nothing staged.') }}</p>
+        </div>
+
+        <div class="tour__grid">
+          <!-- Sticky device: every frame is stacked, only the active one is shown. -->
+          <div class="tour__stage">
+            <div class="tour__phone">
+              @for (s of tour; track s.shot; let i = $index) {
+                <img class="tour__shot" [class.is-active]="i === active()"
+                     [src]="shot(s.shot)" width="1040" height="2203" loading="lazy" decoding="async"
+                     [alt]="i18n.t(s.arT, s.enT)">
+              }
+            </div>
+            <ol class="tour__dots" [attr.aria-label]="i18n.t('خطوات الجولة', 'Tour steps')">
+              @for (s of tour; track s.shot; let i = $index) {
+                <li><span class="tour__dot" [class.is-active]="i === active()"></span></li>
+              }
+            </ol>
+          </div>
+
+          <ol class="tour__steps">
+            @for (s of tour; track s.shot; let i = $index) {
+              <li class="tour__step" [class.is-active]="i === active()"
+                  [appScrollStep]="i" (stepEnter)="active.set($event)">
+                <span class="tour__index">{{ '0' + (i + 1) }}</span>
+                <span class="tour__icon"><svg class="ico" aria-hidden="true"><use [attr.href]="'#i-' + s.icon"/></svg></span>
+                <h3>{{ i18n.t(s.arT, s.enT) }}</h3>
+                <p>{{ i18n.t(s.arD, s.enD) }}</p>
+                <!-- Mobile only: the sticky stage collapses, so each step carries
+                     its own frame instead of pointing at one that isn't there. -->
+                <img class="tour__inline" [src]="shot(s.shot)" width="1040" height="2203"
+                     loading="lazy" decoding="async" alt="">
+              </li>
+            }
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ What it finds ══ -->
+    <section class="section" id="finds">
+      <div class="container">
+        <div class="section-head" appReveal>
+          <span class="eyebrow">{{ i18n.t('ما الذي يجده', 'What it finds') }}</span>
+          <h2>{{ i18n.t('ثماني فئات من الفوضى', 'Eight kinds of clutter') }}</h2>
+          <p>{{ i18n.t('فحص واحد يفرز مكتبتك كلها إلى فئات واضحة، كلٌّ منها بحجمها بالميغابايت.', 'One scan sorts your whole library into clear categories, each with its size on disk.') }}</p>
+        </div>
+        <ul class="finds">
+          @for (c of categories; track c.en; let i = $index) {
+            <li class="find" [appReveal]="i * 50" appSpotlight>
+              <span class="find__icon"><svg class="ico" aria-hidden="true"><use [attr.href]="'#i-' + c.icon"/></svg></span>
+              <h3>{{ i18n.t(c.ar, c.en) }}</h3>
+              <p>{{ i18n.t(c.arD, c.enD) }}</p>
             </li>
           }
         </ul>
       </div>
     </section>
 
-    <!-- Features -->
-    <section class="section" id="features">
+    <!-- ══ Features ══ -->
+    <section class="section section--alt" id="features">
       <div class="container">
         <div class="section-head" appReveal>
           <span class="eyebrow">{{ i18n.t('المميزات', 'Features') }}</span>
-          <h2>{{ i18n.t('كل ما تحتاجه لتنظيف جهازك', 'Everything you need to clean up') }}</h2>
+          <h2>{{ i18n.t('أكثر بكثير من حذف المكرر', 'Far more than a duplicate finder') }}</h2>
           <p>{{ i18n.t('أدوات قوية، بواجهة بسيطة، وخصوصية كاملة.', 'Powerful tools, a simple interface, and full privacy.') }}</p>
         </div>
         <div class="features__grid">
-          <!-- Real-screenshot anchor cell grounds the grid in the actual app -->
+          <!-- Anchor cell: a real frame keeps the grid honest -->
           <figure class="feature-media" [appReveal]="0">
-            <img [src]="'screens/home_' + shotLang() + '.png'"
-                 [alt]="i18n.t('واجهة CleanSpace الرئيسية', 'The CleanSpace home screen')" loading="lazy">
-            <figcaption>{{ i18n.t('لوحة واحدة تدير مساحتك كلها', 'One dashboard for all your space') }}</figcaption>
+            <img [src]="shot('albums')" width="1040" height="2203" loading="lazy" decoding="async"
+                 [alt]="i18n.t('شاشة الألبومات في CleanSpace', 'The CleanSpace albums screen')">
+            <figcaption>{{ i18n.t('ألبوماتك مرتّبة حسب الحجم', 'Your albums, sorted by weight') }}</figcaption>
           </figure>
           @for (f of features; track f.enT) {
-            <div class="feature" [appReveal]="($index + 1) * 60" appSpotlight>
+            <div class="feature" [appReveal]="($index + 1) * 50" appSpotlight>
               <span class="feature__icon"><svg class="ico" aria-hidden="true"><use [attr.href]="'#i-' + f.icon"/></svg></span>
               <h3>{{ i18n.t(f.arT, f.enT) }}</h3>
               <p>{{ i18n.t(f.arD, f.enD) }}</p>
@@ -125,7 +288,25 @@ interface Plan {
       </div>
     </section>
 
-    <!-- How it works -->
+    <!-- ══ Screen ribbon ══ -->
+    <section class="section--tight ribbon-section" id="screens" aria-labelledby="ribbon-title">
+      <div class="container">
+        <div class="section-head" appReveal>
+          <span class="eyebrow">{{ i18n.t('من داخل التطبيق', 'Inside the app') }}</span>
+          <h2 id="ribbon-title">{{ i18n.t('تصميم بسيط، نتائج واضحة', 'Simple design, clear results') }}</h2>
+        </div>
+      </div>
+      <!-- Decorative: the same frames already appear, captioned, in the tour above. -->
+      <div class="ribbon" aria-hidden="true">
+        <div class="ribbon__track">
+          @for (s of ribbonLoop; track $index) {
+            <img class="ribbon__shot" [src]="shot(s)" width="1040" height="2203" loading="lazy" decoding="async" alt="">
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ How it works ══ -->
     <section class="section section--alt" id="how">
       <div class="container">
         <div class="section-head" appReveal>
@@ -148,29 +329,8 @@ interface Plan {
       </div>
     </section>
 
-    <!-- Screenshot showcase -->
-    <section class="section" id="screens">
-      <div class="container">
-        <div class="section-head" appReveal>
-          <span class="eyebrow">{{ i18n.t('من داخل التطبيق', 'Inside the app') }}</span>
-          <h2>{{ i18n.t('تصميم بسيط، نتائج واضحة', 'Simple design, clear results') }}</h2>
-          <p>{{ i18n.t('لقطات حقيقية من CleanSpace.', 'Real screenshots from CleanSpace.') }}</p>
-        </div>
-        <div class="showcase">
-          @for (s of shots; track s.name; let i = $index) {
-            <figure class="shot rv-scale" [class.shot--featured]="i === 1" [appReveal]="i * 120">
-              <div class="shot__device">
-                <img [src]="'screens/' + s.name + '_' + shotLang() + '.png'" [alt]="i18n.t(s.ar, s.en)" loading="lazy">
-              </div>
-              <figcaption class="shot__cap">{{ i18n.t(s.ar, s.en) }}</figcaption>
-            </figure>
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- Privacy -->
-    <section class="section section--alt privacy" id="privacy-highlight">
+    <!-- ══ Privacy ══ -->
+    <section class="section privacy" id="privacy-highlight">
       <div class="container">
         <div class="privacy__grid">
           <div class="privacy__lead" appReveal>
@@ -199,25 +359,35 @@ interface Plan {
       </div>
     </section>
 
-    <!-- Plans -->
-    <section class="section" id="plans">
+    <!-- ══ Plans ══ -->
+    <section class="section section--alt" id="plans">
       <div class="container">
         <div class="section-head" appReveal>
           <span class="eyebrow">{{ i18n.t('الأسعار', 'Pricing') }}</span>
           <h2>{{ i18n.t('اختر خطتك', 'Choose your plan') }}</h2>
-          <p>{{ i18n.t('افحص مجاناً، واشترك للتنظيف. ألغِ في أي وقت.', 'Scan for free, subscribe to clean. Cancel anytime.') }}</p>
+          <p>{{ i18n.t('ابدأ بـ٧ أيام مجاناً على الخطة الأسبوعية، أو افحص وحرّر أول ١٠٠ ميغابايت بلا أي اشتراك.', 'Start with 7 days free on the weekly plan, or scan and clear your first 100 MB with no subscription at all.') }}</p>
         </div>
         <div class="plans__grid">
           @for (p of plans; track p.enName) {
             <div class="plan" [class.plan--featured]="p.featured" [appReveal]="$index * 90" appSpotlight>
               @if (p.featured) { <div class="plan__badge">{{ i18n.t('الأكثر شيوعًا', 'Most popular') }}</div> }
               <div class="plan__name">{{ i18n.t(p.arName, p.enName) }}</div>
+              @if (p.trial) {
+                <span class="plan__trial">{{ i18n.t('٧ أيام مجاناً', '7 days free') }}</span>
+              }
               <div class="plan__price">
                 @if (p.wasPrice) {
                   <s class="plan__was" [attr.aria-label]="i18n.t('السعر قبل الخصم', 'Regular price')">{{ p.wasPrice }}</s>
                 }
+                @if (p.trial) { <small class="plan__then">{{ i18n.t('ثم', 'then') }}</small> }
                 <b>{{ p.price }}</b><span>{{ i18n.t(p.arPer, p.enPer) }}</span>
               </div>
+              @if (p.trial) {
+                <!-- Apple grants an introductory offer once per subscription group per
+                     account, so a returning subscriber will not see the trial. Saying so
+                     here is what keeps the headline from being a promise we can't keep. -->
+                <span class="plan__fine">{{ i18n.t('تجربة واحدة لكل حساب Apple', 'One trial per Apple account') }}</span>
+              }
               @if (p.arTag) { <span class="eyebrow">{{ i18n.t(p.arTag, p.enTag!) }}</span> }
               <ul class="plan__list">
                 @for (feat of proFeatures; track feat.en) {
@@ -229,7 +399,7 @@ interface Plan {
                  target="_blank"
                  rel="noopener noreferrer"
                  (click)="analytics.downloadClick('plans_' + p.enName.toLowerCase().replace(' ', '_'))">
-                {{ i18n.t('اشترك', 'Subscribe') }}
+                {{ p.trial ? i18n.t('جرّبه مجاناً', 'Try it free') : i18n.t('اشترك', 'Subscribe') }}
               </a>
             </div>
           }
@@ -238,43 +408,65 @@ interface Plan {
           {{ i18n.t(
             'الأسعار توضيحية وتُعرض بعملتك داخل التطبيق. خطتا الأسبوع والسنة اشتراكان يتجدّدان تلقائياً ما لم يتم إيقاف التجديد قبل ٢٤ ساعة من نهاية الفترة، أما «مدى الحياة» فهي عملية شراء واحدة بلا تجديد. يُحصَّل المبلغ من حساب Apple، ويمكن إدارة الاشتراك أو إلغاؤه من إعدادات الـ App Store.',
             'Prices are illustrative and shown in your currency inside the app. The weekly and yearly plans are subscriptions that renew automatically unless auto-renew is turned off at least 24 hours before the period ends; Lifetime is a one-time purchase with no renewal. Payment is charged to your Apple account, and you can manage or cancel from your App Store settings.') }}
+          {{ i18n.t(
+            'تنطبق تجربة الـ٧ أيام المجانية على الخطة الأسبوعية فقط، وهي متاحة مرة واحدة لكل حساب Apple. تتحوّل تلقائياً إلى اشتراك أسبوعي مدفوع ما لم يتم الإلغاء قبل ٢٤ ساعة على الأقل من انتهائها، ويسقط الجزء غير المستخدم منها عند شراء أي اشتراك.',
+            'The 7-day free trial applies to the weekly plan only and is available once per Apple account. It converts to a paid weekly subscription unless you cancel at least 24 hours before it ends, and any unused portion is forfeited when you purchase a subscription.') }}
         </p>
       </div>
     </section>
 
-    <!-- Free vs Pro comparison -->
-    <section class="section section--alt" id="compare">
+    <!-- ══ Free vs Pro ══ -->
+    <section class="section" id="compare">
       <div class="container">
         <div class="section-head" appReveal>
           <span class="eyebrow">{{ i18n.t('المقارنة', 'Compare') }}</span>
           <h2>{{ i18n.t('المجاني مقابل Pro', 'Free vs Pro') }}</h2>
-          <p>{{ i18n.t('افحص وحلّل مجاناً. افتح التنظيف الكامل مع Pro.', 'Scan and analyze for free. Unlock full cleaning with Pro.') }}</p>
+          <p>{{ i18n.t('افحص وحلّل مجاناً. افتح التنظيف بلا حدود مع Pro.', 'Scan and analyze for free. Unlock unlimited cleaning with Pro.') }}</p>
         </div>
-        <div class="compare" appReveal>
-          <div class="compare__head">
-            <span>{{ i18n.t('الميزة', 'Feature') }}</span>
-            <span>{{ i18n.t('مجاني', 'Free') }}</span>
-            <span class="compare__pro">Pro</span>
-          </div>
-          @for (row of compare; track row.en) {
-            <div class="compare__row">
-              <span class="compare__label">{{ i18n.t(row.ar, row.en) }}</span>
-              <span class="compare__cell" [class.compare__cell--no]="!row.free">
-                <span aria-hidden="true">{{ row.free ? '✓' : '—' }}</span>
-                <span class="sr-only">{{ row.free ? i18n.t('نعم', 'Yes') : i18n.t('لا', 'No') }}</span>
-              </span>
-              <span class="compare__cell compare__cell--yes">
-                <span aria-hidden="true">✓</span>
-                <span class="sr-only">{{ i18n.t('نعم', 'Yes') }}</span>
-              </span>
-            </div>
-          }
-        </div>
+        <!-- A real table, not a grid of spans: the rows are tabular data, and
+             letting the cells carry the Pro column's tint means the highlight
+             cannot drift out of alignment with the ticks the way an absolutely
+             positioned overlay did. -->
+        <table class="compare" appReveal>
+          <thead>
+            <tr>
+              <th scope="col" class="compare__h">{{ i18n.t('الميزة', 'Feature') }}</th>
+              <th scope="col" class="compare__h compare__h--free">{{ i18n.t('مجاني', 'Free') }}</th>
+              <th scope="col" class="compare__h compare__h--pro">Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of compare; track row.en) {
+              <tr>
+                <th scope="row" class="compare__label">{{ i18n.t(row.ar, row.en) }}</th>
+                <td class="compare__cell" [class.compare__cell--no]="!row.free">
+                  @if (row.freeNoteEn) {
+                    <span class="compare__cap">{{ i18n.t(row.freeNoteAr!, row.freeNoteEn) }}</span>
+                  } @else if (row.free) {
+                    <svg class="compare__tick" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M20 6.5 9.4 17 4 11.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="sr-only">{{ i18n.t('نعم', 'Yes') }}</span>
+                  } @else {
+                    <span class="compare__dash" aria-hidden="true"></span>
+                    <span class="sr-only">{{ i18n.t('لا', 'No') }}</span>
+                  }
+                </td>
+                <td class="compare__cell compare__cell--pro">
+                  <svg class="compare__tick" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 6.5 9.4 17 4 11.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="sr-only">{{ i18n.t('نعم', 'Yes') }}</span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="section" id="faq">
+    <!-- ══ FAQ ══ -->
+    <section class="section section--alt" id="faq">
       <div class="container container--narrow">
         <div class="section-head" appReveal>
           <span class="eyebrow">{{ i18n.t('الأسئلة الشائعة', 'FAQ') }}</span>
@@ -294,7 +486,7 @@ interface Plan {
       </div>
     </section>
 
-    <!-- CTA band -->
+    <!-- ══ CTA band ══ -->
     <section class="section--tight">
       <div class="container">
         <div class="cta-band" appReveal>
@@ -320,13 +512,82 @@ interface Plan {
 export class HomeComponent {
   i18n = inject(I18n);
   readonly analytics = inject(GoogleAnalyticsService);
+  private readonly theme = inject(Theme);
   readonly APP_STORE_URL = APP_STORE_URL;
   lang = this.i18n.lang;
   shotLang = this.i18n.shotLang;
 
-  // Honest trust signals — reuses strings already in the translation catalog, so all
-  // 21 languages are covered with no new translation work. (No fabricated reviews:
-  // a real ratings/testimonials section belongs post-launch with genuine App Store data.)
+  /** Which tour beat the sticky device is showing. */
+  readonly active = signal(0);
+
+  /** Bumped to replay the duplicate-stack animation. */
+  readonly run = signal(0);
+  replay(): void {
+    this.run.update((v) => v + 1);
+  }
+
+  /**
+   * The five cards. `slot` is the fan position (the stylesheet turns it into an
+   * offset and a rotation), `i` staggers the entrance. The middle card is the
+   * keeper — centre is where the eye already is when the fan opens.
+   *
+   * `z` stacks the fan from the centre outwards. DOM order alone would paint
+   * each card over the one to its left, which buries the left-hand cards'
+   * corner marks; a card's own transform makes it a stacking context, so the
+   * marks cannot be lifted out from inside.
+   */
+  readonly deck = [
+    { slot: -2, i: 0, keep: false, z: 1 },
+    { slot: -1, i: 1, keep: false, z: 2 },
+    { slot: 0, i: 2, keep: true, z: 3 },
+    { slot: 1, i: 3, keep: false, z: 2 },
+    { slot: 2, i: 4, keep: false, z: 1 },
+  ];
+
+  /**
+   * Which capture is on screen, as a `<lang>-<scheme>` key.
+   *
+   * The phones follow the site's theme, so a light page shows the app in light
+   * mode. Reading `Theme.scheme` rather than a media query is deliberate: it
+   * already resolves the header toggle's explicit choice over the OS one, which
+   * a `prefers-color-scheme` source in a <picture> could not do.
+   *
+   * Not every language has both captures — SCREEN_VARIANTS says which were
+   * built, and anything missing falls back to the first that was.
+   */
+  private readonly variant = computed(() => {
+    const lang = this.shotLang();
+    const built = SCREEN_VARIANTS[lang] ?? ['dark'];
+    const wanted = this.theme.scheme();
+    const scheme = built.includes(wanted) ? wanted : built[0];
+    return { lang, scheme, key: `${lang}-${scheme}` };
+  });
+
+  /** Resolves a screen name to the frame built by scripts/build-screens.py. */
+  shot(name: string): string {
+    const { lang, scheme } = this.variant();
+    return `screens/${name}_${lang}_${scheme}.webp`;
+  }
+
+  /**
+   * The figures on the hero's floating chips.
+   *
+   * The chips magnify numbers printed on the frame behind them, and all four
+   * captures came from different scan runs — so the figures have to follow the
+   * exact frame being shown, not just its language. They are keyed off the same
+   * `variant()` the image src is, which is what stops the two drifting.
+   */
+  private static readonly HERO_FIGURES: Record<string, { freed: string; duplicates: string }> = {
+    'en-dark': { freed: '2.07 GB', duplicates: '241' },
+    'en-light': { freed: '1.53 GB', duplicates: '106' },
+    'ar-dark': { freed: '1.53 GB', duplicates: '109' },
+    'ar-light': { freed: '1.53 GB', duplicates: '109' },
+  };
+  readonly heroFigures = computed(
+    () => HomeComponent.HERO_FIGURES[this.variant().key] ?? HomeComponent.HERO_FIGURES['en-dark'],
+  );
+
+  // Honest trust signals — no invented ratings or download counts.
   trust = [
     { ar: 'خصوصية كاملة', en: 'Full privacy' },
     { ar: 'بدون إنترنت', en: 'Works offline' },
@@ -334,15 +595,78 @@ export class HomeComponent {
     { ar: 'بـ 21 لغة', en: 'In 21 languages' },
   ];
 
+  /** The eight categories the app's own home screen lists after a scan. */
+  categories = [
+    { icon: 'dup', ar: 'الصور المكررة', en: 'Duplicate photos', arD: 'نسخ متطابقة تماماً — نجمعها ونختار الأفضل تلقائياً.', enD: 'Byte-for-byte copies, grouped with the best one picked for you.' },
+    { icon: 'review', ar: 'الصور المتشابهة', en: 'Similar photos', arD: 'لقطات متقاربة لنفس المشهد، مرتّبة في مجموعات.', enD: 'Near-identical shots of the same moment, sorted into groups.' },
+    { icon: 'burst', ar: 'اللقطات المتتابعة', en: 'Burst photos', arD: 'سلاسل الـ Burst الطويلة — احتفظ بواحدة واحذف الباقي.', enD: 'Long burst sequences — keep one, clear the rest.' },
+    { icon: 'blur', ar: 'الصور غير الواضحة', en: 'Blurry photos', arD: 'الصور المهزوزة أو الخارجة عن التركيز.', enD: 'Shaky or out-of-focus shots you meant to delete.' },
+    { icon: 'screenshot', ar: 'السكرينشوت', en: 'Screenshots', arD: 'لقطات الشاشة القديمة التي تراكمت لسنوات.', enD: 'Old screen grabs that piled up over the years.' },
+    { icon: 'video', ar: 'الفيديوهات الكبيرة', en: 'Large videos', arD: 'أثقل الفيديوهات في مكتبتك، مرتّبة حسب الحجم.', enD: 'Your heaviest videos, sorted biggest first.' },
+    { icon: 'video-dup', ar: 'الفيديوهات المتشابهة', en: 'Similar videos', arD: 'مقاطع مكررة أو متقاربة تحتل مساحة مضاعفة.', enD: 'Duplicate or near-identical clips taking up double the space.' },
+    { icon: 'file-large', ar: 'ملفات كبيرة أخرى', en: 'Other large files', arD: 'كل ما تبقّى من ملفات ثقيلة تستحق المراجعة.', enD: 'Everything else that’s heavy enough to be worth a look.' },
+  ];
+
+  /** Sticky tour. Each `shot` must exist as public/screens/<shot>_{ar,en}.webp. */
+  tour: TourStep[] = [
+    {
+      shot: 'home', icon: 'scan',
+      arT: 'افحص مكتبتك كلها', enT: 'Scan your whole library',
+      arD: 'فحص واحد يقيس كل صورة وفيديو على جهازك ويخبرك كم غيغابايت يمكن تحريرها — قبل أن تحذف أي شيء.',
+      enD: 'One scan measures every photo and video on your device and tells you how many gigabytes you can reclaim — before you delete anything.',
+    },
+    {
+      shot: 'duplicates', icon: 'dup',
+      arT: 'المكرر مجمّع ومُختار مسبقاً', enT: 'Duplicates, grouped and pre-picked',
+      arD: 'كل مجموعة تعرض عدد النسخ وحجمها، مع شارة «الأفضل» على الصورة التي ننصح بالاحتفاظ بها. حدّد الكل بضغطة.',
+      enD: 'Every group shows how many copies it holds and what they weigh, with a “Best” badge on the one worth keeping. Select them all in a tap.',
+    },
+    {
+      shot: 'swipe', icon: 'swipe',
+      arT: 'راجع بالسحب', enT: 'Review by swiping',
+      arD: 'وضع السحب يعرض صورة واحدة في كل مرة: اسحب يميناً للاحتفاظ، يساراً للحذف. كل ما تحذفه يمرّ بسلة مؤقتة أولاً.',
+      enD: 'Swipe mode shows one photo at a time: right to keep, left to delete. Everything you remove lands in a trash bin first.',
+    },
+    {
+      shot: 'video', icon: 'video',
+      arT: 'اضغط الفيديو دون أن تفقده', enT: 'Compress video without losing it',
+      arD: 'نعرض لك كم ستوفّر من كل مقطع قبل الضغط — غالباً عشرات الميغابايت للفيديو الواحد، بنفس المشهد.',
+      enD: 'We show what each clip will save before you compress it — often tens of megabytes per video, same footage.',
+    },
+    {
+      shot: 'vault', icon: 'vault',
+      arT: 'اخفِ ما هو خاص', enT: 'Hide what’s private',
+      arD: 'الخزنة السرية تنقل الصور خارج تطبيق الصور وتقفلها برمز أو Face ID، مشفّرة على جهازك وحده.',
+      enD: 'The Secret Vault moves photos out of the Photos app and locks them behind a passcode or Face ID, encrypted on your device alone.',
+    },
+    {
+      shot: 'memories', icon: 'memory',
+      arT: 'نظّف ذكرياتك وأنت تتصفّحها', enT: 'Clean your memories as you browse',
+      arD: '«في مثل هذا اليوم» تعيد لك صور السنوات الماضية، وتخبرك كم نسخة متشابهة فيها يمكن حذفها فوراً.',
+      enD: '“On This Day” brings back photos from past years — and tells you how many look-alikes in them you can clear on the spot.',
+    },
+  ];
+
+  /** Decorative ribbon; order is chosen for visual variety, not meaning. */
+  private readonly ribbon = [
+    'categories', 'similar', 'contacts', 'albums', 'widgets',
+    'history', 'files', 'live', 'settings', 'blurry',
+  ];
+  /** Two passes back to back — the marquee translates by exactly half the track,
+   *  which only loops seamlessly if the second half repeats the first. */
+  readonly ribbonLoop = [...this.ribbon, ...this.ribbon];
+
   features: Feature[] = [
-    { icon: 'dup', arT: 'صور مكررة ومتشابهة', enT: 'Duplicates & look-alikes', arD: 'نعثر على النسخ المتطابقة والمتشابهة ونحذفها بضغطة.', enD: 'We find identical and similar photos and remove them in a tap.' },
-    { icon: 'video', arT: 'ضغط الفيديو', enT: 'Video compression', arD: 'صغّر الفيديوهات وحوّل الصور الحية لصور ثابتة لتوفير مساحة.', enD: 'Shrink videos and convert Live Photos to stills to save space.' },
-    { icon: 'swipe', arT: 'وضع السحب', enT: 'Swipe mode', arD: 'راجع صورك بسرعة — اسحب للاحتفاظ أو الحذف.', enD: 'Review fast — swipe to keep or delete.' },
-    { icon: 'contacts', arT: 'جهات الاتصال المكررة', enT: 'Duplicate contacts', arD: 'ادمج جهات الاتصال المكررة مع الاحتفاظ بكل الأرقام والتفاصيل.', enD: 'Merge duplicate contacts while keeping every number and detail.' },
-    { icon: 'files', arT: 'الملفات والوثائق', enT: 'Files & documents', arD: 'اعثر على أكبر الملفات وملفات PDF والفيديو ونظّفها.', enD: 'Find your largest files, PDFs and videos, and clear them.' },
-    { icon: 'screenshot', arT: 'منظّف السكرينشوت', enT: 'Screenshot cleaner', arD: 'اكتشف السكرينشوت القديمة واحذفها دفعة واحدة.', enD: 'Spot old screenshots and clear them in bulk.' },
-    { icon: 'vault', arT: 'الخزنة الخاصة', enT: 'Private vault', arD: 'صور محمية برمز PIN أو Face ID ومشفّرة على جهازك.', enD: 'Photos locked with a PIN or Face ID, encrypted on-device.' },
-    { icon: 'widget', arT: 'ويدجت الشاشة الرئيسية', enT: 'Home Screen widgets', arD: 'شاهد المساحة والبطارية بنظرة من شاشتك الرئيسية.', enD: 'See storage and battery at a glance from your Home Screen.' },
+    { icon: 'swipe', arT: 'وضع السحب', enT: 'Swipe mode', arD: 'راجع صورك بسرعة — اسحب للاحتفاظ أو الحذف، مع سلة تراجع.', enD: 'Review fast — swipe to keep or delete, with an undo bin.' },
+    { icon: 'vault', arT: 'الخزنة السرية', enT: 'Secret Vault', arD: 'صور محمية برمز أو Face ID ومشفّرة على جهازك.', enD: 'Photos locked with a passcode or Face ID, encrypted on-device.' },
+    { icon: 'contacts', arT: 'جهات الاتصال والنسخ الاحتياطي', enT: 'Contacts & backup', arD: 'ادمج المكرر، أكمل الناقص، واحتفظ بنسخة قبل أي تعديل.', enD: 'Merge duplicates, complete partial cards, and back up before any change.' },
+    { icon: 'files', arT: 'الملفات والوثائق', enT: 'Files & documents', arD: 'افحص أي مجلد في «الملفات» ورتّب PDF والفيديو والصور حسب الحجم.', enD: 'Scan any folder in Files and rank PDFs, videos and images by size.' },
+    { icon: 'album', arT: 'ألبومات ومجموعات ذكية', enT: 'Albums & smart collections', arD: 'يجمع صورك في مجموعات كالأشخاص والطبيعة والسفر — واحفظها كألبوم.', enD: 'Groups your photos into collections like People, Nature and Travel — save any as an album.' },
+    { icon: 'video', arT: 'ضغط وتحويل الوسائط', enT: 'Compress & convert', arD: 'صغّر الفيديو، وحوّل الصور الحية إلى صور ثابتة بضغطة.', enD: 'Shrink videos and convert Live Photos into stills in a tap.' },
+    { icon: 'memory', arT: 'في مثل هذا اليوم', enT: 'On This Day', arD: 'ذكريات السنوات الماضية، مع اقتراح ما يمكن تنظيفه منها.', enD: 'Memories from past years, with a suggestion of what to clean in them.' },
+    { icon: 'chart', arT: 'سجلّ التنظيف', enT: 'Cleaning history', arD: 'تتبّع كل ميغابايت حرّرته، بمخطط لآخر ١٤ يوماً.', enD: 'Track every megabyte you’ve freed, charted over the last 14 days.' },
+    { icon: 'widget', arT: 'ويدجت الشاشة الرئيسية', enT: 'Home Screen widgets', arD: 'المساحة والبطارية بنظرة واحدة، بخمس ثيمات ألوان.', enD: 'Storage and battery at a glance, in five colour themes.' },
+    { icon: 'bell', arT: 'تذكير بالتنظيف', enT: 'Cleanup reminders', arD: 'تنبيه أسبوعي أو شهري — أو أوقفه تماماً.', enD: 'A weekly or monthly nudge — or none at all.' },
     { icon: 'globe', arT: 'بـ 21 لغة', enT: 'In 21 languages', arD: 'واجهة كاملة بلغتك — بما فيها الكردية والعربية والفارسية.', enD: 'A fully localized interface in your language — including Kurdish, Arabic and Persian.' },
     { icon: 'shield', arT: 'خصوصية كاملة', enT: 'Full privacy', arD: 'كل المعالجة على جهازك — لا يُرفع أي شيء إلى أي خادم.', enD: 'Everything runs on-device — nothing is uploaded anywhere.' },
   ];
@@ -360,55 +684,25 @@ export class HomeComponent {
     { icon: 'lock', arT: 'خزنة مشفّرة', enT: 'Encrypted vault', arD: 'صورك الخاصة محمية بـ Face ID ومشفّرة على جهازك.', enD: 'Private photos are locked with Face ID and encrypted on-device.' },
   ];
 
-  compare = [
+  /**
+   * `freeNote*` renders instead of a ✓/— where the free tier is real but capped —
+   * a plain ✗ next to "delete duplicates" would understate what Free actually does
+   * (FreeQuotaService grants a lifetime 100 MB allowance and 10 vault items).
+   */
+  compare: { ar: string; en: string; free: boolean; freeNoteAr?: string; freeNoteEn?: string }[] = [
     { ar: 'فحص التخزين وتحليل المكتبة', en: 'Storage scan & library analysis', free: true },
     { ar: 'اكتشاف المكرر والمتشابه', en: 'Find duplicates & look-alikes', free: true },
-    { ar: 'حذف المكرر والمتشابه', en: 'Delete duplicates & look-alikes', free: false },
+    { ar: 'حذف المكرر والمتشابه', en: 'Delete duplicates & look-alikes', free: true, freeNoteAr: 'أول ١٠٠ م.ب', freeNoteEn: 'First 100 MB' },
+    { ar: 'الخزنة السرية المشفّرة', en: 'Encrypted Secret Vault', free: true, freeNoteAr: '١٠ عناصر', freeNoteEn: '10 items' },
     { ar: 'ضغط الفيديو وتحويل الصور الحية', en: 'Video compression & Live→Still', free: false },
-    { ar: 'الخزنة الخاصة المشفّرة', en: 'Encrypted private vault', free: false },
     { ar: 'دمج جهات الاتصال المكررة', en: 'Merge duplicate contacts', free: false },
+    { ar: 'تنظيف بلا حدود', en: 'Unlimited cleaning', free: false },
     { ar: 'بدون إعلانات', en: 'No ads', free: false },
     { ar: 'دعم بأولوية', en: 'Priority support', free: false },
   ];
 
-  faq = [
-    {
-      arQ: 'هل تُرفع صوري إلى الإنترنت؟',
-      enQ: 'Are my photos uploaded to the internet?',
-      arA: 'لا. كل الفحص والحذف يتم على جهازك بالكامل، ويعمل التطبيق حتى بدون اتصال. لا نرفع صورك ولا نراها إطلاقاً.',
-      enA: 'No. All scanning and deleting happen entirely on your device, and the app works even offline. We never upload or see your photos.',
-    },
-    {
-      arQ: 'ماذا أحصل عليه مجاناً؟',
-      enQ: 'What do I get for free?',
-      arA: 'الفحص الكامل وتحليل المكتبة واكتشاف المكرر والمتشابه مجاني. أما الحذف بالجملة وضغط الفيديو والخزنة فتُفتح مع Pro.',
-      enA: 'A full scan, library analysis, and finding duplicates & look-alikes are free. Bulk deleting, video compression and the vault unlock with Pro.',
-    },
-    {
-      arQ: 'ما الفرق بين الأسبوعي والسنوي ومدى الحياة؟',
-      enQ: 'What’s the difference between Weekly, Yearly and Lifetime?',
-      arA: 'الأسبوعي والسنوي اشتراكان يتجدّدان تلقائياً، والسنوي أوفر بكثير. «مدى الحياة» عملية شراء واحدة بلا تجديد.',
-      enA: 'Weekly and Yearly are auto-renewing subscriptions, with Yearly far cheaper over time. Lifetime is a single one-time purchase with no renewal.',
-    },
-    {
-      arQ: 'هل هناك تجربة مجانية؟',
-      enQ: 'Is there a free trial?',
-      arA: 'لا توجد فترة تجريبية، لكن يمكنك الفحص والتحليل مجاناً قبل الاشتراك لترى كم مساحة يمكنك تحريرها.',
-      enA: 'There’s no trial period, but you can scan and analyze for free before subscribing to see exactly how much space you can reclaim.',
-    },
-    {
-      arQ: 'هل يمكنني الإلغاء في أي وقت؟',
-      enQ: 'Can I cancel anytime?',
-      arA: 'نعم. تُدار الاشتراكات من إعدادات الـ App Store، ويمكنك إيقاف التجديد في أي وقت.',
-      enA: 'Yes. Subscriptions are managed from your App Store settings, and you can turn off renewal at any time.',
-    },
-    {
-      arQ: 'هل الحذف آمن؟ ماذا لو حذفت شيئاً بالخطأ؟',
-      enQ: 'Is deleting safe? What if I remove something by mistake?',
-      arA: 'يمرّ المحذوف عبر ألبوم «المحذوفة مؤخراً» في تطبيق الصور لمدة ٣٠ يوماً، فيمكنك الاستعادة بسهولة.',
-      enA: 'Deleted items pass through the Photos app’s “Recently Deleted” album for 30 days, so you can restore them easily.',
-    },
-  ];
+  /** Shared with StructuredDataService so the FAQPage schema cannot drift. */
+  readonly faq = FAQ;
 
   proFeatures = [
     { ar: 'إزالة غير محدودة للمكرر والمتشابه', en: 'Unlimited duplicate & similar removal' },
@@ -418,17 +712,11 @@ export class HomeComponent {
     { ar: 'دعم بأولوية', en: 'Priority support' },
   ];
 
-  // Matches the app's actual StoreKit products: weekly / yearly / lifetime (NO monthly,
-  // NO free trial). Prices are illustrative (shown per-currency in the App Store).
+  // Matches the app's actual StoreKit products: weekly / yearly / lifetime (NO monthly).
+  // Prices are illustrative (shown per-currency in the App Store).
   plans: Plan[] = [
-    { arName: 'أسبوعي', enName: 'Weekly', price: '$6.99', arPer: '/ أسبوع', enPer: '/ week', featured: true },
+    { arName: 'أسبوعي', enName: 'Weekly', price: '$6.99', arPer: '/ أسبوع', enPer: '/ week', featured: true, trial: true },
     { arName: 'سنوي', enName: 'Yearly', price: '$19.99', wasPrice: '$39.99', arPer: '/ سنة', enPer: '/ year', featured: false, arTag: 'خصم ٥٠٪', enTag: '50% off' },
     { arName: 'مدى الحياة', enName: 'Lifetime', price: '$39.99', arPer: 'دفعة واحدة', enPer: 'one-time', featured: false, arTag: 'أفضل قيمة', enTag: 'Best value' },
-  ];
-
-  shots = [
-    { name: 'settings', ar: 'الإعدادات', en: 'Settings' },
-    { name: 'video', ar: 'ضغط الفيديو', en: 'Video compression' },
-    { name: 'widgets', ar: 'الويدجت', en: 'Widgets' },
   ];
 }
