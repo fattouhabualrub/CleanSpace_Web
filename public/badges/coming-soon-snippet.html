@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<meta charset="utf-8">
+<title>CleanSpace — شارات المتاجر</title>
+<style>
+  body { background:#0F121A; color:#fff; margin:0; min-height:100vh;
+         display:grid; place-items:center;
+         font-family:"SF Arabic","Geeza Pro",-apple-system,system-ui,sans-serif; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ١ · الصفّ — الشارتان جنب بعض، متساويتان بالارتفاع لا بالعرض
+   ═══════════════════════════════════════════════════════════════ */
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ٢ · القاعدة المشتركة — الارتفاع هو اللي بيوحّدهم
+   ═══════════════════════════════════════════════════════════════ */
+.store-badge {
+  display: inline-flex;
+  line-height: 0;
+  position: relative;
+  transition: transform .15s ease, opacity .15s ease;
+}
+.store-badge img { height: 52px; width: auto; display: block; }
+
+/* آبل — فعّالة */
+.store-badge--apple { margin: 5px; }            /* مساحة أبل: ١٠٪ من الارتفاع */
+.store-badge--apple:hover  { transform: translateY(-2px); }
+.store-badge--apple:active { opacity: .82; transform: translateY(0); }
+.store-badge--apple:focus-visible { outline:2px solid #5CC7FA; outline-offset:4px; border-radius:8px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ٣ · جوجل — معطّلة، «قريباً»
+   الشارة رمادية وباهتة عشان تُقرأ كـ«مش جاهزة» قبل ما تُقرأ الكلمة.
+   ═══════════════════════════════════════════════════════════════ */
+.store-badge--soon {
+  margin: 13px;                                  /* مساحة جوجل: ٢٥٪ من الارتفاع */
+  cursor: default;
+  pointer-events: none;                          /* لا تُضغط ولا تُركّز عليها */
+}
+.store-badge--soon img {
+  filter: grayscale(1) brightness(.72);
+  opacity: .55;
+}
+/* شارة «قريباً» — معلّقة على الزاوية العليا، مقروءة بلا ما تغطّي */
+.store-badge--soon::after {
+  content: attr(data-soon);
+  position: absolute;
+  inset-block-start: -9px;
+  inset-inline-end: -6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #2E7FEF;
+  color: #fff;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.45);
+}
+
+/* سطر توضيحي تحت الصفّ — اختياري بس بيمنع سؤال «ليش رمادية؟» */
+.store-note {
+  margin-block-start: 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store-badge { transition: none; }
+  .store-badge:hover { transform: none; }
+}
+</style>
+
+<div>
+  <!-- ══ انسخ من هون ══ -->
+  <div class="store-badges">
+
+    <!-- آبل — فعّالة -->
+    <a class="store-badge store-badge--apple"
+       href="https://apps.apple.com/app/id6790139624"
+       aria-label="حمّل CleanSpace من App Store">
+      <img src="appstore-ar.svg" alt="حمّله من App Store" width="120" height="40">
+    </a>
+
+    <!-- جوجل — معطّلة. span وليس a: ما في رابط يوصل لمكان -->
+    <span class="store-badge store-badge--soon"
+          data-soon="قريباً"
+          role="img"
+          aria-label="Google Play — قريباً">
+      <img src="gplay-ar.png" alt="" width="646" height="250" aria-hidden="true">
+    </span>
+
+  </div>
+  <p class="store-note">نسخة أندرويد قيد التطوير.</p>
+  <!-- ══ لهون ══ -->
+</div>
+</html>

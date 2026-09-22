@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generates sitemap.xml for every prerendered URL: 17 locales × 5 routes.
+ * Generates sitemap.xml for every prerendered URL: 21 locales × 5 routes.
  *
  * Each <url> repeats the full xhtml:link alternate set, matching the hreflang
  * tags in the page head — Google cross-checks the two and ignores annotations

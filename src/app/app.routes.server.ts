@@ -5,7 +5,7 @@ import { LANGUAGES } from './services/i18n';
 const langParams = async () => LANGUAGES.map((l) => ({ lang: l.code }));
 
 /**
- * Prerender every page in every language: 17 locales × 5 routes = 85 static
+ * Prerender every page in every language: 21 locales × 5 routes = 105 static
  * files. The site is fixed marketing copy, so there is nothing per-request to
  * compute, and static output is what the LiteSpeed host can serve.
  *

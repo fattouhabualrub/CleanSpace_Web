@@ -1,105 +1,79 @@
 # CleanSpace — LiteSpeed/Apache rules for the prerendered site.
 #
-# The build emits one static folder per locale/route (/ar/download/index.html …).
-# These rules do three things:
-#   1. 301 the bare root to the visitor's language, from Accept-Language.
-#   2. Serve each prerendered index.html directly — a prefixed URL must return
-#      200 with no redirect chain, or crawlers waste budget and may loop.
-#   3. Fall back to the CSR shell only for URLs with no prerendered file.
+# The build emits one folder per locale/route (/ar/download/index.html …), plus
+# index.csr.html as the client-rendered shell.
+#
+#   1. the bare root 301s to the visitor's language, from Accept-Language
+#   2. a prefixed URL returns its prerendered file at 200, with no redirect chain
+#   3. anything unknown falls back to the shell and routes client-side
+
+# This file must never be downloadable. Most hosts deny .ht* globally, but that
+# isn't guaranteed, and the rules below describe the site's layout.
+<FilesMatch "^\.ht">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_dir.c>
+  # Without this, mod_dir 301s /ar/download to /ar/download/ before the rewrite
+  # below can answer it — a redirect chain on every single page. Off means the
+  # directory's index.html is served straight at the URL that was requested.
+  DirectorySlash Off
+  DirectoryIndex index.html
+</IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # --- 1. Bare root → /<lang>/ -------------------------------------------------
-  # Longest/most specific first; zh-Hans and pt-BR must win over bare zh / pt.
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^zh-Hans [NC,OR]
-  RewriteCond %{HTTP:Accept-Language} ^zh-CN [NC]
+  # --- 1. Bare root → /<lang>/ ------------------------------------------------
+  # Chinese and Portuguese first: their folder names (zh-Hans, zh-Hant, pt-BR) aren't just
+  # the primary subtag, so they can't come from the generic capture below.
+  RewriteCond %{HTTP:Accept-Language} ^zh-(?:TW|HK|Hant) [NC]
+  RewriteRule ^$ /zh-Hant/ [R=301,L]
+
+  RewriteCond %{HTTP:Accept-Language} ^zh [NC]
   RewriteRule ^$ /zh-Hans/ [R=301,L]
 
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^pt-BR [NC]
+  RewriteCond %{HTTP:Accept-Language} ^pt [NC]
   RewriteRule ^$ /pt-BR/ [R=301,L]
 
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^ar [NC]
-  RewriteRule ^$ /ar/ [R=301,L]
+  # The other 18 locales, where the folder name *is* the primary subtag, so the
+  # captured %1 can be reused directly. The trailing (?![a-z]) stops 'ar' from
+  # matching 'arn' and friends.
+  # Deliberately no [NC]: %1 becomes a directory name, and it must keep the
+  # lower-case form the folders use. Browsers send lower-case subtags; anything
+  # unusual just falls through to English below, which is a safe outcome.
+  RewriteCond %{HTTP:Accept-Language} ^(ar|ckb|de|en|es|fa|fr|hi|id|it|ja|ko|nl|pl|ru|tr|ur|vi)(?![a-z])
+  RewriteRule ^$ /%1/ [R=301,L]
 
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^ckb [NC]
-  RewriteRule ^$ /ckb/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^fa [NC]
-  RewriteRule ^$ /fa/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^ur [NC]
-  RewriteRule ^$ /ur/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^de [NC]
-  RewriteRule ^$ /de/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^es [NC]
-  RewriteRule ^$ /es/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^fr [NC]
-  RewriteRule ^$ /fr/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^hi [NC]
-  RewriteRule ^$ /hi/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^id [NC]
-  RewriteRule ^$ /id/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^it [NC]
-  RewriteRule ^$ /it/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^ja [NC]
-  RewriteRule ^$ /ja/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^nl [NC]
-  RewriteRule ^$ /nl/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^ru [NC]
-  RewriteRule ^$ /ru/ [R=301,L]
-
-  RewriteCond %{REQUEST_URI} ^/?$
-  RewriteCond %{HTTP:Accept-Language} ^tr [NC]
-  RewriteRule ^$ /tr/ [R=301,L]
-
-  # Anything else (including en) → English.
+  # Everything else → English.
   RewriteRule ^$ /en/ [R=301,L]
 
   # --- 2. Serve the prerendered file ------------------------------------------
-  # /ar/download → /ar/download/index.html, returned 200 with no further hop.
+  # Real files are served as-is. Directories deliberately are NOT matched here:
+  # letting one through hands it to mod_dir, which 301s /ar/download to
+  # /ar/download/ — a redirect chain on every page. The next rule serves the
+  # directory's index.html directly instead, at 200.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
-  RewriteCond %{REQUEST_FILENAME}/index.html -f
-  RewriteRule ^(.*?)/?$ /$1/index.html [L]
 
-  # --- 3. Unknown URL → CSR shell, which routes client-side ---------------------
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ /index.csr.html [L]
+  # /ar/download → /ar/download/index.html, with or without a trailing slash.
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ /$1/index.html [L]
+
+  # --- 3. Unknown URL → the client-rendered shell -------------------------------
+  # index.html is the shell, copied from index.csr.html by scripts/root-index.mjs.
+  RewriteRule ^ /index.html [L]
 </IfModule>
 
-# Never cache HTML: a stale shell would pin visitors to an old bundle.
 <IfModule mod_headers.c>
+  # HTML must never be cached: a stale shell would pin visitors to an old bundle.
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  # Hashed assets are immutable.
-  <FilesMatch "\-[A-Z0-9]{8}\.(js|css)$">
+  # Hashed assets never change under the same name.
+  <FilesMatch "-[A-Z0-9]{8}\.(js|css)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>

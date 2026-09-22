@@ -4,7 +4,7 @@ import { I18n, Lang } from '../services/i18n';
 import { urlWithLang } from '../services/lang-route';
 
 /**
- * 17-language switcher. A transparent full-size native <select> overlays a styled
+ * 21-language switcher. A transparent full-size native <select> overlays a styled
  * button (flag + endonym), so we get native dropdown UX with our own visible label.
  * Kurdish (ckb) has no emoji flag, so it renders a small inline Kurdistan flag.
  */

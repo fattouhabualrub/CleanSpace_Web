@@ -2,7 +2,8 @@ import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 
 export type Lang =
   | 'ar' | 'en' | 'ckb' | 'de' | 'es' | 'fa' | 'fr' | 'hi' | 'id'
-  | 'it' | 'ja' | 'nl' | 'pt-BR' | 'ru' | 'tr' | 'ur' | 'zh-Hans';
+  | 'it' | 'ja' | 'ko' | 'nl' | 'pl' | 'pt-BR' | 'ru' | 'tr' | 'ur'
+  | 'vi' | 'zh-Hans' | 'zh-Hant';
 
 export interface LangInfo {
   code: Lang;
@@ -33,12 +34,16 @@ export const LANGUAGES: readonly LangInfo[] = [
   { code: 'id', native: 'Bahasa Indonesia', flag: '🇮🇩', rtl: false },
   { code: 'hi', native: 'हिन्दी', flag: '🇮🇳', rtl: false },
   { code: 'ja', native: '日本語', flag: '🇯🇵', rtl: false },
+  { code: 'ko', native: '한국어', flag: '🇰🇷', rtl: false },
+  { code: 'vi', native: 'Tiếng Việt', flag: '🇻🇳', rtl: false },
+  { code: 'pl', native: 'Polski', flag: '🇵🇱', rtl: false },
   { code: 'zh-Hans', native: '简体中文', flag: '🇨🇳', rtl: false },
+  { code: 'zh-Hant', native: '繁體中文', flag: '🇹🇼', rtl: false },
 ];
 
 @Injectable({ providedIn: 'root' })
 export class I18n {
-  /** ar & en are authored inline via t(ar, en); the other 15 come from TRANSLATIONS
+  /** ar & en are authored inline via t(ar, en); the other 19 come from TRANSLATIONS
    *  keyed by the English string, with a graceful fallback to English. */
   readonly languages = LANGUAGES;
 
@@ -53,7 +58,7 @@ export class I18n {
 
   private readonly codes = new Set<Lang>(this.languages.map((l) => l.code));
 
-  /** ar & en ship inline; the 15-language dictionary (~330 kB) is a lazy chunk loaded
+  /** ar & en ship inline; the 19-language dictionary is a lazy chunk loaded
    *  on demand the first time a non-ar/en language is selected. Until then, and as a
    *  fallback for any missing key, t() returns English. */
   private readonly dict = signal<Record<string, Record<string, string>>>({});

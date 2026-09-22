@@ -13,9 +13,8 @@ import { AppStoreBadgeComponent } from './appstore-badge';
         <div class="footer__brandcol">
           <div class="brand"><span class="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path transform="translate(12.8 14.2) scale(1.097) translate(-12 -8.6)" d="M12 2.4c.55 4.35 1.85 5.65 6.2 6.2-4.35.55-5.65 1.85-6.2 6.2-.55-4.35-1.85-5.65-6.2-6.2 4.35-.55 5.65-1.85 6.2-6.2Z"/>
-              <path transform="translate(7.3 8.8) scale(0.597) translate(-12 -8.6)" d="M12 2.4c.55 4.35 1.85 5.65 6.2 6.2-4.35.55-5.65 1.85-6.2 6.2-.55-4.35-1.85-5.65-6.2-6.2 4.35-.55 5.65-1.85 6.2-6.2Z"/>
-              <path transform="translate(14.8 5.2) scale(0.387) translate(-12 -8.6)" d="M12 2.4c.55 4.35 1.85 5.65 6.2 6.2-4.35.55-5.65 1.85-6.2 6.2-.55-4.35-1.85-5.65-6.2-6.2 4.35-.55 5.65-1.85 6.2-6.2Z"/>
+              <path d="M11.26 6.95 A5.68 5.68 0 1 0 16.94 12.63" fill="none" stroke="currentColor" stroke-width="2.39"/>
+              <path fill="currentColor" transform="translate(15.84 8.17) scale(0.605) translate(-12 -8.6)" d="M12 2.4c.55 4.35 1.85 5.65 6.2 6.2-4.35.55-5.65 1.85-6.2 6.2-.55-4.35-1.85-5.65-6.2-6.2 4.35-.55 5.65-1.85 6.2-6.2Z"/>
             </svg>
           </span> CleanSpace</div>
           <p class="footer__tagline">

@@ -2,6 +2,7 @@ import { DOCUMENT, Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 import { I18n, LANGUAGES, type Lang } from '../../services/i18n';
+import { OG_IMAGE_PATH } from '../brand';
 import { OG_LOCALE, SEO_COPY } from './seo-copy';
 
 /**
@@ -30,7 +31,7 @@ export class SeoService {
     const lang = this.i18n.lang();
     const copy = SEO_COPY[lang];
     const url = this.pageUrl(lang, path);
-    const image = `${this.site}/og-image.png`;
+    const image = `${this.site}${OG_IMAGE_PATH}`;
 
     this.title.setTitle(copy.title);
 
@@ -100,7 +101,7 @@ export class SeoService {
   }
 
   /**
-   * The full reciprocal hreflang set: every page links to all 17 alternates
+   * The full reciprocal hreflang set: every page links to all 21 alternates
    * including itself, plus x-default. Stale nodes are cleared first so they
    * don't accumulate across client-side navigations.
    */

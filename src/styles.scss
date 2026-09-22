@@ -1,6 +1,10 @@
 /* CleanSpace landing — "Ink & Jade on Paper" (light editorial redesign) */
 
 :root {
+  /* Tells the browser we ship both themes, which stops Chrome/Samsung from
+     force-inverting the page into the muddy auto-dark it used to produce. */
+  color-scheme: light dark;
+
   /* ---- Ink & Jade on Paper : light editorial palette ---- */
   --paper:     #F4F5F2;   /* page background — cool light paper (not warm cream) */
   --surface:   #FFFFFF;   /* cards / panels */
@@ -14,11 +18,14 @@
 
   /* Brand blue (from the CleanSpace logo). Var names kept as --jade* so every
      existing reference remaps in one place; they now hold blue, not green. */
-  --jade:      #2563EB;   /* THE accent — CTA fill + accent text (white-on-blue passes AA) */
-  --jade-2:    #4A90E2;   /* brighter azure — matches the logo; icons / decorative only */
-  --jade-tint: #E8F1FD;   /* light blue wash — tinted pills / surfaces */
+  --jade:      #0069D6;   /* CTA fill + accent text. NOT the raw logo blue: white on #0080FB
+                             is only 3.83:1, below AA. This shade keeps the hue and passes
+                             white-on-blue 5.26, on paper 4.81, on the grey band 4.53. */
+  --jade-2:    #0080FB;   /* the logo blue exactly — decorative use only, never text */
+  --jade-tint: #E4F1FF;   /* light wash of the logo blue — tinted pills / surfaces */
   --amber:     #925B11;   /* rare single warm accent — AA as text on paper (5.2:1) */
-  --brand-grad: linear-gradient(135deg, #5B9BF5, #3E7EDB);  /* logo gradient — brand mark */
+  --brand-grad: #0080FB;  /* the logo is flat now, no gradient — kept as a token so every
+                             brand-mark tile stays in one place */
   --navy:      #232E45;   /* deep slate-navy — the download band */
   --navy-2:    #1B2437;   /* darker navy edge for the band gradient */
 
@@ -38,11 +45,69 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow:    0 18px 40px rgba(20, 30, 46, 0.10);
   --shadow-sm: 0 6px 18px rgba(20, 30, 46, 0.07);
+  --cta-hover:       #0059B8;
+  --nav-bg:          rgba(244, 245, 242, 0.82);
+  --nav-bg-scrolled: rgba(244, 245, 242, 0.92);
+  --badge-soon-bg:   rgba(255, 255, 255, 0.66);
   --font-display: 'Space Grotesk', 'Cairo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Cairo', system-ui, -apple-system, 'Segoe UI', 'Noto Sans',
     'Noto Sans Arabic', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans Devanagari',
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
+
+/* ---- Dark theme ------------------------------------------------------------
+   Only the tokens are redefined — every rule above keeps working unchanged.
+   The palette mirrors the iOS app's dark theme so the site and the app feel
+   like one product. Contrast against the page background:
+     --muted 8.4:1 · --faint 6.1:1 · --accent-2 8.8:1 · white on --jade 4.6:1
+   all at or above WCAG AA.
+
+   Applied from two places, hence the mixin:
+     1. the OS preference, unless the visitor explicitly chose light
+     2. an explicit [data-theme='dark'] set by the header toggle
+   Order matters — an explicit choice must beat the OS.                        */
+@mixin dark-tokens {
+
+  --paper:     #0F1219;   /* page background — matches the app's canvas */
+  --surface:   #171B24;   /* cards / panels */
+  --surface-2: #141821;
+  --band:      #12151D;   /* alternating band — a touch below the page */
+  --ink:       #F3F5F8;   /* primary text */
+  --muted:     #A6AEB9;   /* secondary text */
+  --faint:     #8B939F;   /* tertiary / legal */
+  --line:      #242A35;   /* hairline border */
+  --line-2:    #333A47;   /* stronger divider */
+
+  /* The fill keeps a deep blue so white button text still passes AA; accent
+     *text* gets its own lighter blue, since --jade is too dark to read on the
+     page background. */
+  --jade:      #0A73E8;   /* fill; white on it is 4.6:1 */
+  --jade-2:    #4DA3FF;
+  --jade-tint: rgba(77, 163, 255, 0.14);
+  --amber:     #E3A84E;
+  --navy:      #1A2233;
+  --navy-2:    #10161F;
+
+  --accent-2:  #5CACFF;   /* accent text on dark, 7.85:1 — overrides the light alias */
+
+  /* Shadows read as depth only if they are darker than the surface. */
+  --shadow:    0 18px 40px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.40);
+  --cta-hover:       #2E8AF5;   /* lighter on hover, not darker */
+  --nav-bg:          rgba(15, 18, 25, 0.82);
+  --nav-bg-scrolled: rgba(15, 18, 25, 0.94);
+  --badge-soon-bg:   rgba(255, 255, 255, 0.09);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { @include dark-tokens; }
+}
+:root[data-theme='dark'] { @include dark-tokens; }
+
+/* Keeps native widgets (scrollbars, form controls, the URL bar) in step with
+   the chosen theme rather than the OS one. */
+:root[data-theme='dark']  { color-scheme: dark; }
+:root[data-theme='light'] { color-scheme: light; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -75,9 +140,9 @@ button { font-family: inherit; cursor: pointer; border: none; }
   display: inline-flex; align-items: center; gap: 9px;
   font-family: var(--font-display);
   font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--jade);
+  color: var(--accent-2);
 }
-.eyebrow::before { content: ''; width: 20px; height: 2px; border-radius: 2px; background: var(--jade); }
+.eyebrow::before { content: ''; width: 20px; height: 2px; border-radius: 2px; background: var(--accent-2); }
 
 /* Display headlines — Space Grotesk (Latin) / Cairo (Arabic), solid ink, never gradient */
 h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 700; color: var(--ink); }
@@ -99,13 +164,13 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   font-family: var(--font-display);
   padding: 13px 24px; border-radius: 12px; font-weight: 600; font-size: 15.5px; letter-spacing: 0.005em;
   white-space: nowrap;
-  transition: transform 0.18s var(--ease), box-shadow 0.22s var(--ease), background 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.18s var(--ease), box-shadow 0.22s var(--ease), background-color 0.2s ease, border-color 0.2s ease;
 }
 .btn:hover { transform: translateY(-2px); }
 /* Press feedback: a subtle scale-down so the button feels like it hears the tap. */
 .btn:active { transform: scale(0.97); transition-duration: 0.1s; }
 .btn--primary { background: var(--jade); color: #fff; box-shadow: var(--shadow-sm); }
-.btn--primary:hover { background: #1D4ED8; box-shadow: 0 12px 26px rgba(37, 99, 235, 0.30); }
+.btn--primary:hover { background: var(--cta-hover); box-shadow: 0 12px 26px rgba(37, 99, 235, 0.30); }
 .btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-2); }
 .btn--ghost:hover { border-color: var(--ink); background: var(--surface); }
 .btn--block { width: 100%; }
@@ -113,13 +178,13 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 /* Navbar — clean sticky bar on paper (NOT a floating capsule). Hairline appears on scroll. */
 .nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(244, 245, 242, 0.82);
+  background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(12px);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid transparent;
-  transition: border-color 0.25s ease, background 0.25s ease;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
 }
-.nav--scrolled { background: rgba(244, 245, 242, 0.92); border-bottom-color: var(--line); }
+.nav--scrolled { background: var(--nav-bg-scrolled); border-bottom-color: var(--line); }
 .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 .brand { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); }
 .brand__mark {
@@ -127,7 +192,15 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   background: var(--brand-grad); color: #fff;
   box-shadow: 0 3px 8px rgba(37, 99, 235, 0.30);
 }
-.brand__mark svg { width: 20px; height: 20px; display: block; }
+/* The mark now reproduces the app icon's own composition, padding included,
+   so the artwork fills the tile instead of being inset a second time. */
+.brand__mark svg { width: 100%; height: 100%; display: block; }
+/* One flex item, so .brand's 9px gap doesn't open a space before the colon. */
+.brand__name { white-space: nowrap; }
+/* The full store name is 25 characters; below the tablet breakpoint it wraps and
+   doubles the navbar height, so the wordmark falls back to just "CleanSpace". */
+.brand__suffix { display: none; }
+@media (min-width: 1040px) { .brand__suffix { display: inline; } }
 .nav__links { display: flex; align-items: center; gap: 28px; }
 .nav__links a { position: relative; color: var(--muted); font-weight: 500; font-size: 15px; transition: color 0.15s; }
 .nav__links a::after {
@@ -140,6 +213,27 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 .nav__links a:hover { color: var(--ink); }
 .nav__links a:hover::after { transform: scaleX(1); }
 .nav__actions { display: flex; align-items: center; gap: 12px; }
+
+/* Theme switch — same pill language as .lang-picker, sized to the 44px minimum
+   touch target once padding is counted. */
+.theme-toggle {
+  display: inline-grid; place-items: center;
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s, transform 0.15s var(--ease);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--line-2); }
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.theme-toggle__ic {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 1.9;
+  stroke-linecap: round; stroke-linejoin: round;
+}
 
 /* Language picker: styled label + transparent full-size native <select> overlay. */
 .lang-picker {
@@ -171,7 +265,7 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   color: var(--accent-2); transition: transform 0.2s var(--ease), color 0.15s;
 }
 .lang-picker__chevron svg { width: 15px; height: 15px; display: block; stroke-width: 2.4; }
-.lang-picker:hover .lang-picker__chevron { color: var(--jade); transform: translateY(1px); }
+.lang-picker:hover .lang-picker__chevron { color: var(--accent-2); transform: translateY(1px); }
 .lang-picker__select {
   position: absolute;
   inset: 0;
@@ -186,7 +280,10 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 }
 .lang-picker__select option { color: #111; }
 
-@media (max-width: 760px) { .nav__links { display: none; } }
+/* Measured, not guessed: brand + links + actions need 900px without the name
+   suffix and 1029px with it. The links therefore have to go before 900, not
+   760, or the actions overflow the bar. */
+@media (max-width: 899px) { .nav__links { display: none; } }
 /* On narrow screens, collapse the picker to just the flag (still fully tappable)
    and shrink the nav CTA so brand + picker + button share one row cleanly. */
 @media (max-width: 560px) {
@@ -246,7 +343,7 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 .float-card--b { bottom: 15%; inset-inline-end: -4%; animation-delay: 1.4s; }
 .float-card__ic { width: 32px; height: 32px; padding: 6px; border-radius: 10px; flex-shrink: 0; }
 .float-card__ic--up { color: var(--amber); background: rgba(169, 106, 22, 0.10); }
-.float-card__ic--ok { color: var(--jade); background: var(--jade-tint); }
+.float-card__ic--ok { color: var(--accent-2); background: var(--jade-tint); }
 .float-card__body { display: flex; flex-direction: column; line-height: 1.15; text-align: start; }
 .float-card__body b { font-size: 17px; font-weight: 800; color: var(--ink); direction: ltr; unicode-bidi: isolate; }
 .float-card__body span { font-size: 11.5px; color: var(--muted); }
@@ -299,7 +396,7 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   color: var(--ink); font-size: 14px; font-weight: 600;
   box-shadow: var(--shadow-sm);
 }
-.shot--featured .shot__cap { border-color: var(--jade-2); color: var(--jade); }
+.shot--featured .shot__cap { border-color: var(--jade-2); color: var(--accent-2); }
 @media (max-width: 760px) {
   .showcase { grid-template-columns: 1fr; max-width: 300px; margin: 0 auto; gap: 40px; }
   .shot, .shot--featured { transform: none; }
@@ -344,8 +441,8 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 }
 .feature__icon {
   width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-  margin-bottom: 14px; background: var(--jade-tint); color: var(--jade);
-  transition: transform 0.3s var(--ease), background 0.3s ease, color 0.3s ease;
+  margin-bottom: 14px; background: var(--jade-tint); color: var(--accent-2);
+  transition: transform 0.3s var(--ease), background-color 0.3s ease, color 0.3s ease;
 }
 .feature__icon .ico { width: 23px; height: 23px; }
 .feature:hover .feature__icon { transform: translateY(-1px); background: var(--jade); color: #fff; }
@@ -398,22 +495,25 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   background: var(--jade); color: #fff; font-size: 13px; font-weight: 700;
   padding: 6px 16px; border-radius: 999px; white-space: nowrap;
 }
-.plan__name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--jade); }
+.plan__name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent-2); }
 .plan__price { display: flex; align-items: baseline; gap: 6px; }
 .plan__price b {
   font-family: var(--font-display);
   font-size: 44px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink);
 }
 .plan__price span { color: var(--muted); font-size: 14px; }
+/* Pre-discount price. Muted and smaller so the payable figure stays the one
+   the eye lands on; <s> already announces it as struck to assistive tech. */
+.plan__was { color: var(--faint); font-size: 15px; text-decoration-thickness: 1.5px; }
 .plan__list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
 .plan__list li { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14.5px; }
-.plan__list li::before { content: '✓'; color: var(--jade); font-weight: 800; }
+.plan__list li::before { content: '✓'; color: var(--accent-2); font-weight: 800; }
 .plan__cta { margin-top: auto; }
 /* Visual hierarchy: only the featured plan gets a solid jade CTA; others are outline. */
 .plan:not(.plan--featured) .plan__cta {
   background: transparent; color: var(--ink); border: 1px solid var(--line-2); box-shadow: none;
 }
-.plan:not(.plan--featured) .plan__cta:hover { border-color: var(--jade); color: var(--jade); background: var(--jade-tint); }
+.plan:not(.plan--featured) .plan__cta:hover { border-color: var(--accent-2); color: var(--accent-2); background: var(--jade-tint); }
 .plans__legal { color: var(--faint); font-size: 12.5px; text-align: center; max-width: 760px; margin: 28px auto 0; line-height: 1.7; }
 
 /* CTA band — a bold deep-jade anchor closing the page (the one dark block) */
@@ -499,6 +599,68 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   .footer__top { grid-template-columns: 1fr; }
 }
 
+/* The two badges are Angular components, so the flex items in the row are the
+   host elements, not the badge markup inside them. A host left as a block puts
+   its inline-block badge on a line box, and the line box reserves descender
+   space underneath — 7px of it, which pushed the App Store badge that much
+   higher than the Play badge. Making the hosts flex containers removes the line
+   box entirely, so both badges sit on the same baseline. */
+app-appstore-badge,
+app-googleplay-badge { display: flex; }
+
+/* ---- Google Play badge (coming soon) ---------------------------------------
+   Google's artwork, unmodified apart from trimming the transparent margin that
+   only some of the language files shipped with — without that the padded ones
+   render visibly smaller at the same height. Their clear-space rule (a quarter
+   of the badge height) is re-applied here as margin instead.
+   Not a link: the Android build has no listing yet. */
+.gplay { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; }
+.gplay__soon {
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent-2);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.gplay__soon::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent-2); opacity: 0.85; flex-shrink: 0;
+}
+.gplay__badge {
+  display: inline-flex; line-height: 0;
+  margin: 12px;                       /* Google's quarter-height clear space */
+  cursor: default;
+  border-radius: 9px;
+}
+.gplay__img {
+  height: 48px; width: auto; display: block;
+  /* Slightly recessed so it reads as pending, but NOT desaturated: Google's
+     guidelines forbid altering the badge's colours, and greying it also washed
+     out the wordmark on the light theme. The label above carries the state. */
+  opacity: 0.85;
+}
+
+/* ---- Official App Store badge ----------------------------------------------
+   Apple's artwork, unmodified. Their guidelines ask for clear space of at least
+   10% of the badge height on every side (the margin below) and a minimum height
+   of 40px on the web. Both variants are in the DOM; CSS picks one per theme so
+   the manual toggle works, which a <picture> element could not do. */
+.appstore-badge {
+  display: inline-block;
+  line-height: 0;
+  margin: 12px;                      /* matches Google's 25% so the two badges line up;
+                                        comfortably above Apple's own 10% minimum */
+  border-radius: 9px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.appstore-badge:hover { transform: translateY(-2px); }
+.appstore-badge:active { opacity: 0.82; transform: translateY(0); }
+.appstore-badge:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 4px; }
+.appstore-badge__img { height: 48px; width: auto; display: block; }
+.appstore-badge__img--white { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .appstore-badge, .appstore-badge:hover { transition: none; transform: none; }
+}
+
 /* ---- App Store badge ---- */
 .store-badge {
   display: inline-flex;
@@ -521,13 +683,13 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 
 /* ---- CTA band actions ---- */
 .cta-band__actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.cta-band__badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.cta-band__badges { align-items: flex-end; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .cta-band__note { color: rgba(255, 255, 255, 0.75); font-size: 13px; }
 
 /* Coming-soon Google Play badge — a non-interactive status marker, visually
    secondary to the live App Store badge (ghosted fill + a "Soon" chip). */
 .store-badge--soon {
-  background: rgba(255, 255, 255, 0.66);
+  background: var(--badge-soon-bg);
   border-color: rgba(15, 23, 42, 0.08);
   box-shadow: none;
   cursor: default;
@@ -562,14 +724,14 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 .legal__body p { margin: 0 0 12px; }
 .legal__body ul, .legal__body ol { padding-inline-start: 22px; margin: 8px 0 14px; display: flex; flex-direction: column; gap: 6px; }
 .legal__body strong { color: var(--ink); font-weight: 700; }
-.legal__body a { color: var(--jade); text-decoration: underline; }
+.legal__body a { color: var(--accent-2); text-decoration: underline; }
 .legal__body blockquote { border-inline-start: 3px solid var(--jade); margin: 14px 0; padding-inline-start: 14px; }
 
 /* Loading state */
 .legal__loading { display: flex; align-items: center; gap: 10px; color: var(--faint); font-size: 15px; padding: 30px 0; }
 .legal__spinner {
   width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--line-2); border-top-color: var(--jade);
+  border: 2px solid var(--line-2); border-top-color: var(--accent-2);
   animation: legalspin 0.7s linear infinite;
 }
 @keyframes legalspin { to { transform: rotate(360deg); } }
@@ -710,7 +872,7 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
   width: 46px;
   height: 46px;
   border-radius: 13px;
-  color: var(--jade);
+  color: var(--accent-2);
   background: var(--jade-tint);
 }
 .privacy__icon .ico { width: 24px; height: 24px; }
@@ -770,7 +932,7 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 }
 .compare__label { color: var(--ink); }
 .compare__cell { font-weight: 800; }
-.compare__cell--yes { color: var(--jade); }
+.compare__cell--yes { color: var(--accent-2); }
 .compare__cell--no { color: var(--faint); font-weight: 500; }
 @media (max-width: 520px) {
   .compare__head, .compare__row { grid-template-columns: 1fr 64px 64px; padding-inline: 14px; }
@@ -851,12 +1013,12 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.14; font-weight: 7
 .store-badge:hover::after { inset-inline-start: 125%; }
 
 /* Comparison table: zebra + row hover */
-.compare__row { transition: background 0.2s ease; }
+.compare__row { transition: background-color 0.2s ease; }
 .compare__row:nth-child(even) { background: rgba(21, 24, 28, 0.02); }
 .compare__row:hover { background: rgba(74, 144, 226, 0.06); }
 
 /* FAQ: answer fades in; height animates where the browser supports it */
-.faq__item { transition: border-color 0.25s ease, background 0.25s ease; }
+.faq__item { transition: border-color 0.25s ease, background-color 0.25s ease; }
 .faq__item:hover { border-color: var(--line-2); }
 .faq__item[open] { background: var(--surface); }
 .faq__item[open] .faq__a { animation: fadeUp 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -925,7 +1087,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
   transition: color 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 .trust-chip:hover { color: var(--ink); border-color: var(--jade-2); box-shadow: var(--shadow-sm); }
-.trust-chip__ic { width: 16px; height: 16px; color: var(--jade); flex-shrink: 0; }
+.trust-chip__ic { width: 16px; height: 16px; color: var(--accent-2); flex-shrink: 0; }
 @media (max-width: 860px) { .trust-strip { justify-content: center; } }
 
 /* ---- Support / Contact page ---- */
@@ -949,7 +1111,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
 .support__card-ic {
   flex-shrink: 0; width: 46px; height: 46px; border-radius: 13px;
   display: grid; place-items: center;
-  background: var(--jade-tint); color: var(--jade);
+  background: var(--jade-tint); color: var(--accent-2);
 }
 .support__card-txt { display: flex; flex-direction: column; line-height: 1.35; text-align: start; }
 .support__card-txt b { font-size: 15.5px; color: var(--ink); }
@@ -972,7 +1134,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
 }
 .support__field input::placeholder, .support__field textarea::placeholder { color: var(--faint); }
 .support__field input:focus, .support__field textarea:focus {
-  outline: none; border-color: var(--jade); box-shadow: 0 0 0 3px var(--jade-tint);
+  outline: none; border-color: var(--accent-2); box-shadow: 0 0 0 3px var(--jade-tint);
 }
 .support__field textarea { min-height: 132px; resize: vertical; line-height: 1.6; }
 .support__hint { color: var(--faint); font-size: 12.5px; text-align: center; margin-top: -2px; }
@@ -999,13 +1161,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
 .dl__hint { color: var(--faint); font-size: 13px; line-height: 1.65; max-width: 40ch; }
 .dl__cta { margin-top: 4px; }
 .dl__cta .ico { fill: currentColor; stroke: none; }
-.dl__badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 2px; }
+.dl__badges { align-items: flex-end; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 2px; }
 .dl__foot { color: var(--faint); font-size: 13px; margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--line); width: 100%; }
 .dl__foot a { color: var(--accent-2); font-weight: 700; }
 
 .dl__spinner {
   width: 17px; height: 17px; flex-shrink: 0;
-  border: 2.2px solid var(--jade-tint); border-top-color: var(--jade);
+  border: 2.2px solid var(--jade-tint); border-top-color: var(--accent-2);
   border-radius: 50%;
   animation: dl-spin 0.75s linear infinite;
 }
@@ -1013,3 +1175,43 @@ a:focus-visible, button:focus-visible, summary:focus-visible, select:focus-visib
 @media (prefers-reduced-motion: reduce) { .dl__spinner { animation-duration: 2.4s; } }
 
 @media (max-width: 820px) { .support { grid-template-columns: 1fr; gap: 30px; } }
+
+/* ---- Dark theme: component overrides ---------------------------------------
+   Separate from the token block above because these are ordinary rules: they
+   have to appear after the light rules they override, not before them.        */
+@mixin dark-components {
+  /* The Play badge is black with a pale outline: on a dark page it needs *more*
+     presence, not less, so the dimming is eased and a faint plate lifts it off
+     the background. */
+  .gplay__img { opacity: 0.9; }
+  .gplay__badge {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  /* Apple's black badge disappears into a dark page; the white one is their
+     supplied variant for exactly this case. */
+  .appstore-badge__img--black { display: none; }
+  .appstore-badge__img--white { display: block; }
+
+/* The ghost button's hover fill has to lift away from the page, not blend in. */
+.btn--ghost:hover { background: var(--surface); border-color: var(--ink); }
+
+/* A white sheen sweep is invisible over a dark pill. */
+.store-badge::after { background: linear-gradient(100deg, transparent, rgba(20, 30, 46, 0.10), transparent); }
+
+/* The live App Store badge deliberately stays a white pill — it is the page's
+   primary action, and that is Apple's own convention on dark backgrounds.
+   Only the ghosted "coming soon" Play badge must flip: it inherits the badge's
+   near-black text, which over a 9%-white fill on a dark page is invisible. */
+.store-badge--soon {
+  color: var(--muted);
+  border-color: var(--line-2);
+}
+.store-badge--soon .store-badge__logo { opacity: 0.85; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { @include dark-components; }
+}
+:root[data-theme='dark'] { @include dark-components; }

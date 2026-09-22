@@ -1,6 +1,7 @@
 import { DOCUMENT, Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { I18n, LANGUAGES, type Lang } from '../../services/i18n';
+import { APP_NAME, APP_SHORT_NAME, OG_IMAGE_PATH } from '../brand';
 import { SEO_COPY } from './seo-copy';
 
 /** Marks the nodes this service owns, so it can replace exactly its own. */
@@ -39,7 +40,7 @@ export class StructuredDataService {
     this.emit('website', {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'CleanSpace',
+      name: APP_SHORT_NAME,
       url: `${this.site}/${lang}`,
       inLanguage: LANGUAGES.map((l) => l.code),
       publisher: PUBLISHER,
@@ -48,20 +49,21 @@ export class StructuredDataService {
     this.emit('app', {
       '@context': 'https://schema.org',
       '@type': 'MobileApplication',
-      name: 'CleanSpace',
+      name: APP_NAME,
+      alternateName: APP_SHORT_NAME,
       operatingSystem: 'iOS 16.0 or later',
       applicationCategory: 'UtilitiesApplication',
       description: SEO_COPY[lang].description,
       url,
       author: PUBLISHER,
       installUrl: environment.appStoreUrl,
-      image: `${this.site}/og-image.png`,
+      image: `${this.site}${OG_IMAGE_PATH}`,
       inLanguage: LANGUAGES.map((l) => l.code),
       offers: [
         { '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free — scan & analyze' },
         { '@type': 'Offer', price: '6.99', priceCurrency: 'USD', name: 'Pro Weekly' },
-        { '@type': 'Offer', price: '39.99', priceCurrency: 'USD', name: 'Pro Yearly' },
-        { '@type': 'Offer', price: '99.99', priceCurrency: 'USD', name: 'Pro Lifetime' },
+        { '@type': 'Offer', price: '19.99', priceCurrency: 'USD', name: 'Pro Yearly' },
+        { '@type': 'Offer', price: '39.99', priceCurrency: 'USD', name: 'Pro Lifetime' },
       ],
       featureList: FEATURE_LIST[lang] ?? FEATURE_LIST['en'],
       // NOTE (owner): no aggregateRating here on purpose — inventing rating or
@@ -100,7 +102,7 @@ const FEATURE_LIST: Partial<Record<Lang, string[]>> = {
     'Encrypted private vault',
     'Duplicate contact merging',
     'Home Screen widgets',
-    '17 languages',
+    '21 languages',
     'Fully on-device — no uploads',
   ],
   ar: [
@@ -110,7 +112,7 @@ const FEATURE_LIST: Partial<Record<Lang, string[]>> = {
     'خزنة خاصة مشفّرة',
     'دمج جهات الاتصال المكررة',
     'أدوات الشاشة الرئيسية',
-    '17 لغة',
+    '21 لغة',
     'كل المعالجة على الجهاز — بدون رفع',
   ],
 };

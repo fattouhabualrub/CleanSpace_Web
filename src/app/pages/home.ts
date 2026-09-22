@@ -9,7 +9,14 @@ import { AppStoreBadgeComponent } from '../components/appstore-badge';
 import { GooglePlayBadgeComponent } from '../components/googleplay-badge';
 
 interface Feature { icon: string; arT: string; enT: string; arD: string; enD: string; }
-interface Plan { arName: string; enName: string; price: string; arPer: string; enPer: string; featured: boolean; arTag?: string; enTag?: string; }
+interface Plan {
+  arName: string; enName: string;
+  /** What the customer pays today. */
+  price: string;
+  /** Pre-discount price, struck through beside `price` when present. */
+  wasPrice?: string;
+  arPer: string; enPer: string; featured: boolean; arTag?: string; enTag?: string;
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -205,7 +212,12 @@ interface Plan { arName: string; enName: string; price: string; arPer: string; e
             <div class="plan" [class.plan--featured]="p.featured" [appReveal]="$index * 90" appSpotlight>
               @if (p.featured) { <div class="plan__badge">{{ i18n.t('الأكثر شيوعًا', 'Most popular') }}</div> }
               <div class="plan__name">{{ i18n.t(p.arName, p.enName) }}</div>
-              <div class="plan__price"><b>{{ p.price }}</b><span>{{ i18n.t(p.arPer, p.enPer) }}</span></div>
+              <div class="plan__price">
+                @if (p.wasPrice) {
+                  <s class="plan__was" [attr.aria-label]="i18n.t('السعر قبل الخصم', 'Regular price')">{{ p.wasPrice }}</s>
+                }
+                <b>{{ p.price }}</b><span>{{ i18n.t(p.arPer, p.enPer) }}</span>
+              </div>
               @if (p.arTag) { <span class="eyebrow">{{ i18n.t(p.arTag, p.enTag!) }}</span> }
               <ul class="plan__list">
                 @for (feat of proFeatures; track feat.en) {
@@ -313,13 +325,13 @@ export class HomeComponent {
   shotLang = this.i18n.shotLang;
 
   // Honest trust signals — reuses strings already in the translation catalog, so all
-  // 17 languages are covered with no new translation work. (No fabricated reviews:
+  // 21 languages are covered with no new translation work. (No fabricated reviews:
   // a real ratings/testimonials section belongs post-launch with genuine App Store data.)
   trust = [
     { ar: 'خصوصية كاملة', en: 'Full privacy' },
     { ar: 'بدون إنترنت', en: 'Works offline' },
     { ar: 'بلا حساب', en: 'No account' },
-    { ar: 'بـ 17 لغة', en: 'In 17 languages' },
+    { ar: 'بـ 21 لغة', en: 'In 21 languages' },
   ];
 
   features: Feature[] = [
@@ -331,7 +343,7 @@ export class HomeComponent {
     { icon: 'screenshot', arT: 'منظّف السكرينشوت', enT: 'Screenshot cleaner', arD: 'اكتشف السكرينشوت القديمة واحذفها دفعة واحدة.', enD: 'Spot old screenshots and clear them in bulk.' },
     { icon: 'vault', arT: 'الخزنة الخاصة', enT: 'Private vault', arD: 'صور محمية برمز PIN أو Face ID ومشفّرة على جهازك.', enD: 'Photos locked with a PIN or Face ID, encrypted on-device.' },
     { icon: 'widget', arT: 'ويدجت الشاشة الرئيسية', enT: 'Home Screen widgets', arD: 'شاهد المساحة والبطارية بنظرة من شاشتك الرئيسية.', enD: 'See storage and battery at a glance from your Home Screen.' },
-    { icon: 'globe', arT: 'بـ 17 لغة', enT: 'In 17 languages', arD: 'واجهة كاملة بلغتك — بما فيها الكردية والعربية والفارسية.', enD: 'A fully localized interface in your language — including Kurdish, Arabic and Persian.' },
+    { icon: 'globe', arT: 'بـ 21 لغة', enT: 'In 21 languages', arD: 'واجهة كاملة بلغتك — بما فيها الكردية والعربية والفارسية.', enD: 'A fully localized interface in your language — including Kurdish, Arabic and Persian.' },
     { icon: 'shield', arT: 'خصوصية كاملة', enT: 'Full privacy', arD: 'كل المعالجة على جهازك — لا يُرفع أي شيء إلى أي خادم.', enD: 'Everything runs on-device — nothing is uploaded anywhere.' },
   ];
 
@@ -410,8 +422,8 @@ export class HomeComponent {
   // NO free trial). Prices are illustrative (shown per-currency in the App Store).
   plans: Plan[] = [
     { arName: 'أسبوعي', enName: 'Weekly', price: '$6.99', arPer: '/ أسبوع', enPer: '/ week', featured: true },
-    { arName: 'سنوي', enName: 'Yearly', price: '$39.99', arPer: '/ سنة', enPer: '/ year', featured: false, arTag: 'وفّر ٨٩٪', enTag: 'Save 89%' },
-    { arName: 'مدى الحياة', enName: 'Lifetime', price: '$99.99', arPer: 'دفعة واحدة', enPer: 'one-time', featured: false, arTag: 'أفضل قيمة', enTag: 'Best value' },
+    { arName: 'سنوي', enName: 'Yearly', price: '$19.99', wasPrice: '$39.99', arPer: '/ سنة', enPer: '/ year', featured: false, arTag: 'خصم ٥٠٪', enTag: '50% off' },
+    { arName: 'مدى الحياة', enName: 'Lifetime', price: '$39.99', arPer: 'دفعة واحدة', enPer: 'one-time', featured: false, arTag: 'أفضل قيمة', enTag: 'Best value' },
   ];
 
   shots = [

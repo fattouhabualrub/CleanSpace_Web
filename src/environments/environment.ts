@@ -13,6 +13,11 @@ export const environment = {
   siteUrl: 'https://cleaningspace.app',
 
   appStoreId: '6790139624',
+  /**
+   * Region-neutral: Apple redirects to the visitor's own storefront. Do not add a
+   * country segment (/jo/) or a name slug — the country pins every visitor to one
+   * store, and the slug breaks whenever the App Store listing is renamed.
+   */
   appStoreUrl: 'https://apps.apple.com/app/id6790139624',
 
   /** Locale used for x-default and for bare URLs with no saved preference. */
