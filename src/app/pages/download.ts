@@ -32,7 +32,7 @@ import { GoogleAnalyticsService } from '../core/services/google-analytics.servic
   selector: 'app-download',
   imports: [RouterLink, AppStoreBadgeComponent, StorageBarComponent],
   template: `
-    <section class="section" id="main-content">
+    <section class="section page-top">
       <div class="container container--narrow">
         <div class="dl">
           <img class="dl__icon" src="icon-192.png" width="88" height="88" alt="CleanSpace">

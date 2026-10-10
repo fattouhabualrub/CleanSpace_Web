@@ -1,0 +1,215 @@
+@use 'tokens' as t;
+
+/* ============================================================================
+   Chrome — floating glass navbar, footer, store badges
+   ========================================================================== */
+
+/* ---- Navbar ----------------------------------------------------------------
+   A floating glass capsule. Its bottom edge doubles as a reading-progress bar
+   painted in the app's storage-ring gradient, driven by a scroll timeline
+   where supported and simply absent where not. */
+.nav {
+  position: fixed; top: 12px; inset-inline: 0; z-index: 100;
+  pointer-events: none;
+}
+.nav__inner {
+  pointer-events: auto;
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  max-width: calc(var(--maxw) - 24px);
+  height: 62px;
+  margin-inline: auto;
+  padding-inline: 10px 10px;
+  padding-inline-start: 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  border: 1px solid var(--glass-line);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, var(--shadow-1);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  overflow: hidden;
+  transition: background-color 0.3s, box-shadow 0.3s, height 0.3s var(--ease);
+}
+.nav--scrolled .nav__inner {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, var(--shadow-2);
+}
+.nav__progress {
+  position: absolute; inset-inline: 0; bottom: 0; height: 2px;
+  background: var(--grad-ring);
+  transform-origin: left; transform: scaleX(0);
+  opacity: 0.9;
+}
+[dir='rtl'] .nav__progress { transform-origin: right; }
+@supports (animation-timeline: scroll()) {
+  .nav__progress { animation: nav-progress linear both; animation-timeline: scroll(root); }
+  @keyframes nav-progress { to { transform: scaleX(1); } }
+}
+@media (max-width: 1260px) { .nav { top: 10px; } .nav__inner { margin-inline: 12px; } }
+
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.brand__mark {
+  width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none;
+  background: linear-gradient(145deg, #2A86FF, #1559F0);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 6px 14px -4px rgba(21, 89, 240, 0.55);
+  transition: transform 0.5s var(--spring);
+}
+.brand:hover .brand__mark { transform: rotate(-12deg) scale(1.06); }
+.brand__mark svg { width: 100%; height: 100%; display: block; }
+.brand__name { white-space: nowrap; }
+.brand__suffix { display: none; color: var(--muted); font-weight: 600; }
+@media (min-width: 1180px) { .brand__suffix { display: inline; } }
+
+.nav__links { display: flex; align-items: center; gap: 4px; }
+.nav__links a {
+  position: relative; padding: 8px 14px; border-radius: 999px;
+  color: var(--muted); font-weight: 500; font-size: 14.5px;
+  transition: color 0.2s, background-color 0.2s;
+}
+.nav__links a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.nav__actions { display: flex; align-items: center; gap: 8px; }
+.nav__actions .btn { height: 42px; padding-inline: 18px; font-size: 14.5px; }
+
+/* Theme switch — round glass button with a rotate-in icon. */
+.theme-toggle {
+  display: inline-grid; place-items: center;
+  width: 42px; height: 42px; flex-shrink: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s, transform 0.2s var(--ease);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--line-2); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.theme-toggle:active { transform: scale(0.92); }
+.theme-toggle__ic {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+  animation: theme-spin 0.6s var(--spring);
+}
+@keyframes theme-spin { from { transform: rotate(-90deg) scale(0.6); opacity: 0; } }
+
+/* Language picker: styled label over a transparent native <select>. */
+.lang-picker {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 42px; padding-inline: 13px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.lang-picker:hover { border-color: var(--line-2); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.lang-picker__flag { font-size: 16px; line-height: 1; display: inline-flex; }
+.lang-picker__flag .kflag { width: 20px; height: 14px; border-radius: 2px; display: block; }
+.lang-picker__name {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;
+}
+.lang-picker__chevron { display: inline-flex; color: var(--muted); transition: transform 0.2s var(--ease); }
+.lang-picker__chevron svg { width: 14px; height: 14px; display: block; stroke-width: 2.4; }
+.lang-picker:hover .lang-picker__chevron { transform: translateY(1px); }
+.lang-picker__select {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; border: 0; opacity: 0; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+}
+.lang-picker__select option { color: #111; }
+
+@media (max-width: 959px) { .nav__links { display: none; } }
+@media (max-width: 560px) {
+  .nav__inner { height: 56px; padding-inline: 8px; padding-inline-start: 10px; gap: 8px; }
+  .lang-picker__name { display: none; }
+  .lang-picker { padding-inline: 10px 8px; height: 40px; }
+  .theme-toggle { width: 40px; height: 40px; }
+  .nav__actions { gap: 6px; }
+  .nav__actions .btn { height: 40px; padding-inline: 14px; font-size: 14px; }
+  .brand { font-size: 16px; }
+}
+@media (max-width: 400px) { .brand__name { display: none; } }
+
+/* ---- Footer ----------------------------------------------------------------
+   Columns up top; the wordmark set huge underneath, clipped by the page edge,
+   with the ring gradient bleeding through it. */
+.footer {
+  position: relative;
+  padding-top: 80px;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  background:
+    radial-gradient(60% 50% at 50% 120%, color-mix(in srgb, var(--violet) 18%, transparent), transparent 70%),
+    var(--bg);
+}
+.footer__top {
+  display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr; gap: 40px;
+  padding-bottom: 40px;
+}
+.footer__brandcol .brand { margin-bottom: 16px; }
+.footer__tagline { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 34ch; margin-bottom: 14px; }
+.footer__brandcol app-appstore-badge .appstore-badge { margin-inline-start: 0; }
+.footer__col { display: flex; flex-direction: column; gap: 12px; }
+.footer__col h4 {
+  font-family: var(--font-body);
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 4px;
+}
+.footer__col a { color: var(--muted); font-size: 15px; width: fit-content; transition: color 0.2s, translate 0.25s var(--ease); }
+.footer__col a:hover { color: var(--ink); translate: 3px 0; }
+[dir='rtl'] .footer__col a:hover { translate: -3px 0; }
+.footer__bottom {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  padding-block: 22px; border-top: 1px solid var(--line);
+  color: var(--faint); font-size: 13.5px;
+}
+.footer__wordmark {
+  display: block;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(72px, 19.5vw, 300px);
+  line-height: 0.8; letter-spacing: -0.06em;
+  text-align: center; white-space: nowrap;
+  margin-bottom: -0.12em;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 16%, transparent) 10%, transparent 92%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  user-select: none;
+  direction: ltr;
+}
+@media (max-width: 860px) {
+  .footer__top { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer__brandcol { grid-column: 1 / -1; }
+}
+@media (max-width: 460px) { .footer__top { grid-template-columns: 1fr; } }
+
+/* ---- Store badges -----------------------------------------------------------
+   Apple's and Google's artwork, unmodified. Hosts are flex so the inline-block
+   badges don't sit on a line box (which reserved descender space and knocked
+   the two out of alignment). */
+app-appstore-badge, app-googleplay-badge { display: flex; }
+
+.appstore-badge {
+  display: inline-block; line-height: 0;
+  margin: 10px;                       /* ≥ Apple's 10% clear space */
+  border-radius: 10px;
+  transition: transform 0.25s var(--ease), filter 0.25s;
+}
+.appstore-badge:hover { transform: translateY(-2px); filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18)); }
+.appstore-badge:active { transform: scale(0.97); }
+.appstore-badge__img { height: 52px; width: auto; display: block; }
+.appstore-badge__img--white { display: none; }
+.appstore-badge__img--black { @include t.dark { display: none; } }
+.appstore-badge__img--white { @include t.dark { display: block; } }
+
+.gplay { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.gplay__soon {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--faint);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.gplay__soon::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+.gplay__badge { display: inline-flex; line-height: 0; margin: 0 12px 12px; cursor: default; border-radius: 10px; }
+.gplay__img { height: 52px; width: auto; display: block; opacity: 0.8; }
+.gplay__badge { @include t.dark { background: rgba(255, 255, 255, 0.04); box-shadow: 0 0 0 1px var(--line); } }

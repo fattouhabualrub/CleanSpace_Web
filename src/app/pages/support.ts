@@ -13,7 +13,7 @@ import { I18n } from '../services/i18n';
   selector: 'app-support',
   imports: [RouterLink],
   template: `
-    <section class="section" id="main-content">
+    <section class="section page-top">
       <div class="container">
         <a class="back-link" routerLink="/">
           <svg class="ico" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
@@ -22,7 +22,7 @@ import { I18n } from '../services/i18n';
 
         <div class="support">
           <div class="support__intro">
-            <span class="eyebrow">{{ i18n.t('تواصل معنا', 'Contact us') }}</span>
+            <span class="kicker">{{ i18n.t('تواصل معنا', 'Contact us') }}</span>
             <h1>{{ i18n.t('كيف نقدر نساعدك؟', 'How can we help?') }}</h1>
             <p>
               {{ i18n.t('عندك سؤال، اقتراح، أو مشكلة؟ راسلنا مباشرة أو عبّي النموذج وبنرد عليك بأسرع وقت.',

@@ -1,0 +1,203 @@
+@use 'tokens' as t;
+
+/* ============================================================================
+   Swipe demo — a working copy of the app's Swipe Mode screen
+   ========================================================================== */
+
+.sw { overflow: clip; }
+.sw__grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(40px, 7vw, 110px); }
+.sw__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+
+.sw__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 440px; margin-top: 10px; }
+.sw__stat {
+  padding: 18px 20px; border-radius: var(--r-md);
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-1);
+}
+.sw__stat dt { color: var(--muted); font-size: 13.5px; font-weight: 500; margin-bottom: 6px; }
+.sw__stat dd { display: flex; align-items: baseline; gap: 8px; }
+.sw__stat b {
+  font-family: var(--font-display); font-size: 42px; font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--rose);
+}
+.sw__stat small { color: var(--faint); font-size: 14px; font-weight: 600; direction: ltr; }
+.sw__stat--freed b { color: var(--green); }
+.sw__keys { display: flex; align-items: center; gap: 8px; color: var(--faint); font-size: 13.5px; direction: ltr; }
+.sw__keys kbd {
+  display: inline-grid; place-items: center; min-width: 28px; height: 26px; padding-inline: 6px;
+  border-radius: 7px; border: 1px solid var(--line-2); border-bottom-width: 2px;
+  font-family: var(--font-body); font-size: 13px; color: var(--ink); background: var(--surface);
+}
+.sw__keys-sep { width: 1px; height: 14px; background: var(--line-2); margin-inline: 6px; }
+@media (hover: none) { .sw__keys { display: none; } }
+
+/* ---- The phone ---------------------------------------------------------------- */
+.sw__stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.sw__glow {
+  position: absolute; inset: 6% -10% 14%; z-index: 0; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--glow-violet), transparent 72%);
+  filter: blur(40px);
+}
+.sw__phone {
+  --screen: #F5F6FA;
+  --screen-ink: #0B1020;
+  --screen-muted: #6B7385;
+  --screen-panel: #ECEEF8;
+  position: relative; z-index: 1;
+  width: min(340px, 86vw);
+  aspect-ratio: 9 / 18.6;
+  padding: 11px;
+  border-radius: 58px;
+  background: linear-gradient(145deg, #3A4152, #1A1F2B 40%, #2A3040);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    var(--shadow-3);
+}
+.sw__phone {
+  @include t.dark {
+    --screen: #0D1017;
+    --screen-ink: #F3F5FA;
+    --screen-muted: #8C95A6;
+    --screen-panel: #171C28;
+  }
+}
+.sw__island {
+  position: absolute; z-index: 3; top: 22px; left: 50%; translate: -50% 0;
+  width: 32%; height: 30px; border-radius: 20px; background: #000;
+}
+.sw__screen {
+  position: relative; height: 100%;
+  display: flex; flex-direction: column;
+  border-radius: 47px; overflow: hidden;
+  background: var(--screen); color: var(--screen-ink);
+  padding: 58px 14px 16px;
+}
+.sw__bar { display: grid; grid-template-columns: 34px 1fr 34px; align-items: center; margin-bottom: 12px; }
+.sw__bar b { text-align: center; font-family: var(--font-body); font-size: 16px; font-weight: 600; }
+.sw__back { width: 22px; height: 22px; color: #2F7BFF; }
+[dir='rtl'] .sw__back { transform: scaleX(-1); }
+.sw__undo-ic { width: 34px; height: 34px; display: grid; place-items: center; color: var(--screen-muted); border-radius: 50%; }
+.sw__undo-ic:not(:disabled) { color: #2F7BFF; }
+.sw__undo-ic:disabled { opacity: 0.5; cursor: default; }
+.sw__undo-ic svg { width: 20px; height: 20px; }
+
+/* ---- Deck -------------------------------------------------------------------------- */
+.sw__deck {
+  --drag: 0;
+  position: relative; flex: 1; margin: 2px 2px 26px;
+  border-radius: 26px;
+  outline-offset: 4px;
+}
+.sw__card {
+  --keep: 0; --del: 0;
+  position: absolute; inset: 0; margin: 0;
+  border-radius: 26px; overflow: hidden;
+  background: #111;
+  box-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  translate: 0 calc(max(0, var(--depth) - var(--drag)) * 14px);
+  scale: calc(1 - max(0, var(--depth) - var(--drag)) * 0.055);
+  transform-origin: 50% 100%;
+  transition: translate 0.4s var(--ease), scale 0.4s var(--ease), transform 0.5s var(--spring), opacity 0.4s;
+  user-select: none; -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.sw__card.is-top { cursor: grab; }
+.sw__card.is-dragging { cursor: grabbing; transition: translate 0.4s var(--ease), scale 0.4s var(--ease); }
+.sw__card.is-flying { transition: transform 0.42s cubic-bezier(0.3, 0.6, 0.4, 1), opacity 0.42s ease; }
+.sw__card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+/* Keep/delete wash tints the whole photo as it leaves. */
+.sw__card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--green) 55%, transparent), transparent 70%),
+    linear-gradient(270deg, color-mix(in srgb, var(--rose) 55%, transparent), transparent 70%);
+  background-size: 100% 100%;
+  opacity: 0;
+}
+.sw__card.is-top::after {
+  background: linear-gradient(90deg, rgba(52, 211, 153, calc(var(--keep) * 0.45)), transparent 75%),
+              linear-gradient(270deg, rgba(255, 77, 109, calc(var(--del) * 0.45)), transparent 75%);
+  opacity: 1;
+}
+.sw__card figcaption {
+  position: absolute; inset: auto 0 0; padding: 40px 18px 16px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.62));
+  color: #fff; font-size: 15px; font-weight: 600;
+}
+.sw__size {
+  position: absolute; top: 12px; inset-inline-end: 12px; z-index: 1;
+  padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: #fff;
+  background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  direction: ltr;
+}
+/* Stamps are physical: a right swipe keeps in every language, as in the app. */
+.sw__stamp {
+  position: absolute; z-index: 2; top: 26px;
+  padding: 4px 12px; border-radius: 10px; border: 3px solid;
+  font-family: var(--font-display); font-size: 22px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+.sw__stamp--keep { left: 18px; rotate: -14deg; color: #34D399; border-color: #34D399; opacity: var(--keep); scale: calc(0.8 + var(--keep) * 0.2); }
+.sw__stamp--del { right: 18px; rotate: 14deg; color: #FF4D6D; border-color: #FF4D6D; opacity: var(--del); scale: calc(0.8 + var(--del) * 0.2); }
+
+.sw__card.from-left { animation: sw-back-left 0.5s var(--ease) both; }
+.sw__card.from-right { animation: sw-back-right 0.5s var(--ease) both; }
+@keyframes sw-back-left { from { transform: translate(-150%, 30px) rotate(-24deg); opacity: 0; } }
+@keyframes sw-back-right { from { transform: translate(150%, 30px) rotate(24deg); opacity: 0; } }
+
+.sw__done {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  border-radius: 26px; text-align: center;
+  background: var(--screen-panel);
+  animation: sw-pop 0.6s var(--spring) both;
+}
+.sw__done b { font-family: var(--font-display); font-size: 26px; letter-spacing: -0.02em; }
+.sw__done > span:not(.sw__done-ic) { color: var(--green); font-weight: 700; font-size: 17px; direction: ltr; margin-bottom: 8px; }
+.sw__done-ic {
+  width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--green) 18%, transparent); color: var(--green);
+}
+.sw__done-ic svg { width: 30px; height: 30px; }
+@keyframes sw-pop { from { opacity: 0; scale: 0.9; } }
+
+.sw__hint { text-align: center; color: var(--screen-muted); font-size: 12.5px; margin: 0 0 10px; }
+.sw__trash {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 12px 14px; border-radius: 20px; background: var(--screen-panel);
+  font-size: 13.5px;
+}
+.sw__trash-n b { font-family: var(--font-display); font-size: 22px; font-weight: 800; margin-inline-end: 4px; vertical-align: -2px; }
+.sw__empty {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13.5px; font-weight: 600; color: #FF4D6D;
+  padding: 6px 4px; border-radius: 10px;
+}
+.sw__empty svg { width: 17px; height: 17px; }
+.sw__empty:disabled { color: var(--screen-muted); opacity: 0.6; cursor: default; }
+
+/* ---- Round controls --------------------------------------------------------------------- */
+/* Physical, like the gesture: delete sits left and keep right in every language. */
+.sw__controls { position: relative; z-index: 1; display: flex; align-items: center; gap: 18px; direction: ltr; }
+.sw__btn {
+  display: grid; place-items: center;
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--line);
+  box-shadow: var(--shadow-2);
+  transition: transform 0.35s var(--spring), box-shadow 0.3s, opacity 0.2s;
+}
+.sw__btn svg { width: 26px; height: 26px; }
+.sw__btn--del { color: var(--rose); }
+.sw__btn--keep { color: var(--green); }
+.sw__btn--undo { width: 48px; height: 48px; color: var(--muted); }
+.sw__btn--undo svg { width: 20px; height: 20px; }
+.sw__btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.06); }
+.sw__btn:active:not(:disabled) { transform: scale(0.92); }
+.sw__btn:disabled { opacity: 0.4; cursor: default; }
+
+@media (max-width: 900px) {
+  .sw__grid { grid-template-columns: 1fr; }
+  .sw__copy { align-items: center; text-align: center; }
+  .sw__stats { margin-inline: auto; }
+}

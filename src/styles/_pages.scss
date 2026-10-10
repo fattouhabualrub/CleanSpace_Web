@@ -1,0 +1,158 @@
+@use 'tokens' as t;
+
+/* ============================================================================
+   Secondary pages — support, download smart-link, legal
+   The navbar floats over the page, so every page opens with enough top room
+   to clear it.
+   ========================================================================== */
+
+.page-top { padding-top: clamp(120px, 14vw, 160px); }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--blue-ink); font-weight: 600; font-size: 14.5px;
+  margin-bottom: 26px;
+  transition: gap 0.25s var(--ease);
+}
+.back-link:hover { gap: 10px; }
+[dir='rtl'] .back-link .ico { transform: scaleX(-1); }
+
+/* ---- Legal ----------------------------------------------------------------- */
+.legal { padding: clamp(120px, 14vw, 160px) 0 90px; }
+.legal__wrap { max-width: 800px; margin: 0 auto; }
+.legal h1 { font-size: clamp(34px, 5vw, 56px); letter-spacing: -0.03em; margin-bottom: 10px; }
+.legal__meta { color: var(--faint); font-size: 14px; margin-bottom: 34px; }
+.legal__note {
+  background: color-mix(in srgb, var(--amber) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent);
+  color: var(--ink); border-radius: var(--r-sm); padding: 14px 16px; font-size: 14px; margin-bottom: 30px;
+}
+.legal__section { margin-bottom: 28px; }
+.legal__section h2 { font-size: 20px; margin-bottom: 8px; }
+.legal__section p { color: var(--muted); font-size: 15.5px; margin-bottom: 8px; }
+.legal__section ul { color: var(--muted); font-size: 15.5px; padding-inline-start: 22px; display: flex; flex-direction: column; gap: 6px; list-style: disc; }
+.legal__body { color: var(--muted); font-size: 16px; line-height: 1.8; }
+.legal__body h2 { color: var(--ink); font-size: 21px; margin: 34px 0 10px; letter-spacing: -0.01em; }
+.legal__body h3 { color: var(--ink); font-size: 17px; margin: 24px 0 6px; }
+.legal__body p { margin: 0 0 12px; }
+.legal__body ul, .legal__body ol { padding-inline-start: 22px; margin: 8px 0 14px; display: flex; flex-direction: column; gap: 6px; }
+.legal__body ul { list-style: disc; }
+.legal__body ol { list-style: decimal; }
+.legal__body strong { color: var(--ink); font-weight: 600; }
+.legal__body a { color: var(--blue-ink); text-decoration: underline; text-underline-offset: 3px; }
+.legal__body blockquote { border-inline-start: 3px solid var(--blue); margin: 14px 0; padding-inline-start: 14px; }
+.legal__loading { display: flex; align-items: center; gap: 10px; color: var(--faint); font-size: 15px; padding: 30px 0; }
+.legal__spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--line-2); border-top-color: var(--blue);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Support --------------------------------------------------------------- */
+.support { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.support__intro h1 { font-size: clamp(38px, 5.4vw, 64px); margin: 18px 0 14px; letter-spacing: -0.035em; line-height: 1; }
+[dir='rtl'] .support__intro h1 { letter-spacing: 0; line-height: 1.2; }
+.support__intro > p { color: var(--muted); font-size: 17px; line-height: 1.7; margin-bottom: 28px; max-width: 44ch; }
+.support__cards { display: flex; flex-direction: column; gap: 12px; }
+.support__card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 16px 18px;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.3s var(--ease), border-color 0.2s, box-shadow 0.3s;
+}
+.support__card:hover { transform: translateY(-3px); border-color: var(--line-2); box-shadow: var(--shadow-2); }
+.support__card-ic {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue-ink);
+}
+.support__card-txt { display: flex; flex-direction: column; line-height: 1.35; text-align: start; }
+.support__card-txt b { font-size: 16px; color: var(--ink); font-weight: 600; }
+.support__card-txt span { font-size: 14px; color: var(--muted); }
+
+.support__form {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 30px;
+  display: flex; flex-direction: column; gap: 16px;
+  box-shadow: var(--shadow-2);
+}
+.support__field { display: flex; flex-direction: column; gap: 8px; }
+.support__field label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.support__field input, .support__field textarea {
+  font: inherit; font-size: 15.5px; color: var(--ink);
+  background: var(--surface-2); border: 1px solid var(--line-2);
+  border-radius: 14px; padding: 13px 15px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.support__field input::placeholder, .support__field textarea::placeholder { color: var(--faint); }
+.support__field input:focus, .support__field textarea:focus {
+  outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 18%, transparent);
+}
+.support__field textarea { min-height: 140px; resize: vertical; line-height: 1.6; }
+.support__hint { color: var(--faint); font-size: 13px; text-align: center; }
+.support__form--done { align-items: center; text-align: center; gap: 12px; padding: 44px 30px; }
+.support__done-ic {
+  width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center;
+  background: var(--grad-cta); color: #fff; box-shadow: 0 14px 30px -8px var(--glow-blue);
+}
+.support__form--done h3 { font-size: 22px; }
+.support__form--done p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 42ch; }
+@media (max-width: 860px) { .support { grid-template-columns: 1fr; gap: 34px; } }
+
+/* ---- Download smart-link ---------------------------------------------------- */
+.dl {
+  position: relative;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-xl); padding: 44px 32px 34px;
+  box-shadow: var(--shadow-3);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  max-width: 540px; margin: 0 auto;
+  overflow: hidden;
+}
+.dl::before {
+  content: ''; position: absolute; inset: -40% -20% auto; height: 70%; z-index: 0; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--violet) 22%, transparent), transparent);
+}
+.dl > * { position: relative; z-index: 1; }
+.dl__icon { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 18px 40px -12px var(--glow-blue); }
+.dl h1 { font-size: clamp(30px, 4vw, 42px); letter-spacing: -0.03em; }
+.dl__lede { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 40ch; display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.dl__hint { color: var(--faint); font-size: 13.5px; line-height: 1.65; max-width: 40ch; }
+.dl__cta { margin-top: 6px; }
+.dl__cta .ico { fill: currentColor; stroke: none; }
+.dl__badges { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px; }
+.dl__foot { color: var(--faint); font-size: 13.5px; margin-top: 10px; padding-top: 18px; border-top: 1px solid var(--line); width: 100%; }
+.dl__foot a { color: var(--blue-ink); font-weight: 600; }
+.dl__spinner {
+  width: 17px; height: 17px; flex-shrink: 0;
+  border: 2.2px solid color-mix(in srgb, var(--blue) 20%, transparent); border-top-color: var(--blue);
+  border-radius: 50%; animation: spin 0.75s linear infinite;
+}
+
+/* ---- Before / after storage bars (download page) --------------------------- */
+.stobar-host { display: block; width: 100%; }
+.stobar { display: flex; flex-direction: column; gap: 14px; margin: 26px 0 6px; text-align: start; }
+.stobar__card { padding: 18px 20px; border-radius: var(--r-md); background: var(--surface-2); border: 1px solid var(--line); }
+.stobar__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.stobar__when { font-size: 15px; font-weight: 600; color: var(--rose); }
+.stobar__card--after .stobar__when { color: var(--blue-ink); }
+.stobar__used { font-size: 15px; font-weight: 700; color: var(--rose); direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+.stobar__card--after .stobar__used { color: var(--blue-ink); }
+.stobar__used span { font-weight: 500; opacity: 0.75; unicode-bidi: isolate; }
+.stobar__track { display: flex; height: 22px; border-radius: 999px; overflow: hidden; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--line); }
+.stobar__seg { display: block; width: var(--w); height: 100%; flex: none; }
+.stobar__card--after .stobar__seg { width: var(--w0); transition: width 1.2s var(--ease) 0.3s; }
+.stobar.in .stobar__card--after .stobar__seg { width: var(--w); }
+.stobar__legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin-top: 14px; }
+.stobar__legend li { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; }
+.stobar__legend i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.stobar__delta { display: flex; align-items: center; justify-content: center; gap: 10px; margin: -4px 0; }
+.stobar__delta::before, .stobar__delta::after { content: ''; flex: 1; height: 1px; background: var(--line-2); }
+.stobar__delta b { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--green); direction: ltr; unicode-bidi: isolate; }
+.stobar__delta span { color: var(--muted); font-size: 13.5px; }
+.stobar__claim { display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 6px; color: var(--blue-ink); font-weight: 600; font-size: 15px; }
+.stobar__dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 20%, transparent); }
+.stobar__note { color: var(--faint); font-size: 12.5px; text-align: center; line-height: 1.6; }
+@media (max-width: 460px) { .stobar__head { flex-direction: column; gap: 2px; } }
+@media (prefers-reduced-motion: reduce) { .stobar__card--after .stobar__seg { width: var(--w); } }

@@ -1,0 +1,154 @@
+/* ============================================================================
+   CleanSpace — design tokens ("Clean Room")
+
+   The palette is lifted from the iOS app itself so the site and the product
+   read as one thing: the deep navy canvas, the violet storage ring, the
+   blue→sky Rescan gradient, and the per-category stat colours (blue "can be
+   freed", green "duplicates", amber "large videos", rose selection frames).
+
+   Light is the default token set; dark redefines the same names. Legacy names
+   (--paper, --jade, --accent-2 …) are kept as aliases so the secondary pages
+   (support, download, legal) pick up the new system without a rewrite.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- Surfaces & text (light) ---- */
+  --bg:        #F2F4F9;
+  --bg-deep:   #E8ECF4;
+  --surface:   #FFFFFF;
+  --surface-2: #F7F8FC;
+  --surface-3: #EEF1F7;
+  --ink:       #0B1020;
+  --muted:     #4D5768;   /* 7.1:1 on --bg */
+  --faint:     #626C7D;   /* 4.8:1 on --bg */
+  --line:      rgba(15, 23, 42, 0.08);
+  --line-2:    rgba(15, 23, 42, 0.15);
+
+  /* ---- Brand & category colours ---- */
+  --blue:      #1463FF;
+  --blue-ink:  #0A55E6;   /* blue as text — 5.5:1 on --bg */
+  --sky:       #38B6FF;
+  --violet:    #5B4CFF;
+  --violet-2:  #8B6CFF;
+  --green:     #0E9F6E;
+  --amber:     #B7791F;
+  --rose:      #E11D48;
+  --pink:      #C026D3;
+  --teal:      #0E9AA7;
+  --orange:    #EA580C;
+
+  /* The app's Rescan pill runs blue→sky. White text needs the darker half under
+     it, so the sky end lives in the sheen rather than behind the label. */
+  --grad-cta:  linear-gradient(100deg, #1559F0 0%, #1F6BF7 55%, #2A7DFF 100%);
+  --grad-ring: linear-gradient(135deg, #5B4CFF, #8B6CFF 55%, #38B6FF);
+  --grad-ink:  linear-gradient(100deg, #0B1020 0%, #2A3350 100%);
+  --cta-fill:  #1559F0;   /* white on it: 5.6:1 */
+
+  --glass:        rgba(255, 255, 255, 0.72);
+  --glass-strong: rgba(255, 255, 255, 0.86);
+  --glass-line:   rgba(255, 255, 255, 0.9);
+
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --shadow-2: 0 2px 6px rgba(15, 23, 42, 0.06), 0 18px 40px rgba(15, 23, 42, 0.10);
+  --shadow-3: 0 30px 80px rgba(20, 30, 60, 0.18), 0 8px 24px rgba(20, 30, 60, 0.08);
+  --glow-blue:   rgba(20, 99, 255, 0.22);
+  --glow-violet: rgba(91, 76, 255, 0.20);
+
+  /* ---- Type ---- */
+  --font-display: 'Bricolage Grotesque', 'Readex Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Geist', 'Readex Pro', system-ui, -apple-system, 'Segoe UI', 'Noto Sans',
+    'Noto Sans Arabic', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans Devanagari',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  /* ---- Shape, rhythm, motion ---- */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---- Legacy aliases (secondary pages, badges) ---- */
+  --paper:     var(--bg);
+  --band:      var(--bg-deep);
+  --card:      var(--surface);
+  --card-2:    var(--surface-2);
+  --text:      var(--ink);
+  --jade:      var(--cta-fill);
+  --jade-2:    var(--blue);
+  --jade-tint: color-mix(in srgb, var(--blue) 11%, transparent);
+  --accent:    var(--blue);
+  --accent-2:  var(--blue-ink);
+  --warn:      var(--rose);
+  --good:      var(--green);
+  --good-tint: color-mix(in srgb, var(--green) 14%, transparent);
+  --cta-hover: #0F4FE0;
+  --radius:    var(--r-md);
+  --shadow:    var(--shadow-2);
+  --shadow-sm: var(--shadow-1);
+  --badge-soon-bg: rgba(255, 255, 255, 0.66);
+}
+
+/* Dark mirrors the app's own canvas. Applied from two places — the OS
+   preference unless the visitor picked light, and an explicit data-theme — so
+   it lives in a mixin. Order matters: an explicit choice beats the OS. */
+@mixin dark-tokens {
+  --bg:        #090C13;
+  --bg-deep:   #0C1019;
+  --surface:   #121722;
+  --surface-2: #171D2A;
+  --surface-3: #1D2433;
+  --ink:       #F3F5FA;
+  --muted:     #A2ACBC;   /* 8.3:1 */
+  --faint:     #808A9B;   /* 5.5:1 */
+  --line:      rgba(255, 255, 255, 0.07);
+  --line-2:    rgba(255, 255, 255, 0.13);
+
+  --blue:      #3B82FF;
+  --blue-ink:  #6AA6FF;   /* 7.9:1 */
+  --sky:       #5CC8FF;
+  --violet:    #7C6CFF;
+  --violet-2:  #A48BFF;
+  --green:     #34D399;
+  --amber:     #FBBF24;
+  --rose:      #FF4D6D;
+  --pink:      #E879F9;
+  --teal:      #2DD4BF;
+  --orange:    #FB923C;
+
+  --grad-ring: linear-gradient(135deg, #6C5CFF, #A48BFF 55%, #5CC8FF);
+  --grad-ink:  linear-gradient(100deg, #FFFFFF 0%, #B9C3D6 100%);
+  --cta-fill:  #1F63F2;
+
+  --glass:        rgba(18, 23, 34, 0.66);
+  --glass-strong: rgba(18, 23, 34, 0.86);
+  --glass-line:   rgba(255, 255, 255, 0.08);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.30);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.4), 0 22px 50px rgba(0, 0, 0, 0.50);
+  --shadow-3: 0 40px 100px rgba(0, 0, 0, 0.65), 0 10px 30px rgba(0, 0, 0, 0.4);
+  --glow-blue:   rgba(59, 130, 255, 0.30);
+  --glow-violet: rgba(124, 108, 255, 0.30);
+
+  --cta-hover: #2F72FF;
+  --badge-soon-bg: rgba(255, 255, 255, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { @include dark-tokens; }
+}
+:root[data-theme='dark'] { @include dark-tokens; color-scheme: dark; }
+:root[data-theme='light'] { color-scheme: light; }
+
+/* Scopes a block to whichever dark source is active. Use inside a selector:
+   .thing { @include t.dark { … } }                                          */
+@mixin dark {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) & { @content; }
+  }
+  :root[data-theme='dark'] & { @content; }
+}

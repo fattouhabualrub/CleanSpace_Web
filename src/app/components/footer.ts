@@ -47,6 +47,7 @@ import { AppStoreBadgeComponent } from './appstore-badge';
         <span class="footer__copy">© {{ year }} CleanSpace. {{ i18n.t('كل الحقوق محفوظة.', 'All rights reserved.') }}</span>
         <span class="footer__made">{{ i18n.t('صُنع بعناية لخصوصيتك.', 'Made with care for your privacy.') }}</span>
       </div>
+      <span class="footer__wordmark" aria-hidden="true">CleanSpace</span>
     </footer>
   `,
 })

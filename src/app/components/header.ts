@@ -14,7 +14,7 @@ import { ThemeToggleComponent } from './theme-toggle';
   template: `
     <a class="skip-link" href="#main-content">{{ i18n.t('تخطَّ إلى المحتوى', 'Skip to content') }}</a>
     <nav class="nav" [class.nav--scrolled]="scrolled()">
-      <div class="container nav__inner">
+      <div class="nav__inner">
         <a class="brand" routerLink="/" [attr.aria-label]="i18n.t('كلين سبيس — الصفحة الرئيسية', 'CleanSpace — home')">
           <span class="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -24,11 +24,11 @@ import { ThemeToggleComponent } from './theme-toggle';
           </span><span class="brand__name">{{ APP_SHORT_NAME }}<span class="brand__suffix">{{ APP_NAME_SUFFIX }}</span></span>
         </a>
         <div class="nav__links">
+          <a routerLink="/" fragment="try">{{ i18n.t('وضع السحب', 'Swipe mode') }}</a>
           <a routerLink="/" fragment="features">{{ i18n.t('الميزات', 'Features') }}</a>
           <a routerLink="/" fragment="plans">{{ i18n.t('الأسعار', 'Plans') }}</a>
           <a routerLink="/support">{{ i18n.t('الدعم', 'Support') }}</a>
           <a routerLink="/privacy">{{ i18n.t('الخصوصية', 'Privacy') }}</a>
-          <a routerLink="/terms">{{ i18n.t('الشروط', 'Terms') }}</a>
         </div>
         <div class="nav__actions">
           <app-theme-toggle />
@@ -41,6 +41,7 @@ import { ThemeToggleComponent } from './theme-toggle';
             {{ i18n.t('حمّل الآن', 'Get the App') }}
           </a>
         </div>
+        <span class="nav__progress" aria-hidden="true"></span>
       </div>
     </nav>
   `,

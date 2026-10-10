@@ -106,7 +106,7 @@ export class Theme {
     const meta = (existing as HTMLMetaElement) ?? this.doc.createElement('meta');
     meta.id = id;
     meta.setAttribute('name', 'theme-color');
-    meta.setAttribute('content', pref === 'dark' ? '#0F1219' : '#F4F5F2');
+    meta.setAttribute('content', pref === 'dark' ? '#090C13' : '#F2F4F9');
     if (!existing) this.doc.head.prepend(meta);
   }
 }
