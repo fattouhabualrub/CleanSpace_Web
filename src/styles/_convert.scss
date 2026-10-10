@@ -6,101 +6,6 @@
 
 @property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 
-/* ---- Privacy: the sealed room ---------------------------------------------------
-   Always dark, in both themes: it is the one place the page goes quiet and
-   closed, which is the point it makes. */
-.vaultroom {
-  position: relative; isolation: isolate; overflow: hidden;
-  display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 24px 56px;
-  padding: clamp(32px, 6vw, 72px);
-  border-radius: var(--r-xl);
-  color: #F3F5FA;
-  background:
-    radial-gradient(60% 70% at 85% 30%, rgba(108, 92, 255, 0.30), transparent 70%),
-    radial-gradient(50% 60% at 10% 100%, rgba(31, 107, 247, 0.22), transparent 70%),
-    #070A11;
-  box-shadow: 0 40px 90px -30px rgba(10, 12, 30, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-.vaultroom::before {
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.4px);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(60% 70% at 75% 40%, #000, transparent 75%);
-  -webkit-mask-image: radial-gradient(60% 70% at 75% 40%, #000, transparent 75%);
-}
-.vaultroom__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
-.vaultroom h2 { color: #fff; }
-.vaultroom .lede { color: #A9B3C4; }
-.vaultroom .kicker { color: #9EDBFF; }
-.vaultroom__link { color: #fff; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.18); }
-.vaultroom__link:hover { border-color: rgba(255, 255, 255, 0.5); }
-
-.vaultroom__art { position: relative; width: 100%; max-width: 420px; aspect-ratio: 1; justify-self: center; }
-.vr-ring { position: absolute; border-radius: 50%; }
-.vr-ring--1 { inset: 0; border: 1px dashed rgba(164, 139, 255, 0.35); animation: spin 60s linear infinite; }
-.vr-ring--2 { inset: 13%; border: 1px solid rgba(92, 200, 255, 0.25); }
-.vr-ring--3 {
-  inset: 27%;
-  background: radial-gradient(closest-side, rgba(108, 92, 255, 0.28), rgba(108, 92, 255, 0.04) 70%, transparent);
-  box-shadow: 0 0 0 1.5px rgba(164, 139, 255, 0.55), 0 0 60px rgba(108, 92, 255, 0.35);
-  animation: vr-shield 3.2s ease-in-out infinite;
-}
-@keyframes vr-shield { 50% { box-shadow: 0 0 0 1.5px rgba(164, 139, 255, 0.9), 0 0 90px rgba(108, 92, 255, 0.5); } }
-.vr-core {
-  position: absolute; inset: 39%; border-radius: 30%;
-  display: grid; place-items: center; color: #fff;
-  background: linear-gradient(145deg, #6C5CFF, #1F6BF7);
-  box-shadow: 0 20px 40px -10px rgba(108, 92, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-.vr-core .ico { width: 44%; height: 44%; }
-/* Packets fly in from outside and bounce off the shield — nothing gets through. */
-.vr-packet { position: absolute; inset: 0; rotate: calc(var(--k) * 60deg + 20deg); pointer-events: none; }
-.vr-packet::before {
-  content: ''; position: absolute; top: -2%; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%;
-  background: #FF8A9C; box-shadow: 0 0 12px 2px rgba(255, 77, 109, 0.7);
-  animation: vr-bounce 3.4s var(--ease-io) infinite; animation-delay: calc(var(--k) * 0.55s);
-}
-@keyframes vr-bounce {
-  0% { translate: 0 0; opacity: 0; }
-  15% { opacity: 1; }
-  45% { translate: 0 calc(min(420px, 38vw) * 0.24); opacity: 1; scale: 1; }
-  50% { scale: 1.8; background: #fff; }
-  80% { translate: 0 -10px; opacity: 0; scale: 1; }
-  100% { opacity: 0; }
-}
-.vr-zero {
-  position: absolute; bottom: 2%; left: 50%; translate: -50% 0;
-  display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap;
-  padding: 8px 16px; border-radius: 999px;
-  font-size: 13.5px; color: #C9D2E0;
-  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-[dir='rtl'] .vr-zero { translate: 50% 0; }
-.vr-zero b { font-family: var(--font-display); font-size: 22px; color: #34D399; }
-
-.vaultroom__pillars { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
-.vaultroom__pillars li {
-  display: flex; flex-direction: column; gap: 12px;
-  padding: 20px; border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: background-color 0.3s, border-color 0.3s;
-}
-.vaultroom__pillars li:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(164, 139, 255, 0.35); }
-.vaultroom__ic {
-  width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
-  color: #A48BFF; background: rgba(124, 108, 255, 0.14);
-}
-.vaultroom__ic .ico { width: 20px; height: 20px; }
-.vaultroom__pillars h3 { color: #fff; font-size: 16.5px; margin-bottom: 4px; letter-spacing: -0.01em; }
-.vaultroom__pillars p { color: #98A3B6; font-size: 14px; line-height: 1.55; }
-@media (max-width: 960px) {
-  .vaultroom { grid-template-columns: 1fr; }
-  .vaultroom__art { max-width: 320px; }
-  .vaultroom__pillars { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 520px) { .vaultroom__pillars { grid-template-columns: 1fr; } }
-
 /* ---- Plans ------------------------------------------------------------------------------ */
 .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; max-width: 1080px; margin-inline: auto; }
 .plan {
@@ -214,56 +119,97 @@ tbody tr:hover .compare__label, tbody tr:hover .compare__cell:not(.compare__cell
   .faq-wrap__head { position: static; }
 }
 
-/* ---- Closing CTA ------------------------------------------------------------------------------- */
+/* ---- Closing CTA ---------------------------------------------------------------------------------
+   The one loud block on the page: the app's own blue→sky gradient, bright in
+   both themes, with the photos the hero kept floating around the ask. */
 .cta { padding-bottom: clamp(64px, 9vw, 120px); }
 .cta__panel {
   position: relative; isolation: isolate; overflow: hidden;
-  display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;
-  padding: clamp(56px, 8vw, 110px) 24px;
+  min-height: 560px;
+  display: grid; place-items: center;
+  padding: clamp(56px, 8vw, 100px) 24px;
   border-radius: var(--r-xl);
-  background: #080C18; color: #fff;
-  box-shadow: 0 40px 90px -30px rgba(31, 107, 247, 0.45);
-}
-.cta__mesh {
-  position: absolute; inset: -30%; z-index: -1;
+  color: #fff;
   background:
-    radial-gradient(35% 40% at 25% 30%, rgba(108, 92, 255, 0.55), transparent 70%),
-    radial-gradient(35% 40% at 75% 25%, rgba(31, 107, 247, 0.55), transparent 70%),
-    radial-gradient(45% 45% at 50% 95%, rgba(56, 182, 255, 0.40), transparent 70%);
-  filter: blur(30px);
-  animation: cta-mesh 18s ease-in-out infinite alternate;
+    radial-gradient(55% 75% at 12% 0%, rgba(140, 120, 255, 0.55), transparent 62%),
+    radial-gradient(50% 70% at 100% 100%, rgba(92, 210, 255, 0.65), transparent 62%),
+    linear-gradient(135deg, #1350E6 0%, #1F6BF7 48%, #2E8FFF 100%);
+  box-shadow: 0 40px 90px -34px rgba(31, 107, 247, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-@keyframes cta-mesh { to { transform: rotate(18deg) scale(1.15); } }
+/* Fine dot texture so the gradient doesn't read as flat plastic. */
 .cta__panel::after {
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1.4px);
-  background-size: 24px 24px;
-  mask-image: radial-gradient(60% 60% at 50% 40%, #000, transparent);
-  -webkit-mask-image: radial-gradient(60% 60% at 50% 40%, #000, transparent);
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(60% 70% at 50% 45%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(60% 70% at 50% 45%, #000, transparent 80%);
 }
-.cta__icon { position: relative; width: 190px; height: 190px; display: grid; place-items: center; margin-bottom: 6px; }
-.cta__icon img { width: 116px; height: 116px; border-radius: 28px; box-shadow: 0 24px 50px -12px rgba(31, 107, 247, 0.7); }
+/* Soft light rays turning slowly behind the icon. */
+.cta__rays {
+  position: absolute; left: 50%; top: 38%; z-index: -1; width: 1100px; height: 1100px; margin: -550px 0 0 -550px;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.10) 0deg 6deg, transparent 6deg 18deg);
+  mask-image: radial-gradient(closest-side, #000 10%, transparent 70%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 10%, transparent 70%);
+  animation: spin 80s linear infinite;
+}
+
+/* The kept photos — white-framed prints, drifting. */
+.cta__photos { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.cta__photo {
+  position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
+  width: var(--w); margin: 0;
+  padding: 6px 6px 20px; border-radius: 12px; background: #fff;
+  box-shadow: 0 22px 40px -14px rgba(8, 20, 70, 0.55), 0 4px 10px rgba(8, 20, 70, 0.18);
+  transform: translate(-50%, -50%) rotate(var(--r));
+  opacity: 0; scale: 0.6;
+  transition: opacity 0.9s var(--ease), scale 1.1s var(--spring), translate 1.1s var(--ease);
+  transition-delay: calc(0.15s + var(--k) * 0.07s);
+}
+.cta__photo img { width: 100%; aspect-ratio: 1.1; object-fit: cover; border-radius: 7px; }
+.cta__panel.in .cta__photo { opacity: 1; scale: 1; animation: cta-drift 7s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -0.9s); }
+@keyframes cta-drift { to { translate: 0 -12px; } }
+[dir='rtl'] .cta__photo { left: auto; right: calc(var(--x) * 1%); transform: translate(50%, -50%) rotate(calc(var(--r) * -1)); }
+
+.cta__body { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; max-width: 560px; }
+.cta__icon { position: relative; width: 170px; height: 170px; display: grid; place-items: center; margin-bottom: 4px; }
+.cta__icon img { width: 112px; height: 112px; border-radius: 27px; box-shadow: 0 22px 44px -12px rgba(5, 18, 70, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.35); }
 .cta__gauge { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cta__gauge circle { fill: none; stroke-width: 5; }
-.cta__gauge-track { stroke: rgba(255, 255, 255, 0.10); }
+.cta__gauge-track { stroke: rgba(255, 255, 255, 0.18); }
 .cta__gauge-arc {
-  stroke: #9B8BFF; stroke-linecap: round;
+  stroke: #fff; stroke-linecap: round;
   stroke-dasharray: 552.9; stroke-dashoffset: 552.9;
   transition: stroke-dashoffset 2s var(--ease) 0.3s;
-  filter: drop-shadow(0 0 8px rgba(155, 139, 255, 0.8));
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
 }
 .cta__panel.in .cta__gauge-arc { stroke-dashoffset: 40; }
-.cta__panel h2 { color: #fff; }
-.cta__panel .lede { color: rgba(255, 255, 255, 0.72); }
-.cta__badges { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px 10px; margin-top: 8px; }
-.cta__note { color: rgba(255, 255, 255, 0.6); font-size: 13.5px; }
-/* The panel is dark in both themes, so Apple's white badge always applies. */
+.cta__panel h2 { color: #fff; text-shadow: 0 2px 20px rgba(5, 18, 70, 0.25); }
+.cta__panel .lede { color: rgba(255, 255, 255, 0.92); }
+.cta__badges { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px 10px; margin-top: 6px; }
+.cta__note { color: rgba(255, 255, 255, 0.8); font-size: 13.5px; }
+/* On the blue panel Apple's white badge is the right variant in both themes. */
 .cta__panel .appstore-badge__img--black { display: none !important; }
 .cta__panel .appstore-badge__img--white { display: block !important; }
-.cta__panel .gplay__soon { color: rgba(255, 255, 255, 0.65); }
-.cta__panel .gplay__badge { background: rgba(255, 255, 255, 0.05); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.cta__panel .gplay__soon { color: rgba(255, 255, 255, 0.85); }
+.cta__panel .gplay__soon::before { background: #FFD60A; }
+.cta__panel .gplay__img { opacity: 0.95; }
+
+@media (max-width: 860px) {
+  .cta__panel { min-height: 0; padding-top: 190px; }
+  .cta__photo--side { display: none; }
+  .cta__photo { --w: 96px !important; }
+  .cta__photo:nth-child(1) { left: 22%; top: 10%; }
+  .cta__photo:nth-child(3) { left: 8%; top: 22%; }
+  .cta__photo:nth-child(5) { left: 78%; top: 10%; }
+  .cta__photo:nth-child(7) { left: 92%; top: 22%; }
+  [dir='rtl'] .cta__photo:nth-child(1) { right: 22%; }
+  [dir='rtl'] .cta__photo:nth-child(3) { right: 8%; }
+  [dir='rtl'] .cta__photo:nth-child(5) { right: 78%; }
+  [dir='rtl'] .cta__photo:nth-child(7) { right: 92%; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cta__gauge-arc { stroke-dashoffset: 40; }
-  .vr-packet { display: none; }
+  .cta__photo { opacity: 1; scale: 1; }
+  .cta__rays { animation: none; }
 }

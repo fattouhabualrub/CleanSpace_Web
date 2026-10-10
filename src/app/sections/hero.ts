@@ -15,6 +15,8 @@ import { I18n } from '../services/i18n';
 import { Shots } from '../core/shots';
 import { AppStoreBadgeComponent } from '../components/appstore-badge';
 import { prefersReducedMotion } from '../directives/motion';
+import { APP_RATING } from '../core/seo/app-rating';
+import { MIN_RATINGS_SHOWN } from '../core/seo/structured-data.service';
 
 /** What the scan decides about a photo — the same three outcomes the app shows. */
 type Verdict = 'best' | 'del' | 'blur';
@@ -84,6 +86,15 @@ interface Tile {
               </a>
             </div>
             <ul class="hx__trust hx__in" style="--i:4" [attr.aria-label]="i18n.t('لماذا تثق بنا', 'Why trust us')">
+              <!-- The real App Store rating (scripts/fetch-rating.mjs) — the same
+                   figures the AggregateRating schema claims, as Google requires. -->
+              @if (rating.count >= minRatings) {
+                <li class="hx__rating" [attr.aria-label]="ratingLabel()">
+                  <span class="hx__stars" aria-hidden="true" [style.--fill.%]="rating.value * 20">★★★★★</span>
+                  <b aria-hidden="true">{{ rating.value.toFixed(1) }}</b>
+                  <span aria-hidden="true">App Store ({{ rating.count }})</span>
+                </li>
+              }
               @for (t of trust; track t.en) {
                 <li>
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6.5 9.4 17 4 11.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -197,6 +208,15 @@ export class HeroComponent {
   readonly run = signal(0);
   rescan(): void {
     this.run.update((v) => v + 1);
+  }
+
+  readonly rating = APP_RATING;
+  readonly minRatings = MIN_RATINGS_SHOWN;
+  ratingLabel(): string {
+    return this.i18n
+      .t('تقييم {v} من 5 على App Store ({n} تقييم)', 'Rated {v} out of 5 on the App Store ({n} ratings)')
+      .replace('{v}', this.rating.value.toFixed(1))
+      .replace('{n}', String(this.rating.count));
   }
 
   // Honest trust signals — no invented ratings or download counts.

@@ -1,6 +1,6 @@
 // AUTO-GENERATED — do not edit by hand. Run `node scripts/i18n/build.js` to regenerate.
 // Maps each non-ar/en language code to { <English source string>: <translation> }.
-// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 323 catalog strings.
+// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 327 catalog strings.
 export const TRANSLATIONS: Record<string, Record<string, string>> = {
   "de": {
     "FAQ": "FAQ",
@@ -325,7 +325,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Nach rechts wischen zum Behalten · nach links zum Löschen",
     "All clean!": "Alles aufgeräumt!",
     "Start over": "Neu starten",
-    "Empty Trash": "Papierkorb leeren"
+    "Empty Trash": "Papierkorb leeren",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Mit {v} von 5 im App Store bewertet ({n} Bewertungen)",
+    "Airplane mode": "Flugmodus",
+    "Mobile data": "Mobile Daten",
+    "Try it: turn on airplane mode": "Probier es: Flugmodus einschalten"
   },
   "es": {
     "FAQ": "Preguntas frecuentes",
@@ -650,7 +654,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Desliza a la derecha para conservar · a la izquierda para borrar",
     "All clean!": "¡Todo limpio!",
     "Start over": "Empezar de nuevo",
-    "Empty Trash": "Vaciar papelera"
+    "Empty Trash": "Vaciar papelera",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Valorada con {v} de 5 en el App Store ({n} valoraciones)",
+    "Airplane mode": "Modo avión",
+    "Mobile data": "Datos móviles",
+    "Try it: turn on airplane mode": "Pruébalo: activa el modo avión"
   },
   "fr": {
     "FAQ": "FAQ",
@@ -975,7 +983,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Balayez à droite pour garder · à gauche pour supprimer",
     "All clean!": "Tout est propre !",
     "Start over": "Recommencer",
-    "Empty Trash": "Vider la corbeille"
+    "Empty Trash": "Vider la corbeille",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Noté {v} sur 5 sur l’App Store ({n} notes)",
+    "Airplane mode": "Mode Avion",
+    "Mobile data": "Données cellulaires",
+    "Try it: turn on airplane mode": "Essayez : activez le mode Avion"
   },
   "it": {
     "FAQ": "FAQ",
@@ -1300,7 +1312,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Scorri a destra per tenere · a sinistra per eliminare",
     "All clean!": "Tutto pulito!",
     "Start over": "Ricomincia",
-    "Empty Trash": "Svuota cestino"
+    "Empty Trash": "Svuota cestino",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Valutata {v} su 5 nell’App Store ({n} valutazioni)",
+    "Airplane mode": "Modalità aereo",
+    "Mobile data": "Dati cellulare",
+    "Try it: turn on airplane mode": "Prova: attiva la modalità aereo"
   },
   "nl": {
     "FAQ": "Veelgestelde vragen",
@@ -1625,7 +1641,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Veeg naar rechts om te bewaren · naar links om te verwijderen",
     "All clean!": "Alles opgeruimd!",
     "Start over": "Opnieuw beginnen",
-    "Empty Trash": "Prullenbak legen"
+    "Empty Trash": "Prullenbak legen",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Beoordeeld met {v} van 5 in de App Store ({n} beoordelingen)",
+    "Airplane mode": "Vliegtuigmodus",
+    "Mobile data": "Mobiele data",
+    "Try it: turn on airplane mode": "Probeer het: zet vliegtuigmodus aan"
   },
   "pl": {
     "FAQ": "FAQ",
@@ -1950,7 +1970,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Przesuń w prawo, aby zachować · w lewo, aby usunąć",
     "All clean!": "Wszystko czyste!",
     "Start over": "Zacznij od nowa",
-    "Empty Trash": "Opróżnij kosz"
+    "Empty Trash": "Opróżnij kosz",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Ocena {v} na 5 w App Store ({n} ocen)",
+    "Airplane mode": "Tryb samolotowy",
+    "Mobile data": "Dane komórkowe",
+    "Try it: turn on airplane mode": "Spróbuj: włącz tryb samolotowy"
   },
   "pt-BR": {
     "FAQ": "Perguntas frequentes",
@@ -2275,7 +2299,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Deslize para a direita para manter · para a esquerda para apagar",
     "All clean!": "Tudo limpo!",
     "Start over": "Recomeçar",
-    "Empty Trash": "Esvaziar lixeira"
+    "Empty Trash": "Esvaziar lixeira",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Avaliado com {v} de 5 na App Store ({n} avaliações)",
+    "Airplane mode": "Modo Avião",
+    "Mobile data": "Dados celulares",
+    "Try it: turn on airplane mode": "Experimente: ative o Modo Avião"
   },
   "ru": {
     "FAQ": "Вопросы и ответы",
@@ -2600,7 +2628,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Свайп вправо — оставить · влево — удалить",
     "All clean!": "Всё чисто!",
     "Start over": "Начать заново",
-    "Empty Trash": "Очистить корзину"
+    "Empty Trash": "Очистить корзину",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Оценка {v} из 5 в App Store ({n} оценок)",
+    "Airplane mode": "Авиарежим",
+    "Mobile data": "Сотовые данные",
+    "Try it: turn on airplane mode": "Попробуйте: включите авиарежим"
   },
   "tr": {
     "FAQ": "SSS",
@@ -2925,7 +2957,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Saklamak için sağa · silmek için sola kaydırın",
     "All clean!": "Tertemiz!",
     "Start over": "Baştan başlat",
-    "Empty Trash": "Çöp kutusunu boşalt"
+    "Empty Trash": "Çöp kutusunu boşalt",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store’da 5 üzerinden {v} puan ({n} değerlendirme)",
+    "Airplane mode": "Uçak modu",
+    "Mobile data": "Hücresel veri",
+    "Try it: turn on airplane mode": "Deneyin: uçak modunu açın"
   },
   "id": {
     "FAQ": "FAQ",
@@ -3250,7 +3286,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Geser ke kanan untuk menyimpan · ke kiri untuk menghapus",
     "All clean!": "Semua bersih!",
     "Start over": "Mulai lagi",
-    "Empty Trash": "Kosongkan sampah"
+    "Empty Trash": "Kosongkan sampah",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Dinilai {v} dari 5 di App Store ({n} penilaian)",
+    "Airplane mode": "Mode pesawat",
+    "Mobile data": "Data seluler",
+    "Try it: turn on airplane mode": "Coba: nyalakan mode pesawat"
   },
   "vi": {
     "FAQ": "Câu hỏi thường gặp",
@@ -3575,7 +3615,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "Vuốt phải để giữ · vuốt trái để xóa",
     "All clean!": "Đã sạch sẽ!",
     "Start over": "Làm lại",
-    "Empty Trash": "Dọn thùng rác"
+    "Empty Trash": "Dọn thùng rác",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "Được đánh giá {v}/5 trên App Store ({n} lượt đánh giá)",
+    "Airplane mode": "Chế độ máy bay",
+    "Mobile data": "Dữ liệu di động",
+    "Try it: turn on airplane mode": "Thử ngay: bật chế độ máy bay"
   },
   "hi": {
     "FAQ": "अक्सर पूछे जाने वाले प्रश्न",
@@ -3900,7 +3944,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "रखने के लिए दाएँ · हटाने के लिए बाएँ स्वाइप करें",
     "All clean!": "सब साफ़!",
     "Start over": "फिर से शुरू करें",
-    "Empty Trash": "ट्रैश खाली करें"
+    "Empty Trash": "ट्रैश खाली करें",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store पर 5 में से {v} रेटिंग ({n} रेटिंग)",
+    "Airplane mode": "हवाई जहाज़ मोड",
+    "Mobile data": "मोबाइल डेटा",
+    "Try it: turn on airplane mode": "आज़माएँ: हवाई जहाज़ मोड चालू करें"
   },
   "ja": {
     "FAQ": "よくある質問",
@@ -4225,7 +4273,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "右にスワイプで残す · 左にスワイプで削除",
     "All clean!": "すっきり！",
     "Start over": "最初から",
-    "Empty Trash": "ゴミ箱を空にする"
+    "Empty Trash": "ゴミ箱を空にする",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Storeで5点中{v}点の評価（{n}件）",
+    "Airplane mode": "機内モード",
+    "Mobile data": "モバイルデータ通信",
+    "Try it: turn on airplane mode": "試してみよう：機内モードをオン"
   },
   "ko": {
     "FAQ": "자주 묻는 질문",
@@ -4550,7 +4602,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "오른쪽으로 쓸어넘기면 보관 · 왼쪽은 삭제",
     "All clean!": "모두 정리됐어요!",
     "Start over": "처음부터",
-    "Empty Trash": "휴지통 비우기"
+    "Empty Trash": "휴지통 비우기",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 평점 5점 만점에 {v}점 (평가 {n}개)",
+    "Airplane mode": "에어플레인 모드",
+    "Mobile data": "셀룰러 데이터",
+    "Try it: turn on airplane mode": "해 보세요: 에어플레인 모드 켜기"
   },
   "zh-Hans": {
     "FAQ": "常见问题",
@@ -4875,7 +4931,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "向右滑动保留 · 向左滑动删除",
     "All clean!": "全部清理完毕！",
     "Start over": "重新开始",
-    "Empty Trash": "清空回收站"
+    "Empty Trash": "清空回收站",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 评分 {v}/5（{n} 个评分）",
+    "Airplane mode": "飞行模式",
+    "Mobile data": "蜂窝数据",
+    "Try it: turn on airplane mode": "试试看：打开飞行模式"
   },
   "zh-Hant": {
     "FAQ": "常見問題",
@@ -5200,7 +5260,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "向右滑動保留 · 向左滑動刪除",
     "All clean!": "全部清理完畢！",
     "Start over": "重新開始",
-    "Empty Trash": "清空垃圾桶"
+    "Empty Trash": "清空垃圾桶",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 評分 {v}/5（{n} 則評分）",
+    "Airplane mode": "飛航模式",
+    "Mobile data": "行動數據",
+    "Try it: turn on airplane mode": "試試看：開啟飛航模式"
   },
   "fa": {
     "FAQ": "پرسش‌های متداول",
@@ -5525,7 +5589,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "برای نگه‌داشتن به راست · برای حذف به چپ بکشید",
     "All clean!": "همه‌چیز تمیز شد!",
     "Start over": "شروع دوباره",
-    "Empty Trash": "خالی کردن سطل زباله"
+    "Empty Trash": "خالی کردن سطل زباله",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "امتیاز {v} از ۵ در App Store ({n} امتیاز)",
+    "Airplane mode": "حالت هواپیما",
+    "Mobile data": "داده تلفن همراه",
+    "Try it: turn on airplane mode": "امتحان کنید: حالت هواپیما را روشن کنید"
   },
   "ur": {
     "FAQ": "عمومی سوالات",
@@ -5850,7 +5918,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "رکھنے کے لیے دائیں · حذف کرنے کے لیے بائیں سوائپ کریں",
     "All clean!": "سب صاف!",
     "Start over": "دوبارہ شروع کریں",
-    "Empty Trash": "ردی خالی کریں"
+    "Empty Trash": "ردی خالی کریں",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store پر 5 میں سے {v} ریٹنگ ({n} ریٹنگز)",
+    "Airplane mode": "ایئرپلین موڈ",
+    "Mobile data": "موبائل ڈیٹا",
+    "Try it: turn on airplane mode": "آزمائیں: ایئرپلین موڈ آن کریں"
   },
   "ckb": {
     "FAQ": "پرسیارە دووبارەکان",
@@ -6175,6 +6247,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Swipe right to keep · left to delete": "بۆ هێشتنەوە ڕاست · بۆ سڕینەوە چەپ ڕابکێشە",
     "All clean!": "هەمووی پاک بوو!",
     "Start over": "دەستپێکردنەوە",
-    "Empty Trash": "بەتاڵکردنی سەبەتە"
+    "Empty Trash": "بەتاڵکردنی سەبەتە",
+    "Rated {v} out of 5 on the App Store ({n} ratings)": "هەڵسەنگاندنی {v} لە 5 لە App Store ({n} هەڵسەنگاندن)",
+    "Airplane mode": "دۆخی فڕۆکە",
+    "Mobile data": "داتای مۆبایل",
+    "Try it: turn on airplane mode": "تاقی بکەرەوە: دۆخی فڕۆکە هەڵبکە"
   }
 };

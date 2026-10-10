@@ -4,14 +4,16 @@ import { environment } from '../../../environments/environment';
 import { I18n, LANGUAGES, type Lang } from '../../services/i18n';
 import { OG_IMAGE_PATH } from '../brand';
 import { OG_LOCALE, SEO_COPY } from './seo-copy';
+import { PAGE_COPY, isSeoPage } from './page-copy';
 
 /**
  * Emits the head tags for the current locale + URL.
  *
- * The copy is identical on every page — only the locale changes it — so there is
- * no per-route metadata here. What *is* per-route is the canonical: it must
- * point at the URL being served, otherwise /download, /privacy and /terms all
- * canonicalize to the home page and never get indexed.
+ * The home page uses SEO_COPY; each secondary route has its own title and
+ * description in PAGE_COPY, so no two URLs in a locale share a title. The
+ * canonical is per-route too: it must point at the URL being served, otherwise
+ * /download, /privacy and /terms all canonicalize to the home page and never
+ * get indexed.
  */
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -29,7 +31,8 @@ export class SeoService {
    */
   update(path: string): void {
     const lang = this.i18n.lang();
-    const copy = SEO_COPY[lang];
+    const page = path.replace(/^\/+|\/+$/g, '');
+    const copy = isSeoPage(page) ? { ...SEO_COPY[lang], ...PAGE_COPY[page][lang] } : SEO_COPY[lang];
     const url = this.pageUrl(lang, path);
     const image = `${this.site}${OG_IMAGE_PATH}`;
 

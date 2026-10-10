@@ -14,6 +14,7 @@ import { GooglePlayBadgeComponent } from '../components/googleplay-badge';
 import { HeroComponent } from '../sections/hero';
 import { SwipeDemoComponent } from '../sections/swipe-demo';
 import { ScreenOrbitComponent } from '../sections/screen-orbit';
+import { PrivacyPanelComponent } from '../sections/privacy-panel';
 
 interface Feature { icon: string; arT: string; enT: string; arD: string; enD: string; art?: 'vault' | 'compress' | 'history' | 'langs'; tone: string; }
 interface Category { key: string; icon: string; ar: string; en: string; arD: string; enD: string; tone: string; wide?: boolean; }
@@ -36,7 +37,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
   imports: [
     RouterLink, RevealDirective, SpotlightDirective, ScrollStepDirective, CountUpDirective,
     AppStoreBadgeComponent, GooglePlayBadgeComponent,
-    HeroComponent, SwipeDemoComponent, ScreenOrbitComponent,
+    HeroComponent, SwipeDemoComponent, ScreenOrbitComponent, PrivacyPanelComponent,
   ],
   template: `
     <!-- Icon sprite: one coherent outline family (24px, 1.8 stroke, currentColor) -->
@@ -325,46 +326,8 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
       </div>
     </section>
 
-    <!-- ══ Privacy — the sealed room ══ -->
-    <section class="section--tight privacy" id="privacy-highlight">
-      <div class="container">
-        <div class="vaultroom" appReveal>
-          <div class="vaultroom__copy">
-            <span class="kicker" style="--tone: #5CC8FF">{{ i18n.t('الخصوصية أولاً', 'Privacy first') }}</span>
-            <h2 class="h2">{{ i18n.t('صورك لا تغادر جهازك — أبداً', 'Your photos never leave your device — ever') }}</h2>
-            <p class="lede">{{ i18n.t(
-              'كل الفحص والمقارنة والحذف يتم محلياً على الـ iPhone بقوة الشريحة نفسها. لا خوادم، لا رفع، لا تتبّع.',
-              'All scanning, matching and deleting happen locally on your iPhone, powered by the chip itself. No servers, no uploads, no tracking.') }}</p>
-            <a class="btn btn--ghost vaultroom__link" routerLink="/privacy">{{ i18n.t('سياسة الخصوصية', 'Privacy Policy') }}</a>
-          </div>
-
-          <div class="vaultroom__art" aria-hidden="true">
-            <span class="vr-ring vr-ring--1"></span>
-            <span class="vr-ring vr-ring--2"></span>
-            <span class="vr-ring vr-ring--3"></span>
-            @for (n of [0, 1, 2, 3, 4, 5]; track n) {
-              <span class="vr-packet" [style.--k]="n"></span>
-            }
-            <span class="vr-core">
-              <svg class="ico"><use href="#i-shield"/></svg>
-            </span>
-            <span class="vr-zero"><b>0</b> {{ i18n.t('صورة تُرفع إلى أي مكان', 'photos uploaded anywhere') }}</span>
-          </div>
-
-          <ul class="vaultroom__pillars">
-            @for (p of privacy; track p.enT) {
-              <li>
-                <span class="vaultroom__ic"><svg class="ico" aria-hidden="true"><use [attr.href]="'#i-' + p.icon"/></svg></span>
-                <div>
-                  <h3>{{ i18n.t(p.arT, p.enT) }}</h3>
-                  <p>{{ i18n.t(p.arD, p.enD) }}</p>
-                </div>
-              </li>
-            }
-          </ul>
-        </div>
-      </div>
-    </section>
+    <!-- ══ Privacy — Control Center with Airplane Mode ══ -->
+    <app-privacy-panel />
 
     <!-- ══ Plans ══ -->
     <section class="section" id="plans">
@@ -491,25 +454,35 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
       </div>
     </section>
 
-    <!-- ══ Closing CTA ══ -->
+    <!-- ══ Closing CTA — the kept library, floating around the ask ══ -->
     <section class="section--tight cta">
       <div class="container">
         <div class="cta__panel" appReveal>
-          <span class="cta__mesh" aria-hidden="true"></span>
-          <div class="cta__icon" aria-hidden="true">
-            <svg class="cta__gauge" viewBox="0 0 200 200">
-              <circle class="cta__gauge-track" cx="100" cy="100" r="88"/>
-              <circle class="cta__gauge-arc" cx="100" cy="100" r="88" transform="rotate(-90 100 100)"/>
-            </svg>
-            <img src="icon-192.png" width="120" height="120" alt="">
+          <span class="cta__rays" aria-hidden="true"></span>
+          <div class="cta__photos" aria-hidden="true">
+            @for (p of ctaPhotos; track p.src; let i = $index) {
+              <figure class="cta__photo" [class.cta__photo--side]="p.side"
+                      [style.--x]="p.x" [style.--y]="p.y" [style.--r.deg]="p.r" [style.--w.px]="p.w" [style.--k]="i">
+                <img [src]="'tiles/' + p.src + '.webp'" alt="" loading="lazy" decoding="async">
+              </figure>
+            }
           </div>
-          <h2 class="h2">{{ i18n.t('جاهز تستعيد مساحتك؟', 'Ready to reclaim your space?') }}</h2>
-          <p class="lede">{{ i18n.t('نزّل CleanSpace وابدأ التنظيف اليوم.', 'Download CleanSpace and start cleaning today.') }}</p>
-          <div class="cta__badges">
-            <app-appstore-badge placement="home_cta_band" />
-            <app-googleplay-badge />
+          <div class="cta__body">
+            <div class="cta__icon" aria-hidden="true">
+              <svg class="cta__gauge" viewBox="0 0 200 200">
+                <circle class="cta__gauge-track" cx="100" cy="100" r="88"/>
+                <circle class="cta__gauge-arc" cx="100" cy="100" r="88" transform="rotate(-90 100 100)"/>
+              </svg>
+              <img src="icon-192.png" width="112" height="112" alt="">
+            </div>
+            <h2 class="h2">{{ i18n.t('جاهز تستعيد مساحتك؟', 'Ready to reclaim your space?') }}</h2>
+            <p class="lede">{{ i18n.t('نزّل CleanSpace وابدأ التنظيف اليوم.', 'Download CleanSpace and start cleaning today.') }}</p>
+            <div class="cta__badges">
+              <app-appstore-badge placement="home_cta_band" />
+              <app-googleplay-badge />
+            </div>
+            <span class="cta__note">{{ i18n.t('لـ iPhone • iOS 16 وأحدث', 'For iPhone • iOS 16 and later') }}</span>
           </div>
-          <span class="cta__note">{{ i18n.t('لـ iPhone • iOS 16 وأحدث', 'For iPhone • iOS 16 and later') }}</span>
         </div>
       </div>
     </section>
@@ -614,11 +587,19 @@ export class HomeComponent {
     { icon: 'sparkle', arT: 'حرّر المساحة', enT: 'Free up space', arD: 'احذف ما لا تحتاجه بضغطة — احتفظ بالأفضل واحذف الباقي.', enD: 'Delete what you don’t need in a tap — keep the best, remove the rest.' },
   ];
 
-  readonly privacy = [
-    { icon: 'offline', arT: 'بدون إنترنت', enT: 'Works offline', arD: 'يعمل بالكامل بدون اتصال — لا حاجة لشبكة إطلاقاً.', enD: 'Runs entirely offline — no connection ever required.' },
-    { icon: 'noaccount', arT: 'بلا حساب', enT: 'No account', arD: 'لا تسجيل ولا بريد ولا رقم هاتف. حمّل وابدأ فوراً.', enD: 'No sign-up, email or phone number. Just download and go.' },
-    { icon: 'notrack', arT: 'بلا تتبّع ولا إعلانات', enT: 'No tracking, no ads', arD: 'لا نجمع بياناتك ولا نبيعها ولا نعرض إعلانات.', enD: 'We don’t collect, sell your data, or show ads.' },
-    { icon: 'lock', arT: 'خزنة مشفّرة', enT: 'Encrypted vault', arD: 'صورك الخاصة محمية بـ Face ID ومشفّرة على جهازك.', enD: 'Private photos are locked with Face ID and encrypted on-device.' },
+  /**
+   * The closing collage: the keepers from the hero, arranged around the ask.
+   * x/y are % of the panel; `side` photos are dropped on narrow screens.
+   */
+  readonly ctaPhotos = [
+    { src: 'santorini', x: 9, y: 20, r: -9, w: 156, side: false },
+    { src: 'kid-curls', x: 19, y: 64, r: 7, w: 128, side: true },
+    { src: 'puppy', x: 6, y: 88, r: -5, w: 118, side: false },
+    { src: 'burj', x: 27, y: 12, r: 5, w: 96, side: true },
+    { src: 'eiffel', x: 91, y: 17, r: 8, w: 146, side: false },
+    { src: 'kids-hug', x: 81, y: 58, r: -6, w: 134, side: true },
+    { src: 'pyramids', x: 94, y: 86, r: 6, w: 122, side: false },
+    { src: 'baby', x: 73, y: 90, r: -8, w: 100, side: true },
   ];
 
   /**

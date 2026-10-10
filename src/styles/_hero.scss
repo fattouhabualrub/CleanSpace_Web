@@ -73,6 +73,19 @@
 .hx__trust { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
 .hx__trust li { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 14px; font-weight: 500; }
 .hx__trust svg { width: 15px; height: 15px; color: var(--green); flex: none; }
+.hx__rating { flex-basis: 100%; gap: 8px !important; }
+.hx__rating b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Five grey stars with an amber layer clipped to the score, so 4.6 reads as 4.6. */
+.hx__stars {
+  position: relative; display: inline-block; font-size: 16px; letter-spacing: 1px; line-height: 1;
+  color: color-mix(in srgb, var(--ink) 18%, transparent);
+  direction: ltr;
+}
+.hx__stars::before {
+  content: '★★★★★'; position: absolute; inset: 0; overflow: hidden; width: var(--fill);
+  color: #F5B70A;
+}
+@media (max-width: 959px) { .hx__rating { justify-content: center; } }
 
 /* Staggered entrance for the copy. */
 .hx__in { animation: hx-rise 1s var(--ease) both; animation-delay: calc(0.08s + var(--i) * 0.09s); }

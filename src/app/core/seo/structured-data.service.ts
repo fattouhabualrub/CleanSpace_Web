@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { I18n, LANGUAGES, type Lang } from '../../services/i18n';
 import { APP_NAME, APP_SHORT_NAME, OG_IMAGE_PATH } from '../brand';
 import { SEO_COPY } from './seo-copy';
+import { APP_RATING } from './app-rating';
 import { FAQ } from '../content/faq';
 
 /** Marks the nodes this service owns, so it can replace exactly its own. */
@@ -16,12 +17,18 @@ const OWNED = 'data-jsonld';
 const PUBLISHER = { '@type': 'Organization', name: 'Animi-soft' } as const;
 
 /**
+ * Below this many ratings the stars aren't shown on the page, so they aren't
+ * claimed in the schema either — the two must always match.
+ */
+export const MIN_RATINGS_SHOWN = 3;
+
+/**
  * Emits JSON-LD per locale at render time.
  *
  * Previously both blocks were hardcoded English in index.html, which meant an
  * Arabic page shipped English FAQ schema — a structured-data mismatch that can
- * earn a manual action. The FAQ block is only emitted for locales whose FAQ we
- * can actually state in that language.
+ * earn a manual action. Every block here is built from the same strings the
+ * page renders in the active locale.
  */
 @Injectable({ providedIn: 'root' })
 export class StructuredDataService {
@@ -35,6 +42,9 @@ export class StructuredDataService {
     const lang = this.i18n.lang();
     const clean = path.replace(/^\/+|\/+$/g, '');
     const url = clean ? `${this.site}/${lang}/${clean}` : `${this.site}/${lang}`;
+    // The rating and the FAQ are only printed on the home page, and markup may
+    // only describe what the page itself shows.
+    const isHome = clean === '';
 
     this.doc.head.querySelectorAll(`script[${OWNED}]`).forEach((n) => n.remove());
 
@@ -42,9 +52,23 @@ export class StructuredDataService {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: APP_SHORT_NAME,
+      alternateName: APP_NAME,
       url: `${this.site}/${lang}`,
       inLanguage: LANGUAGES.map((l) => l.code),
       publisher: PUBLISHER,
+    });
+
+    // The brand as an entity: name, logo and the store listing it is known by.
+    // This is what search engines use for the logo and knowledge panel.
+    this.emit('org', {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: APP_SHORT_NAME,
+      url: this.site,
+      logo: `${this.site}/icon-512.png`,
+      email: 'support@cleaningspace.app',
+      sameAs: [environment.appStoreUrl],
+      parentOrganization: PUBLISHER,
     });
 
     this.emit('app', {
@@ -67,23 +91,33 @@ export class StructuredDataService {
         { '@type': 'Offer', price: '39.99', priceCurrency: 'USD', name: 'Pro Lifetime' },
       ],
       featureList: FEATURE_LIST[lang] ?? FEATURE_LIST['en'],
-      // NOTE (owner): no aggregateRating here on purpose — inventing rating or
-      // review counts is a policy violation. Supply real App Store figures to add it.
+      // Real App Store figures only (scripts/fetch-rating.mjs) — never invented.
+      // The same numbers are printed in the hero, as Google requires.
+      ...(isHome && APP_RATING.count >= MIN_RATINGS_SHOWN && {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: APP_RATING.value.toFixed(1),
+          ratingCount: APP_RATING.count,
+          bestRating: '5',
+          worstRating: '1',
+        },
+      }),
     });
 
-    // Only ar and en are authored, and the schema must mirror the copy the page
-    // actually renders — an absent FAQPage block is fine, a mismatched one is not.
-    if (lang === 'ar' || lang === 'en') {
-      this.emit('faq', {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: FAQ.map((q) => ({
-          '@type': 'Question',
-          name: lang === 'ar' ? q.arQ : q.enQ,
-          acceptedAnswer: { '@type': 'Answer', text: lang === 'ar' ? q.arA : q.enA },
-        })),
-      });
-    }
+    // The FAQ renders translated in every locale (ar/en inline, the rest from the
+    // dictionary, which is loaded before the page is prerendered), so the schema
+    // is built from the very same i18n.t() calls and always mirrors the page.
+    if (!isHome) return;
+    this.emit('faq', {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      inLanguage: lang,
+      mainEntity: FAQ.map((q) => ({
+        '@type': 'Question',
+        name: this.i18n.t(q.arQ, q.enQ),
+        acceptedAnswer: { '@type': 'Answer', text: this.i18n.t(q.arA, q.enA) },
+      })),
+    });
   }
 
   private emit(id: string, data: unknown): void {

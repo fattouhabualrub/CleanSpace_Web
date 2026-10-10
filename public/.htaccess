@@ -27,16 +27,20 @@
   RewriteEngine On
 
   # --- 1. Bare root → /<lang>/ ------------------------------------------------
+  # 302, not 301: the target depends on the visitor's language, so it must not
+  # be cached as permanent (a browser would pin someone to their first language),
+  # and it is what Google expects for locale-adaptive redirects — the bare root
+  # stays the x-default entry point instead of being folded into /en.
   # Chinese and Portuguese first: their folder names (zh-Hans, zh-Hant, pt-BR) aren't just
   # the primary subtag, so they can't come from the generic capture below.
   RewriteCond %{HTTP:Accept-Language} ^zh-(?:TW|HK|Hant) [NC]
-  RewriteRule ^$ /zh-Hant/ [R=301,L]
+  RewriteRule ^$ /zh-Hant/ [R=302,L]
 
   RewriteCond %{HTTP:Accept-Language} ^zh [NC]
-  RewriteRule ^$ /zh-Hans/ [R=301,L]
+  RewriteRule ^$ /zh-Hans/ [R=302,L]
 
   RewriteCond %{HTTP:Accept-Language} ^pt [NC]
-  RewriteRule ^$ /pt-BR/ [R=301,L]
+  RewriteRule ^$ /pt-BR/ [R=302,L]
 
   # The other 18 locales, where the folder name *is* the primary subtag, so the
   # captured %1 can be reused directly. The trailing (?![a-z]) stops 'ar' from
@@ -45,10 +49,10 @@
   # lower-case form the folders use. Browsers send lower-case subtags; anything
   # unusual just falls through to English below, which is a safe outcome.
   RewriteCond %{HTTP:Accept-Language} ^(ar|ckb|de|en|es|fa|fr|hi|id|it|ja|ko|nl|pl|ru|tr|ur|vi)(?![a-z])
-  RewriteRule ^$ /%1/ [R=301,L]
+  RewriteRule ^$ /%1/ [R=302,L]
 
   # Everything else → English.
-  RewriteRule ^$ /en/ [R=301,L]
+  RewriteRule ^$ /en/ [R=302,L]
 
   # --- 2. Serve the prerendered file ------------------------------------------
   # Real files are served as-is. Directories deliberately are NOT matched here:
