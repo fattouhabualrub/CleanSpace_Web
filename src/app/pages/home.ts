@@ -155,28 +155,28 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
                 @switch (c.key) {
                   @case ('dup') {
                     <div class="art-dup">
-                      <figure class="mini mini--best"><img src="tiles/whale.webp" alt=""><span class="mini__best">{{ i18n.t('الأفضل', 'Best') }}</span><span class="mini__size">1.8 MB</span></figure>
-                      <figure class="mini mini--del"><img src="tiles/whale2.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span><span class="mini__size">240 KB</span></figure>
+                      <figure class="mini mini--best"><img src="tiles/eiffel.webp" alt=""><span class="mini__best">{{ i18n.t('الأفضل', 'Best') }}</span><span class="mini__size">3.1 MB</span></figure>
+                      <figure class="mini mini--del"><img src="tiles/eiffel.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span><span class="mini__size">3.1 MB</span></figure>
                     </div>
                   }
                   @case ('similar') {
                     <div class="art-sim">
-                      <figure class="mini mini--del"><img src="tiles/lake.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span></figure>
-                      <figure class="mini mini--best"><img src="tiles/forest.webp" alt=""><span class="mini__best">{{ i18n.t('الأفضل', 'Best') }}</span></figure>
-                      <figure class="mini mini--del"><img src="tiles/autumn.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span></figure>
+                      <figure class="mini mini--del"><img src="tiles/pyramids2.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span></figure>
+                      <figure class="mini mini--best"><img src="tiles/pyramids.webp" alt=""><span class="mini__best">{{ i18n.t('الأفضل', 'Best') }}</span></figure>
+                      <figure class="mini mini--del"><img src="tiles/pyramids3.webp" alt=""><span class="mini__check"><svg class="ico"><use href="#i-check"/></svg></span></figure>
                     </div>
                   }
                   @case ('burst') {
                     <div class="art-burst">
                       @for (n of [0, 1, 2, 3, 4]; track n) {
-                        <figure class="mini" [style.--k]="n"><img src="tiles/beach.webp" alt=""></figure>
+                        <figure class="mini" [style.--k]="n"><img src="tiles/kid-sea.webp" alt=""></figure>
                       }
                       <span class="art-burst__n">×5</span>
                     </div>
                   }
                   @case ('blur') {
                     <div class="art-blur">
-                      <figure class="mini"><img src="tiles/falls.webp" alt=""></figure>
+                      <figure class="mini"><img src="tiles/birthday.webp" alt=""></figure>
                       <span class="art-blur__focus"></span>
                     </div>
                   }
@@ -189,7 +189,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
                   }
                   @case ('video') {
                     <div class="art-video">
-                      <figure class="mini mini--wide"><img src="tiles/wave.webp" alt="">
+                      <figure class="mini mini--wide"><img src="tiles/petra.webp" alt="">
                         <span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span>
                         <span class="art-video__bar"><i></i></span>
                         <span class="mini__size">1.2 GB</span>
@@ -198,9 +198,9 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
                   }
                   @case ('simvideo') {
                     <div class="art-simv">
-                      <figure class="mini mini--wide"><img src="tiles/cascade.webp" alt=""><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span><span class="mini__size">0:42</span></figure>
+                      <figure class="mini mini--wide"><img src="tiles/aurora.webp" alt=""><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span><span class="mini__size">0:42</span></figure>
                       <span class="art-simv__eq">≈</span>
-                      <figure class="mini mini--wide"><img src="tiles/falls.webp" alt=""><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span><span class="mini__size">0:40</span></figure>
+                      <figure class="mini mini--wide"><img src="tiles/aurora.webp" alt="" style="object-position: 70% 40%; scale: 1.15"><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span><span class="mini__size">0:40</span></figure>
                     </div>
                   }
                   @case ('files') {
@@ -255,7 +255,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
                     }
                     @case ('compress') {
                       <div class="art-comp">
-                        <figure class="mini mini--wide"><img src="tiles/forest.webp" alt=""><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span></figure>
+                        <figure class="mini mini--wide"><img src="tiles/maldives.webp" alt=""><span class="art-video__play"><svg class="ico"><use href="#i-play"/></svg></span></figure>
                         <div class="art-comp__bars">
                           <div class="art-comp__row"><span>HEVC 4K</span><span class="art-comp__bar art-comp__bar--before"><i></i></span><b>86 MB</b></div>
                           <div class="art-comp__row"><span>1080p</span><span class="art-comp__bar art-comp__bar--after"><i></i></span><b>31 MB</b></div>
@@ -598,7 +598,8 @@ export class HomeComponent {
     { icon: 'shield', tone: 'var(--green)', arT: 'خصوصية كاملة', enT: 'Full privacy', arD: 'كل المعالجة على جهازك — لا يُرفع أي شيء إلى أي خادم.', enD: 'Everything runs on-device — nothing is uploaded anywhere.' },
   ];
 
-  readonly vaultTiles = ['forest', 'wave', 'park', 'autumn', 'lake', 'falls'];
+  /** Private family moments — exactly what people move into a vault. */
+  readonly vaultTiles = ['baby', 'kids-hug', 'friends', 'woman-smile', 'birthday', 'kid-curls'];
   /** The history miniature's 14 days — a shape, not data. */
   readonly historyBars = [0.22, 0.38, 0.3, 0.55, 0.42, 0.18, 0.64, 0.48, 0.7, 0.36, 0.58, 0.82, 0.44, 0.96];
 

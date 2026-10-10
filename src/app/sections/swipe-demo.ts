@@ -25,8 +25,8 @@ interface Decision { photo: Photo; verdict: Verdict; emptied: boolean }
  * the same `decide()`; the drag is tracked with pointer events written straight
  * to the card's style, and only the outcome goes through signals.
  *
- * The photos are real frames from the app's own sample library (public/tiles)
- * and the sizes are what those thumbnails show in the app.
+ * The photos are free Unsplash frames (public/tiles/lg); the sizes are
+ * illustrative, in the range a modern iPhone camera produces.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,7 +90,7 @@ interface Decision { photo: Photo; verdict: Verdict; emptied: boolean }
                           [class.is-top]="i === 0" [class.from-left]="i === 0 && returning() === 'delete'"
                           [class.from-right]="i === 0 && returning() === 'keep'"
                           (pointerdown)="i === 0 && grab($event)">
-                    <img [src]="'tiles/' + p.id + '.webp'" alt="" draggable="false">
+                    <img [src]="'tiles/lg/' + p.id + '.webp'" alt="" draggable="false" decoding="async">
                     <span class="sw__size">{{ p.mb }} MB</span>
                     <figcaption>{{ formatDate(p.date) }}</figcaption>
                     @if (i === 0) {
@@ -138,14 +138,14 @@ export class SwipeDemoComponent {
   private readonly deckEl = viewChild.required<ElementRef<HTMLElement>>('deck');
 
   private static readonly PHOTOS: Photo[] = [
-    { id: 'wave', mb: 4.2, date: '2026-09-17' },
-    { id: 'park', mb: 13.6, date: '2026-08-02' },
-    { id: 'forest', mb: 2.1, date: '2026-06-21' },
-    { id: 'whale2', mb: 0.2, date: '2026-05-30' },
-    { id: 'autumn', mb: 6.4, date: '2025-10-11' },
-    { id: 'falls', mb: 2.5, date: '2025-07-04' },
-    { id: 'lake', mb: 1.9, date: '2025-06-14' },
-    { id: 'beach', mb: 1.8, date: '2024-12-28' },
+    { id: 'kids-hug', mb: 3.8, date: '2026-09-17' },
+    { id: 'burj', mb: 2.4, date: '2026-08-02' },
+    { id: 'aurora', mb: 4.6, date: '2026-02-11' },
+    { id: 'baby', mb: 1.9, date: '2025-11-23' },
+    { id: 'colosseum', mb: 2.7, date: '2025-07-04' },
+    { id: 'friends', mb: 3.2, date: '2025-06-14' },
+    { id: 'wadirum', mb: 2.2, date: '2025-03-28' },
+    { id: 'taj', mb: 5.1, date: '2024-12-28' },
   ];
 
   private readonly index = signal(0);

@@ -98,7 +98,7 @@ interface Tile {
           <div class="hx__scene" #scene [attr.data-run]="run() % 2 ? 'b' : 'a'">
             <!-- The clutter. Decorative: the copy and the phone carry the meaning. -->
             <div class="hx__tiles" aria-hidden="true">
-              @for (tile of tiles; track tile.src) {
+              @for (tile of tiles; track $index) {
                 <figure class="hx-tile" [attr.data-kind]="tile.kind"
                         [class.hx-tile--desk]="!tile.m"
                         [style.--x]="vx(tile.x)" [style.--y]="tile.y"
@@ -209,26 +209,27 @@ export class HeroComponent {
 
   /**
    * The clutter. Placed so the copy column (inline-start, ~0–46%) stays clear
-   * on desktop; pairs mirror the app's own groups — the two whale tails are a
-   * duplicate pair, the forest and the lake a look-alike pair.
+   * on desktop. It mirrors the app's own groups: every copy marked for deletion
+   * is either a byte-identical duplicate of a keeper (the same file twice), a
+   * look-alike (two frames of the pyramids), or a shaky, out-of-focus shot.
    */
   readonly tiles: Tile[] = [
-    { src: 'whale', kind: 'best', x: 50, y: 19, m: [10, 10], w: 138, r: -8, d: 0.6, size: '233 KB' },
-    { src: 'whale2', kind: 'del', x: 58, y: 27, m: [90, 9], w: 120, r: 7, d: 0.95, size: '233 KB' },
-    { src: 'forest', kind: 'best', x: 91, y: 19, m: [12, 33], w: 146, r: 6, d: 0.5, size: '2.1 MB' },
-    { src: 'lake', kind: 'del', x: 97, y: 36, m: [89, 31], w: 120, r: -5, d: 1, size: '1.9 MB' },
-    { src: 'blurhill', kind: 'blur', x: 93, y: 60, m: [7, 55], w: 124, r: 9, d: 0.75, size: '65 KB' },
-    { src: 'wave', kind: 'best', x: 92, y: 79, m: [92, 54], w: 150, r: -7, d: 0.6, size: '3.4 MB' },
-    { src: 'blursea', kind: 'blur', x: 98, y: 98, m: null, w: 112, r: 5, d: 1.1, size: '59 KB' },
-    { src: 'park', kind: 'del', x: 53, y: 90, m: [11, 77], w: 130, r: 6, d: 0.8, size: '13.6 MB' },
-    { src: 'beach', kind: 'del', x: 64, y: 99, m: [90, 76], w: 110, r: -9, d: 1, size: '1.8 MB' },
-    { src: 'autumn', kind: 'del', x: 5, y: 101, m: [30, 3], w: 120, r: -6, d: 0.7, size: '6.4 MB' },
-    { src: 'cascade', kind: 'del', x: 27, y: 104, m: null, w: 114, r: 8, d: 1.1, size: '2.5 MB' },
-    { src: 'falls', kind: 'del', x: 41, y: 9, m: [70, 3], w: 104, r: 10, d: 1, size: '2.0 MB' },
-    { src: 'blurfield', kind: 'blur', x: 4, y: 11, m: null, w: 114, r: -10, d: 0.9, size: '63 KB' },
-    { src: 'amber', kind: 'blur', x: 23, y: 7, m: null, w: 96, r: 6, d: 1.2, size: '23 KB' },
-    { src: 'vinyl', kind: 'del', x: 73, y: 8, m: null, w: 106, r: -4, d: 0.85, size: '466 KB' },
-    { src: 'blurcloud', kind: 'blur', x: 79, y: 69, m: null, w: 98, r: 12, d: 1.25, size: '73 KB' },
+    { src: 'eiffel', kind: 'best', x: 50, y: 19, m: [10, 10], w: 138, r: -8, d: 0.6, size: '3.1 MB' },
+    { src: 'eiffel', kind: 'del', x: 58, y: 27, m: [90, 9], w: 120, r: 7, d: 0.95, size: '3.1 MB' },
+    { src: 'pyramids', kind: 'best', x: 91, y: 19, m: [12, 33], w: 146, r: 6, d: 0.5, size: '2.4 MB' },
+    { src: 'pyramids2', kind: 'del', x: 97, y: 36, m: [89, 31], w: 120, r: -5, d: 1, size: '2.2 MB' },
+    { src: 'blur-cappadocia', kind: 'blur', x: 93, y: 60, m: [7, 55], w: 124, r: 9, d: 0.75, size: '1.6 MB' },
+    { src: 'kid-curls', kind: 'best', x: 92, y: 79, m: [92, 54], w: 150, r: -7, d: 0.6, size: '2.8 MB' },
+    { src: 'blur-kitten', kind: 'blur', x: 98, y: 98, m: null, w: 112, r: 5, d: 1.1, size: '1.1 MB' },
+    { src: 'santorini', kind: 'best', x: 53, y: 90, m: [11, 77], w: 130, r: 6, d: 0.8, size: '3.6 MB' },
+    { src: 'santorini', kind: 'del', x: 64, y: 99, m: [90, 76], w: 110, r: -9, d: 1, size: '3.6 MB' },
+    { src: 'blur-woman-travel', kind: 'blur', x: 5, y: 101, m: [30, 3], w: 120, r: -6, d: 0.7, size: '2.0 MB' },
+    { src: 'blur-kid-sea', kind: 'blur', x: 27, y: 104, m: null, w: 114, r: 8, d: 1.1, size: '1.4 MB' },
+    { src: 'puppy', kind: 'best', x: 41, y: 9, m: [70, 3], w: 104, r: 10, d: 1, size: '2.6 MB' },
+    { src: 'blur-maldives', kind: 'blur', x: 4, y: 11, m: null, w: 114, r: -10, d: 0.9, size: '1.8 MB' },
+    { src: 'kid-curls', kind: 'del', x: 23, y: 7, m: null, w: 96, r: 6, d: 1.2, size: '2.8 MB' },
+    { src: 'burj', kind: 'best', x: 73, y: 8, m: null, w: 106, r: -4, d: 0.85, size: '3.3 MB' },
+    { src: 'blur-aurora', kind: 'blur', x: 79, y: 69, m: null, w: 98, r: 12, d: 1.25, size: '1.2 MB' },
   ];
 
   private readonly rtl = computed(() => this.i18n.isRTL());
