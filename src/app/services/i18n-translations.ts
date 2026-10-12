@@ -1,6 +1,6 @@
 // AUTO-GENERATED — do not edit by hand. Run `node scripts/i18n/build.js` to regenerate.
 // Maps each non-ar/en language code to { <English source string>: <translation> }.
-// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 333 catalog strings.
+// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 337 catalog strings.
 export const TRANSLATIONS: Record<string, Record<string, string>> = {
   "de": {
     "FAQ": "FAQ",
@@ -335,7 +335,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Lösche die ersten 100 MB kostenlos – ganz ohne Abo.",
     "Empty the trash to free {n} MB": "Papierkorb leeren und {n} MB freigeben",
     "Delete a photo": "Foto löschen",
-    "Empty the trash": "Papierkorb leeren"
+    "Empty the trash": "Papierkorb leeren",
+    "Scan with your iPhone camera": "Mit der iPhone-Kamera scannen",
+    "It opens CleanSpace on the App Store.": "CleanSpace öffnet sich direkt im App Store.",
+    "QR code to download CleanSpace": "QR-Code zum Laden von CleanSpace",
+    "Cleaning…": "Wird aufgeräumt…"
   },
   "es": {
     "FAQ": "Preguntas frecuentes",
@@ -670,7 +674,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Borra tus primeros 100 MB gratis, sin suscripción.",
     "Empty the trash to free {n} MB": "Vacía la papelera para liberar {n} MB",
     "Delete a photo": "Borra una foto",
-    "Empty the trash": "Vacía la papelera"
+    "Empty the trash": "Vacía la papelera",
+    "Scan with your iPhone camera": "Escanéalo con la cámara de tu iPhone",
+    "It opens CleanSpace on the App Store.": "Abre CleanSpace directamente en el App Store.",
+    "QR code to download CleanSpace": "Código QR para descargar CleanSpace",
+    "Cleaning…": "Limpiando…"
   },
   "fr": {
     "FAQ": "FAQ",
@@ -1005,7 +1013,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Supprimez vos 100 premiers Mo gratuitement — sans abonnement.",
     "Empty the trash to free {n} MB": "Videz la corbeille pour libérer {n} Mo",
     "Delete a photo": "Supprimez une photo",
-    "Empty the trash": "Videz la corbeille"
+    "Empty the trash": "Videz la corbeille",
+    "Scan with your iPhone camera": "Scannez avec l’appareil photo de votre iPhone",
+    "It opens CleanSpace on the App Store.": "CleanSpace s’ouvre directement sur l’App Store.",
+    "QR code to download CleanSpace": "Code QR pour télécharger CleanSpace",
+    "Cleaning…": "Nettoyage en cours…"
   },
   "it": {
     "FAQ": "FAQ",
@@ -1340,7 +1352,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Elimina i primi 100 MB gratis, senza abbonamento.",
     "Empty the trash to free {n} MB": "Svuota il cestino per liberare {n} MB",
     "Delete a photo": "Elimina una foto",
-    "Empty the trash": "Svuota il cestino"
+    "Empty the trash": "Svuota il cestino",
+    "Scan with your iPhone camera": "Inquadra con la fotocamera dell’iPhone",
+    "It opens CleanSpace on the App Store.": "CleanSpace si apre direttamente nell’App Store.",
+    "QR code to download CleanSpace": "Codice QR per scaricare CleanSpace",
+    "Cleaning…": "Pulizia in corso…"
   },
   "nl": {
     "FAQ": "Veelgestelde vragen",
@@ -1675,7 +1691,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Verwijder je eerste 100 MB gratis — zonder abonnement.",
     "Empty the trash to free {n} MB": "Leeg de prullenbak om {n} MB vrij te maken",
     "Delete a photo": "Verwijder een foto",
-    "Empty the trash": "Leeg de prullenbak"
+    "Empty the trash": "Leeg de prullenbak",
+    "Scan with your iPhone camera": "Scan met de camera van je iPhone",
+    "It opens CleanSpace on the App Store.": "CleanSpace opent direct in de App Store.",
+    "QR code to download CleanSpace": "QR-code om CleanSpace te downloaden",
+    "Cleaning…": "Opruimen…"
   },
   "pl": {
     "FAQ": "FAQ",
@@ -2010,7 +2030,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Usuń pierwsze 100 MB za darmo — bez subskrypcji.",
     "Empty the trash to free {n} MB": "Opróżnij kosz, aby zwolnić {n} MB",
     "Delete a photo": "Usuń zdjęcie",
-    "Empty the trash": "Opróżnij kosz"
+    "Empty the trash": "Opróżnij kosz",
+    "Scan with your iPhone camera": "Zeskanuj aparatem iPhone’a",
+    "It opens CleanSpace on the App Store.": "CleanSpace otworzy się od razu w App Store.",
+    "QR code to download CleanSpace": "Kod QR do pobrania CleanSpace",
+    "Cleaning…": "Czyszczenie…"
   },
   "pt-BR": {
     "FAQ": "Perguntas frequentes",
@@ -2345,7 +2369,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Apague seus primeiros 100 MB de graça — sem assinatura.",
     "Empty the trash to free {n} MB": "Esvazie a lixeira para liberar {n} MB",
     "Delete a photo": "Apague uma foto",
-    "Empty the trash": "Esvazie a lixeira"
+    "Empty the trash": "Esvazie a lixeira",
+    "Scan with your iPhone camera": "Escaneie com a câmera do iPhone",
+    "It opens CleanSpace on the App Store.": "Abre o CleanSpace direto na App Store.",
+    "QR code to download CleanSpace": "Código QR para baixar o CleanSpace",
+    "Cleaning…": "Limpando…"
   },
   "ru": {
     "FAQ": "Вопросы и ответы",
@@ -2680,7 +2708,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Удалите первые 100 МБ бесплатно — без подписки.",
     "Empty the trash to free {n} MB": "Очистите корзину, чтобы освободить {n} МБ",
     "Delete a photo": "Удалите фото",
-    "Empty the trash": "Очистите корзину"
+    "Empty the trash": "Очистите корзину",
+    "Scan with your iPhone camera": "Отсканируйте камерой iPhone",
+    "It opens CleanSpace on the App Store.": "CleanSpace откроется сразу в App Store.",
+    "QR code to download CleanSpace": "QR-код для загрузки CleanSpace",
+    "Cleaning…": "Очистка…"
   },
   "tr": {
     "FAQ": "SSS",
@@ -3015,7 +3047,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "İlk 100 MB’ı ücretsiz silin — abonelik gerekmez.",
     "Empty the trash to free {n} MB": "{n} MB boşaltmak için çöp kutusunu boşaltın",
     "Delete a photo": "Bir fotoğraf silin",
-    "Empty the trash": "Çöp kutusunu boşaltın"
+    "Empty the trash": "Çöp kutusunu boşaltın",
+    "Scan with your iPhone camera": "iPhone kameranızla tarayın",
+    "It opens CleanSpace on the App Store.": "CleanSpace doğrudan App Store’da açılır.",
+    "QR code to download CleanSpace": "CleanSpace’i indirmek için QR kodu",
+    "Cleaning…": "Temizleniyor…"
   },
   "id": {
     "FAQ": "FAQ",
@@ -3350,7 +3386,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Hapus 100 MB pertama Anda gratis — tanpa langganan.",
     "Empty the trash to free {n} MB": "Kosongkan sampah untuk membebaskan {n} MB",
     "Delete a photo": "Hapus satu foto",
-    "Empty the trash": "Kosongkan sampah"
+    "Empty the trash": "Kosongkan sampah",
+    "Scan with your iPhone camera": "Pindai dengan kamera iPhone Anda",
+    "It opens CleanSpace on the App Store.": "CleanSpace langsung terbuka di App Store.",
+    "QR code to download CleanSpace": "Kode QR untuk mengunduh CleanSpace",
+    "Cleaning…": "Membersihkan…"
   },
   "vi": {
     "FAQ": "Câu hỏi thường gặp",
@@ -3685,7 +3725,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "Xóa 100 MB đầu tiên miễn phí — không cần đăng ký.",
     "Empty the trash to free {n} MB": "Dọn thùng rác để giải phóng {n} MB",
     "Delete a photo": "Xóa một ảnh",
-    "Empty the trash": "Dọn thùng rác"
+    "Empty the trash": "Dọn thùng rác",
+    "Scan with your iPhone camera": "Quét bằng camera iPhone",
+    "It opens CleanSpace on the App Store.": "CleanSpace sẽ mở ngay trên App Store.",
+    "QR code to download CleanSpace": "Mã QR để tải CleanSpace",
+    "Cleaning…": "Đang dọn dẹp…"
   },
   "hi": {
     "FAQ": "अक्सर पूछे जाने वाले प्रश्न",
@@ -3973,7 +4017,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Does it work with iCloud Photos?": "क्या यह iCloud Photos के साथ काम करता है?",
     "Yes. CleanSpace reads the same photo library the Photos app uses, and anything you delete syncs to iCloud exactly as it would if you deleted it in Photos.": "हाँ। CleanSpace वही फ़ोटो लाइब्रेरी पढ़ता है जिसे Photos ऐप इस्तेमाल करता है, और आप जो भी हटाते हैं वह iCloud से ठीक वैसे ही सिंक होता है जैसे आपने उसे Photos में हटाया हो।",
     "Today": "आज",
-    "of": "में से",
+    "of": "/",
     "After CleanSpace": "CleanSpace के बाद",
     "100% on-device — no uploads, no account": "100% डिवाइस पर — न अपलोड, न अकाउंट",
     "Illustrative example on a 128 GB iPhone; your result depends on your own library.": "128 GB के iPhone पर एक उदाहरण; आपका नतीजा आपकी अपनी लाइब्रेरी पर निर्भर करता है।",
@@ -4020,7 +4064,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "पहले 100 MB मुफ़्त में हटाएँ — कोई सदस्यता नहीं चाहिए।",
     "Empty the trash to free {n} MB": "{n} MB खाली करने के लिए ट्रैश खाली करें",
     "Delete a photo": "एक फोटो हटाएँ",
-    "Empty the trash": "ट्रैश खाली करें"
+    "Empty the trash": "ट्रैश खाली करें",
+    "Scan with your iPhone camera": "अपने iPhone कैमरे से स्कैन करें",
+    "It opens CleanSpace on the App Store.": "CleanSpace सीधे App Store पर खुल जाएगा।",
+    "QR code to download CleanSpace": "CleanSpace डाउनलोड करने के लिए QR कोड",
+    "Cleaning…": "साफ़ हो रहा है…"
   },
   "ja": {
     "FAQ": "よくある質問",
@@ -4355,7 +4403,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "最初の100 MBは無料で削除 — サブスク不要。",
     "Empty the trash to free {n} MB": "ゴミ箱を空にして{n} MBを解放",
     "Delete a photo": "写真を削除",
-    "Empty the trash": "ゴミ箱を空にする"
+    "Empty the trash": "ゴミ箱を空にする",
+    "Scan with your iPhone camera": "iPhoneのカメラで読み取る",
+    "It opens CleanSpace on the App Store.": "App StoreでCleanSpaceがすぐに開きます。",
+    "QR code to download CleanSpace": "CleanSpaceをダウンロードするQRコード",
+    "Cleaning…": "整理中…"
   },
   "ko": {
     "FAQ": "자주 묻는 질문",
@@ -4690,7 +4742,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "처음 100MB는 무료로 삭제하세요 — 구독이 필요 없습니다.",
     "Empty the trash to free {n} MB": "휴지통을 비워 {n}MB 확보하기",
     "Delete a photo": "사진 삭제하기",
-    "Empty the trash": "휴지통 비우기"
+    "Empty the trash": "휴지통 비우기",
+    "Scan with your iPhone camera": "iPhone 카메라로 스캔하세요",
+    "It opens CleanSpace on the App Store.": "App Store에서 CleanSpace가 바로 열립니다.",
+    "QR code to download CleanSpace": "CleanSpace 다운로드 QR 코드",
+    "Cleaning…": "정리 중…"
   },
   "zh-Hans": {
     "FAQ": "常见问题",
@@ -5025,7 +5081,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免费删除——无需订阅。",
     "Empty the trash to free {n} MB": "清空回收站，释放 {n} MB",
     "Delete a photo": "删除一张照片",
-    "Empty the trash": "清空回收站"
+    "Empty the trash": "清空回收站",
+    "Scan with your iPhone camera": "用 iPhone 相机扫描",
+    "It opens CleanSpace on the App Store.": "直接在 App Store 打开 CleanSpace。",
+    "QR code to download CleanSpace": "下载 CleanSpace 的二维码",
+    "Cleaning…": "正在清理…"
   },
   "zh-Hant": {
     "FAQ": "常見問題",
@@ -5360,7 +5420,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免費刪除——不需要訂閱。",
     "Empty the trash to free {n} MB": "清空垃圾桶，釋放 {n} MB",
     "Delete a photo": "刪除一張照片",
-    "Empty the trash": "清空垃圾桶"
+    "Empty the trash": "清空垃圾桶",
+    "Scan with your iPhone camera": "用 iPhone 相機掃描",
+    "It opens CleanSpace on the App Store.": "直接在 App Store 開啟 CleanSpace。",
+    "QR code to download CleanSpace": "下載 CleanSpace 的 QR 碼",
+    "Cleaning…": "正在清理…"
   },
   "fa": {
     "FAQ": "پرسش‌های متداول",
@@ -5695,7 +5759,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "۱۰۰ مگابایت اول را رایگان حذف کنید — بدون اشتراک.",
     "Empty the trash to free {n} MB": "سطل زباله را خالی کنید تا {n} مگابایت آزاد شود",
     "Delete a photo": "یک عکس حذف کنید",
-    "Empty the trash": "سطل زباله را خالی کنید"
+    "Empty the trash": "سطل زباله را خالی کنید",
+    "Scan with your iPhone camera": "با دوربین آیفون اسکن کنید",
+    "It opens CleanSpace on the App Store.": "CleanSpace مستقیم در App Store باز می‌شود.",
+    "QR code to download CleanSpace": "کد QR برای دانلود CleanSpace",
+    "Cleaning…": "در حال پاک‌سازی…"
   },
   "ur": {
     "FAQ": "عمومی سوالات",
@@ -5983,7 +6051,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Does it work with iCloud Photos?": "کیا یہ iCloud Photos کے ساتھ کام کرتا ہے؟",
     "Yes. CleanSpace reads the same photo library the Photos app uses, and anything you delete syncs to iCloud exactly as it would if you deleted it in Photos.": "جی ہاں۔ CleanSpace وہی فوٹو لائبریری پڑھتا ہے جو Photos ایپ استعمال کرتی ہے، اور آپ جو کچھ ہٹاتے ہیں وہ iCloud سے بالکل ویسے ہی ہم آہنگ ہوتا ہے جیسے آپ نے اسے Photos میں ہٹایا ہو۔",
     "Today": "آج",
-    "of": "میں سے",
+    "of": "/",
     "After CleanSpace": "CleanSpace کے بعد",
     "100% on-device — no uploads, no account": "100% آپ ہی کے فون پر — نہ اپ لوڈ، نہ اکاؤنٹ",
     "Illustrative example on a 128 GB iPhone; your result depends on your own library.": "128 GB کے آئی فون پر ایک مثال؛ آپ کا نتیجہ آپ کی اپنی لائبریری پر منحصر ہے۔",
@@ -6030,7 +6098,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "پہلے 100 MB مفت میں حذف کریں — کسی سبسکرپشن کی ضرورت نہیں۔",
     "Empty the trash to free {n} MB": "{n} MB خالی کرنے کے لیے ردی خالی کریں",
     "Delete a photo": "ایک تصویر حذف کریں",
-    "Empty the trash": "ردی خالی کریں"
+    "Empty the trash": "ردی خالی کریں",
+    "Scan with your iPhone camera": "اپنے آئی فون کے کیمرے سے اسکین کریں",
+    "It opens CleanSpace on the App Store.": "CleanSpace سیدھا App Store پر کھل جائے گا۔",
+    "QR code to download CleanSpace": "CleanSpace ڈاؤن لوڈ کرنے کا QR کوڈ",
+    "Cleaning…": "صفائی ہو رہی ہے…"
   },
   "ckb": {
     "FAQ": "پرسیارە دووبارەکان",
@@ -6365,6 +6437,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Delete your first 100 MB for free — no subscription needed.": "یەکەم ١٠٠ مێگابایت بێبەرامبەر بسڕەوە — بێ بەشداریکردن.",
     "Empty the trash to free {n} MB": "سەبەتە بەتاڵ بکە بۆ ئازادکردنی {n} MB",
     "Delete a photo": "وێنەیەک بسڕەوە",
-    "Empty the trash": "سەبەتە بەتاڵ بکە"
+    "Empty the trash": "سەبەتە بەتاڵ بکە",
+    "Scan with your iPhone camera": "بە کامێرای ئایفۆنەکەت سکان بکە",
+    "It opens CleanSpace on the App Store.": "CleanSpace ڕاستەوخۆ لە App Store دەکرێتەوە.",
+    "QR code to download CleanSpace": "کۆدی QR بۆ داگرتنی CleanSpace",
+    "Cleaning…": "لە پاککردنەوەدایە…"
   }
 };

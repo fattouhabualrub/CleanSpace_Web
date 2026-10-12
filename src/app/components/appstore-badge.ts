@@ -40,14 +40,10 @@ export class AppStoreBadgeComponent {
 
   readonly APP_STORE_URL = APP_STORE_URL;
 
-  /** Apple badge artwork is not bundled yet for the four new locales. Keep a
-   *  valid official English badge instead of requesting a missing image. */
-  private readonly badgeLang = computed(() =>
-    ['ko', 'pl', 'vi', 'zh-Hant'].includes(this.i18n.lang()) ? 'en' : this.i18n.lang()
-  );
-
-  readonly src = computed(() => `badges/appstore-${this.badgeLang()}.svg`);
-  readonly srcWhite = computed(() => `badges/appstore-${this.badgeLang()}-white.svg`);
+  /** Every UI language has its own artwork; zh-Hant uses Apple's Traditional
+   *  Chinese (Taiwan) badge. */
+  readonly src = computed(() => `badges/appstore-${this.i18n.lang()}.svg`);
+  readonly srcWhite = computed(() => `badges/appstore-${this.i18n.lang()}-white.svg`);
 
   /** Apple's required wording; the badge art itself carries the localized text. */
   alt(): string {

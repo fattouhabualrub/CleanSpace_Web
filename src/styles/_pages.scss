@@ -123,6 +123,36 @@
 .dl__cta .ico { fill: currentColor; stroke: none; }
 .dl__badges { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px; }
 .dl__foot { color: var(--faint); font-size: 13.5px; margin-top: 10px; padding-top: 18px; border-top: 1px solid var(--line); width: 100%; }
+/* Desktop: scan with the phone. The code always sits on white — a QR reads
+   dark-on-light, whatever the page theme. */
+.dl__scan {
+  display: flex; align-items: center; gap: 22px; width: 100%;
+  padding: 16px; border-radius: var(--r-md); text-align: start;
+  background: var(--surface-2); border: 1px solid var(--line);
+}
+.dl__qr {
+  position: relative; flex: none; width: 168px; height: 168px; padding: 12px;
+  border-radius: 18px; background: #fff;
+  box-shadow: 0 10px 24px -10px rgba(10, 16, 40, 0.35);
+}
+.dl__qr-code { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+.dl__qr-logo {
+  position: absolute; inset: 0; margin: auto; width: 34px; height: 34px;
+  border-radius: 9px; box-shadow: 0 0 0 3px #fff;
+}
+.dl__scan-txt { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.dl__scan-txt b { font-size: 16.5px; font-weight: 600; color: var(--ink); }
+.dl__scan-txt span { font-size: 14px; color: var(--muted); line-height: 1.5; }
+.dl__scan-txt .appstore-badge { margin: 8px 0 0; }
+@media (max-width: 520px) {
+  .dl__scan { flex-direction: column; text-align: center; }
+  .dl__scan-txt { align-items: center; }
+}
+.dl__rating { display: inline-flex; align-items: center; gap: 8px; margin-top: -4px; color: var(--muted); font-size: 14px; font-weight: 500; }
+.dl__rating b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Five grey stars with an amber layer clipped to the score. */
+.dl__stars { position: relative; display: inline-block; font-size: 17px; letter-spacing: 1px; line-height: 1; color: color-mix(in srgb, var(--ink) 18%, transparent); direction: ltr; }
+.dl__stars::before { content: '★★★★★'; position: absolute; inset: 0; overflow: hidden; width: var(--fill); color: #F5B70A; }
 .dl__foot a { color: var(--blue-ink); font-weight: 600; }
 .dl__spinner {
   width: 17px; height: 17px; flex-shrink: 0;
@@ -137,14 +167,86 @@
 .stobar__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .stobar__when { font-size: 15px; font-weight: 600; color: var(--rose); }
 .stobar__card--after .stobar__when { color: var(--blue-ink); }
-.stobar__used { font-size: 15px; font-weight: 700; color: var(--rose); direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+/* Each figure is an LTR island (<bdi>) but the phrase follows the page, so
+   "118 GB of 128 GB" reads in the right order in RTL languages too. */
+.stobar__used { font-size: 15px; font-weight: 700; color: var(--rose); font-variant-numeric: tabular-nums; }
 .stobar__card--after .stobar__used { color: var(--blue-ink); }
-.stobar__used span { font-weight: 500; opacity: 0.75; unicode-bidi: isolate; }
-.stobar__track { display: flex; height: 22px; border-radius: 999px; overflow: hidden; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--line); }
+.stobar__used span { font-weight: 500; opacity: 0.75; margin-inline: 0.3em; }   /* the template's spaces between elements are stripped */
+.stobar__track { position: relative; display: flex; height: 22px; border-radius: 999px; overflow: hidden; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--line); }
 .stobar__seg { display: block; width: var(--w); height: 100%; flex: none; }
-.stobar__card--after .stobar__seg { width: var(--w0); transition: width 1.2s var(--ease) 0.3s; }
-.stobar.in .stobar__card--after .stobar__seg { width: var(--w); }
-.stobar__legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin-top: 14px; }
+
+/* ---- The clean-up, phase by phase (data-phase on .stobar) -------------------
+   Prerendered as "done", so without JS or with reduced motion the after bar
+   simply shows the result. */
+.stobar__bar { position: relative; }
+.stobar__card--after { position: relative; transition: border-color 0.5s, box-shadow 0.6s var(--ease); }
+
+/* idle: the after bar starts as a copy of today. */
+.stobar[data-phase='idle'] .stobar__card--after .stobar__seg,
+.stobar[data-phase='scan'] .stobar__card--after .stobar__seg { width: var(--w0); transition: none; }
+.stobar[data-phase='clean'] .stobar__card--after .stobar__seg { transition: width 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
+
+/* The space handed back: anchored where Photos used to end, it grows as the
+   bands close up. */
+.stobar__freed {
+  position: absolute; top: 0; bottom: 0; inset-inline-end: var(--start); width: var(--size);
+  background:
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--green) 55%, transparent) 0 6px, color-mix(in srgb, var(--green) 30%, transparent) 6px 12px);
+  box-shadow: inset 0 0 0 1.5px var(--green);
+  border-radius: 4px;
+}
+.stobar[data-phase='idle'] .stobar__freed, .stobar[data-phase='scan'] .stobar__freed { width: 0; transition: none; }
+.stobar[data-phase='clean'] .stobar__freed { transition: width 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
+.stobar[data-phase='done'] .stobar__freed { animation: stobar-glow 1.2s ease-out 1; }
+@keyframes stobar-glow { 0% { filter: brightness(1.6); } 100% { filter: none; } }
+
+/* scan: a light runs across the Photos band. */
+.stobar__sweep { position: absolute; top: 0; bottom: 0; inset-inline-start: 0; width: 48.4%; overflow: hidden; opacity: 0; pointer-events: none; }
+.stobar__sweep::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 34%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+}
+.stobar[data-phase='scan'] .stobar__sweep { opacity: 1; }
+.stobar[data-phase='scan'] .stobar__sweep::after { animation: stobar-sweep 1.1s ease-in-out 1 both; }
+@keyframes stobar-sweep { from { transform: translateX(-110%); } to { transform: translateX(310%); } }
+[dir='rtl'] .stobar[data-phase='scan'] .stobar__sweep::after { animation-name: stobar-sweep-rtl; right: 0; }
+@keyframes stobar-sweep-rtl { from { transform: translateX(110%); } to { transform: translateX(-310%); } }
+.stobar[data-phase='scan'] .stobar__seg--photos { animation: stobar-throb 0.55s ease-in-out 2 alternate; }
+@keyframes stobar-throb { to { filter: brightness(1.25); } }
+
+/* clean: little squares lift off the Photos band and fade. */
+.stobar__bits { position: absolute; inset: 0; pointer-events: none; }
+.stobar__bits i {
+  position: absolute; top: 4px; inset-inline-start: var(--x);
+  width: 7px; height: 7px; border-radius: 2px; background: #E5533D; opacity: 0;
+}
+.stobar[data-phase='clean'] .stobar__bits i { animation: stobar-bit 0.9s ease-out 1 both; animation-delay: var(--d); }
+@keyframes stobar-bit {
+  0% { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-46px) rotate(var(--r)) scale(0.4); }
+}
+
+/* done: a check by the label and a brief green ring. */
+.stobar[data-phase='done'] .stobar__card--after { border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
+.stobar__check {
+  display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+  margin-inline-end: 4px; vertical-align: -3px;
+  color: #fff; background: var(--green);
+  animation: stobar-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.stobar__check svg { width: 11px; height: 11px; }
+@keyframes stobar-pop { from { transform: scale(0.3); opacity: 0; } }
+
+.stobar__foot { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 14px; }
+.stobar__status { min-height: 28px; display: inline-flex; align-items: center; color: var(--muted); font-size: 13px; font-weight: 500; }
+.stobar__replay {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding-inline: 12px;
+  border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); font-size: 12.5px; font-weight: 600;
+  transition: color 0.2s, border-color 0.2s;
+}
+.stobar__replay:hover { color: var(--ink); border-color: var(--ink); }
+.stobar__replay svg { width: 14px; height: 14px; }
+.stobar__legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
 .stobar__legend li { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; }
 .stobar__legend i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
 .stobar__delta { display: flex; align-items: center; justify-content: center; gap: 10px; margin: -4px 0; }
@@ -155,4 +257,4 @@
 .stobar__dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 20%, transparent); }
 .stobar__note { color: var(--faint); font-size: 12.5px; text-align: center; line-height: 1.6; }
 @media (max-width: 460px) { .stobar__head { flex-direction: column; gap: 2px; } }
-@media (prefers-reduced-motion: reduce) { .stobar__card--after .stobar__seg { width: var(--w); } }
+

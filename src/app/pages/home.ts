@@ -101,7 +101,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
             <!-- The free allowance as a bar that fills when the card scrolls in. -->
             <span class="fact__viz fact__quota" aria-hidden="true">
               <span class="fact__bar"><i></i></span>
-              <span class="fact__ends" dir="ltr"><span>0</span><span>100 MB</span></span>
+              <span class="fact__ends"><span>0</span><bdi dir="ltr">100 MB</bdi></span>
             </span>
           </li>
           <li class="fact" style="--tone: var(--violet)" [appReveal]="160">

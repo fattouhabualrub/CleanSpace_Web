@@ -23,9 +23,9 @@ import { I18n } from '../services/i18n';
         <div class="support">
           <div class="support__intro">
             <span class="kicker">{{ i18n.t('تواصل معنا', 'Contact us') }}</span>
-            <h1>{{ i18n.t('كيف نقدر نساعدك؟', 'How can we help?') }}</h1>
+            <h1>{{ i18n.t('كيف يمكننا مساعدتك؟', 'How can we help?') }}</h1>
             <p>
-              {{ i18n.t('عندك سؤال، اقتراح، أو مشكلة؟ راسلنا مباشرة أو عبّي النموذج وبنرد عليك بأسرع وقت.',
+              {{ i18n.t('لديك سؤال أو اقتراح أو مشكلة؟ راسلنا مباشرة أو املأ النموذج، وسنرد عليك في أسرع وقت.',
                         'Have a question, idea, or an issue? Reach us directly or fill in the form and we will get back to you shortly.') }}
             </p>
 
@@ -57,7 +57,7 @@ import { I18n } from '../services/i18n';
                 <svg class="ico" width="30" height="30" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
               </span>
               <h3>{{ i18n.t('تم فتح بريدك', 'Your email is ready') }}</h3>
-              <p>{{ i18n.t('فتحنا برنامج البريد عندك بالرسالة جاهزة — بس اضغط إرسال. ما وصلك؟ راسلنا على support@cleaningspace.app',
+              <p>{{ i18n.t('فتحنا تطبيق البريد لديك والرسالة جاهزة — اضغط إرسال فقط. لم يُفتح؟ راسلنا على support@cleaningspace.app',
                            'We opened your mail app with the message ready — just press send. If it did not open, email us at support@cleaningspace.app') }}</p>
               <button type="button" class="btn btn--ghost" (click)="sent.set(false)">
                 {{ i18n.t('رسالة جديدة', 'New message') }}
@@ -73,13 +73,13 @@ import { I18n } from '../services/i18n';
               <div class="support__field">
                 <label for="s-msg">{{ i18n.t('رسالتك', 'Your message') }}</label>
                 <textarea #msgEl id="s-msg" required
-                          [attr.placeholder]="i18n.t('كيف نقدر نساعدك؟', 'How can we help you?')"></textarea>
+                          [attr.placeholder]="i18n.t('كيف يمكننا مساعدتك؟', 'How can we help you?')"></textarea>
               </div>
               <button type="submit" class="btn btn--primary btn--block">
                 {{ i18n.t('إرسال', 'Send') }}
               </button>
               <p class="support__hint">
-                {{ i18n.t('بيفتح برنامج البريد عندك بالرسالة جاهزة.', 'This opens your mail app with the message ready to send.') }}
+                {{ i18n.t('سيُفتح تطبيق البريد لديك والرسالة جاهزة للإرسال.', 'This opens your mail app with the message ready to send.') }}
               </p>
             </form>
           }
