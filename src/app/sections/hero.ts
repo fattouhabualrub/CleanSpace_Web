@@ -251,6 +251,16 @@ export class HeroComponent {
     { src: 'kid-curls', kind: 'del', x: 23, y: 7, m: null, w: 96, r: 6, d: 1.2, size: '2.8 MB' },
     { src: 'burj', kind: 'best', x: 73, y: 8, m: null, w: 106, r: -4, d: 0.85, size: '3.3 MB' },
     { src: 'blur-aurora', kind: 'blur', x: 79, y: 69, m: null, w: 98, r: 12, d: 1.25, size: '1.2 MB' },
+    // Second wave: more of the same story — two more keepers, and more copies,
+    // look-alikes and duplicates of the photos already on screen.
+    { src: 'petra', kind: 'best', x: 54, y: 44, m: [8, 21], w: 116, r: -6, d: 0.7, size: '4.1 MB' },
+    { src: 'petra', kind: 'del', x: 86, y: 47, m: [93, 42], w: 100, r: 8, d: 1.05, size: '4.1 MB' },
+    { src: 'pyramids3', kind: 'del', x: 99, y: 14, m: [92, 19], w: 96, r: -7, d: 1.15, size: '1.7 MB' },
+    { src: 'kids-hug', kind: 'best', x: 96, y: 63, m: [91, 66], w: 118, r: 5, d: 0.65, size: '3.8 MB' },
+    { src: 'kids-hug', kind: 'del', x: 82, y: 92, m: [9, 66], w: 104, r: -10, d: 0.95, size: '3.8 MB' },
+    { src: 'eiffel', kind: 'del', x: 36, y: 103, m: null, w: 100, r: 12, d: 1.1, size: '3.1 MB' },
+    { src: 'santorini', kind: 'del', x: 46, y: 97, m: null, w: 92, r: -4, d: 1.2, size: '3.6 MB' },
+    { src: 'puppy', kind: 'del', x: 15, y: 3, m: null, w: 92, r: 9, d: 1.15, size: '2.6 MB' },
   ];
 
   private readonly rtl = computed(() => this.i18n.isRTL());
@@ -289,7 +299,7 @@ export class HeroComponent {
     const cueEl = this.cue().nativeElement;
     const ARC = 2 * Math.PI * 26;
 
-    interface Body { el: HTMLElement; tile: Tile; cx: number; cy: number; start: number; dist: number }
+    interface Body { el: HTMLElement; tile: Tile; cx: number; cy: number; start: number; dist: number; q: number }
     let bodies: Body[] = [];
     let keepers: Body[] = [];
     let gx = 0, gy = 0;
@@ -312,7 +322,7 @@ export class HeroComponent {
 
       const all = visible.map(({ el, tile }) => {
         const cx = el.offsetLeft, cy = el.offsetTop;
-        return { el, tile, cx, cy, start: 0, dist: Math.hypot(gx - cx, gy - cy) };
+        return { el, tile, cx, cy, start: 0, dist: Math.hypot(gx - cx, gy - cy), q: -1 };
       });
       keepers = all.filter((b) => b.tile.kind === 'best');
       bodies = all.filter((b) => b.tile.kind !== 'best').sort((a, b) => a.dist - b.dist);
@@ -320,24 +330,37 @@ export class HeroComponent {
       bodies.forEach((b, i) => (b.start = 0.04 + (i / Math.max(n - 1, 1)) * 0.5));
     };
 
-    const progress = (): number => {
+    // ---- Scroll → progress, from cached geometry -------------------------------
+    // Measured once (and again on resize/load), never per frame: reading layout
+    // right after the previous frame's style writes forced a synchronous reflow
+    // on every scroll tick.
+    let trackTop = 0, span = 1, stickyTop = 0;
+    const measureTrack = () => {
       const isDesk = desktop.matches;
       const trackEl = isDesk ? this.track().nativeElement : this.sceneWrap().nativeElement;
       const pinnedEl = isDesk ? this.pin().nativeElement : sceneEl;
-      const r = trackEl.getBoundingClientRect();
-      const top = parseFloat(getComputedStyle(pinnedEl).top) || 0;
-      const span = r.height - pinnedEl.offsetHeight;
-      return span > 0 ? clamp((top - r.top) / span) : 0;
+      trackTop = trackEl.getBoundingClientRect().top + win.scrollY;
+      stickyTop = parseFloat(getComputedStyle(pinnedEl).top) || 0;
+      span = Math.max(1, trackEl.offsetHeight - pinnedEl.offsetHeight);
     };
+    const scrollProgress = () => clamp((win.scrollY + stickyTop - trackTop) / span);
 
-    const render = () => {
-      ticking = false;
-      const p = progress();
+    const deviceEl = sceneEl.querySelector<HTMLElement>('.hx__device')!;
+    const haloEl = sceneEl.querySelector<HTMLElement>('.hx__halo')!;
+    const tiltDir = this.rtl() ? 1 : -1;
+    let lastCaption = '', lastCue = '', lastClean = false;
+
+    /** Paints the scene at progress `p`. Writes only what changed, and only to
+     *  the elements that move — a custom property on the scene root used to
+     *  re-style every descendant on every frame. */
+    const render = (p: number) => {
       let sum = 0;
 
       for (const b of bodies) {
         const q = easeInOut(clamp((p - b.start) / 0.34));
         sum += q;
+        if (q === b.q) continue;
+        b.q = q;
         if (q === 0) {
           b.el.style.transform = '';
           b.el.style.opacity = '';
@@ -351,13 +374,15 @@ export class HeroComponent {
         const dy = u * u * b.cy + 2 * u * q * b.cy + q * q * gy - b.cy;
         const rot = b.tile.r * (1 - q) + q * 140;
         const sc = 1 - 0.88 * q;
-        b.el.style.transform = `translate(-50%, -50%) translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) rotate(${rot.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+        b.el.style.transform = `translate(-50%, -50%) translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) rotate(${rot.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
         b.el.style.opacity = q > 0.82 ? ((1 - q) / 0.18).toFixed(3) : '1';
       }
 
       // Keepers straighten up once the clutter around them has gone.
       const k = easeInOut(clamp((p - 0.5) / 0.34));
       for (const b of keepers) {
+        if (k === b.q) continue;
+        b.q = k;
         b.el.style.transform = k
           ? `translate(-50%, -50%) rotate(${(b.tile.r * (1 - k)).toFixed(2)}deg) scale(${(1 + 0.06 * k).toFixed(3)})`
           : '';
@@ -367,44 +392,71 @@ export class HeroComponent {
       const f = bodies.length ? sum / bodies.length : 0;
       arcEl.style.strokeDashoffset = (ARC * (1 - f)).toFixed(2);
       const text = `${(this.shots.homeFigures().freed * f).toFixed(2)} GB`;
-      if (text !== lastText) {
-        freedEl.textContent = text;
-        lastText = text;
-      }
-      sceneEl.classList.toggle('is-clean', f > 0.995);
-      captionEl.style.opacity = clamp((p - 0.8) / 0.12).toFixed(3);
-      cueEl.style.opacity = (1 - clamp(p / 0.06)).toFixed(3);
-      sceneEl.style.setProperty('--hp', p.toFixed(4));
+      if (text !== lastText) { freedEl.textContent = text; lastText = text; }
+
+      const clean = f > 0.995;
+      if (clean !== lastClean) { sceneEl.classList.toggle('is-clean', clean); lastClean = clean; }
+      const caption = clamp((p - 0.8) / 0.12).toFixed(2);
+      if (caption !== lastCaption) { captionEl.style.opacity = caption; lastCaption = caption; }
+      const cue = (1 - clamp(p / 0.06)).toFixed(2);
+      if (cue !== lastCue) { cueEl.style.opacity = cue; lastCue = cue; }
+
+      // The phone turns to face the visitor as the library clears.
+      const t = 1 - p;
+      deviceEl.style.transform = `perspective(1800px) rotateY(${(t * 9 * tiltDir).toFixed(2)}deg) rotateX(${(t * 3).toFixed(2)}deg)`;
+      haloEl.style.opacity = (0.55 + p * 0.45).toFixed(3);
     };
 
-    let ticking = false;
-    const request = () => {
-      if (ticking) return;
-      ticking = true;
-      win.requestAnimationFrame(render);
+    // ---- Smoothing ------------------------------------------------------------
+    // The scene eases toward the scroll position instead of jumping to it. Touch
+    // scrolling delivers positions unevenly, and following them 1:1 is what
+    // read as lag; a ~90 ms exponential follow turns that into a glide.
+    let target = 0, current = 0, raf = 0, last = 0;
+    const step = (now: number) => {
+      const dt = last ? Math.min(now - last, 64) : 16;
+      last = now;
+      current += (target - current) * (1 - Math.exp(-dt / 90));
+      if (Math.abs(target - current) < 0.0005) current = target;
+      render(current);
+      if (current !== target) raf = win.requestAnimationFrame(step);
+      else { raf = 0; last = 0; }
+    };
+    const onScroll = () => {
+      target = scrollProgress();
+      if (!raf) raf = win.requestAnimationFrame(step);
     };
     const remeasure = () => {
       measure();
-      request();
+      measureTrack();
+      for (const b of [...bodies, ...keepers]) b.q = -1;
+      onScroll();
     };
 
+    let pointerQueued = false, px = 0, py = 0;
     const onPointer = (e: PointerEvent) => {
-      const px = (e.clientX / win.innerWidth) * 2 - 1;
-      const py = (e.clientY / win.innerHeight) * 2 - 1;
-      sceneEl.style.setProperty('--px', px.toFixed(3));
-      sceneEl.style.setProperty('--py', py.toFixed(3));
+      px = (e.clientX / win.innerWidth) * 2 - 1;
+      py = (e.clientY / win.innerHeight) * 2 - 1;
+      if (pointerQueued) return;
+      pointerQueued = true;
+      win.requestAnimationFrame(() => {
+        pointerQueued = false;
+        sceneEl.style.setProperty('--px', px.toFixed(3));
+        sceneEl.style.setProperty('--py', py.toFixed(3));
+      });
     };
 
     sceneEl.classList.add('is-live');
     measure();
-    render();
+    measureTrack();
+    current = target = scrollProgress();
+    render(current);
 
-    win.addEventListener('scroll', request, { passive: true });
+    win.addEventListener('scroll', onScroll, { passive: true });
     win.addEventListener('resize', remeasure, { passive: true });
     desktop.addEventListener('change', remeasure);
     const pinEl = this.pin().nativeElement;
     if (finePointer.matches) pinEl.addEventListener('pointermove', onPointer, { passive: true });
-    // Images settle the layout late (fonts, the phone frame); measure again once they have.
+    // Fonts and images settle the layout late; measure again once they have.
     win.addEventListener('load', remeasure, { once: true });
     const late = win.setTimeout(remeasure, 1200);
 
@@ -415,7 +467,8 @@ export class HeroComponent {
 
     this.destroyRef.onDestroy(() => {
       away.disconnect();
-      win.removeEventListener('scroll', request);
+      if (raf) win.cancelAnimationFrame(raf);
+      win.removeEventListener('scroll', onScroll);
       win.removeEventListener('resize', remeasure);
       desktop.removeEventListener('change', remeasure);
       pinEl.removeEventListener('pointermove', onPointer);

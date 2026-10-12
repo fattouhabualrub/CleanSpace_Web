@@ -291,7 +291,7 @@
   min-width: 5.2ch; white-space: nowrap;
 }
 [dir='rtl'] .hx__gauge-txt b { text-align: end; }
-.hx__gauge-txt span { color: var(--muted); font-size: 13px; font-weight: 500; }
+.hx__gauge-txt span { color: var(--muted); font-size: 13px; font-weight: 500; white-space: nowrap; }
 .hx__rescan {
   width: 38px; height: 38px; border-radius: 50%;
   display: grid; place-items: center;
