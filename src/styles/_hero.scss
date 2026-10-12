@@ -28,8 +28,8 @@
 /* ---- Background ------------------------------------------------------------ */
 .hx__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .hx__orb {
-  position: absolute; border-radius: 50%; filter: blur(70px);
-  animation: hx-drift 18s ease-in-out infinite alternate;
+  /* Already a soft radial gradient — a blur filter on top only cost memory. */
+  position: absolute; border-radius: 50%;
 }
 .hx__orb--a {
   width: 46vw; height: 46vw; inset-inline-end: -8vw; top: -12vw;
@@ -40,7 +40,6 @@
   background: radial-gradient(closest-side, var(--glow-blue), transparent);
   animation-duration: 22s; animation-direction: alternate-reverse;
 }
-@keyframes hx-drift { to { translate: -4vw 3vw; scale: 1.08; } }
 /* A faint dot grid — the "room" the clutter sits in. Fades toward the edges. */
 .hx__mesh {
   position: absolute; inset: 0;
@@ -128,8 +127,7 @@
   position: absolute; inset-inline-end: 6px; bottom: 6px;
   padding: 2px 7px; border-radius: 999px;
   font-size: 10.5px; font-weight: 600; color: #fff; letter-spacing: 0.01em;
-  background: rgba(10, 12, 18, 0.55);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  background: rgba(10, 12, 18, 0.62);
   direction: ltr;
 }
 
@@ -195,7 +193,6 @@
 [dir='rtl'] [data-run='b'] > .hx__beam { animation-name: hx-beam-rtl-b; }
 @keyframes hx-beam-rtl-a { 0% { opacity: 0; translate: 15vw 0; } 8%, 88% { opacity: 1; } 100% { opacity: 0; translate: -105vw 0; } }
 @keyframes hx-beam-rtl-b { 0% { opacity: 0; translate: 15vw 0; } 8%, 88% { opacity: 1; } 100% { opacity: 0; translate: -105vw 0; } }
-.hx__beam { @include t.dark { mix-blend-mode: screen; } }
 
 /* ---- Device ------------------------------------------------------------------------ */
 .hx__device {
@@ -213,24 +210,26 @@
 .hx__phone {
   position: relative; z-index: 1;
   width: 100%; height: 100%; object-fit: contain;
-  filter: drop-shadow(0 40px 50px rgba(10, 16, 40, 0.30)) drop-shadow(0 8px 14px rgba(10, 16, 40, 0.18));
+}
+/* A static contact shadow. A drop-shadow filter on the phone had to be
+   re-rendered on every scroll frame because the device tilts with scroll. */
+.hx__device::after {
+  content: ''; position: absolute; z-index: 0; left: 8%; right: 8%; bottom: -3%; height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(5, 10, 30, 0.45), transparent);
 }
 .hx__halo {
   position: absolute; inset: 8% -30%; z-index: 0; border-radius: 50%;
   background: radial-gradient(closest-side, color-mix(in srgb, var(--violet) 40%, transparent), transparent 75%);
-  filter: blur(30px);
   opacity: calc(0.55 + var(--hp) * 0.45);
-  animation: hx-breathe 6s ease-in-out infinite alternate;
 }
-@keyframes hx-breathe { to { scale: 1.12; } }
 
 /* ---- Status pill & gauge ------------------------------------------------------------- */
 .hx__status, .hx__gauge {
   position: absolute; z-index: 6;
-  background: var(--glass-strong);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
   border: 1px solid var(--glass-line);
   box-shadow: var(--shadow-2);
-  backdrop-filter: blur(18px) saturate(170%); -webkit-backdrop-filter: blur(18px) saturate(170%);
   translate: calc(var(--px) * -16px) calc(var(--py) * -12px);
   transition: translate 1.1s var(--ease);
 }
@@ -379,3 +378,7 @@
 @media (prefers-reduced-motion: reduce) and (max-width: 959px) {
   .hx__scene { height: 100svh; }
 }
+
+/* Once the hero has scrolled away its loops have nothing to show; HeroComponent
+   toggles .is-away so they stop costing frames (and battery) off screen. */
+.hx.is-away *, .hx.is-away *::before, .hx.is-away *::after { animation-play-state: paused !important; }

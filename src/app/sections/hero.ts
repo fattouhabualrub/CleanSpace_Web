@@ -138,7 +138,8 @@ interface Tile {
 
             <div class="hx__device">
               <span class="hx__halo" aria-hidden="true"></span>
-              <img class="hx__phone" [src]="shots.src('home')" width="1040" height="2203" fetchpriority="high" decoding="async"
+              <img class="hx__phone" [src]="shots.src('home')" [attr.srcset]="shots.srcset('home')"
+                   sizes="(max-width: 959px) 260px, 350px" width="1040" height="2203" fetchpriority="high" decoding="async"
                    [alt]="i18n.t('شاشة CleanSpace الرئيسية تعرض نتائج الفحص', 'The CleanSpace home screen showing scan results')">
             </div>
 
@@ -407,7 +408,13 @@ export class HeroComponent {
     win.addEventListener('load', remeasure, { once: true });
     const late = win.setTimeout(remeasure, 1200);
 
+    // Pause the hero's loops once it is fully off screen (see .is-away).
+    const trackEl = this.track().nativeElement;
+    const away = new IntersectionObserver(([e]) => trackEl.classList.toggle('is-away', !e.isIntersecting));
+    away.observe(trackEl);
+
     this.destroyRef.onDestroy(() => {
+      away.disconnect();
       win.removeEventListener('scroll', request);
       win.removeEventListener('resize', remeasure);
       desktop.removeEventListener('change', remeasure);

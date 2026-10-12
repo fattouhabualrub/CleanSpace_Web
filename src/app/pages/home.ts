@@ -112,7 +112,8 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
             <div class="tour__phone">
               @for (s of tour; track s.shot; let i = $index) {
                 <img class="tour__shot" [class.is-active]="i === active()" [class.is-past]="i < active()"
-                     [src]="shots.src(s.shot)" width="1040" height="2203" loading="lazy" decoding="async"
+                     [src]="shots.src(s.shot)" [attr.srcset]="shots.srcset(s.shot)" sizes="320px"
+                     width="1040" height="2203" loading="lazy" decoding="async"
                      [alt]="i18n.t(s.arT, s.enT)">
               }
             </div>
@@ -130,7 +131,8 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
                 <h3>{{ i18n.t(s.arT, s.enT) }}</h3>
                 <p>{{ i18n.t(s.arD, s.enD) }}</p>
                 <!-- Mobile only: the sticky stage collapses, so each step carries its own frame. -->
-                <img class="tour__inline" [src]="shots.src(s.shot)" width="1040" height="2203"
+                <img class="tour__inline" [src]="shots.src(s.shot)" [attr.srcset]="shots.srcset(s.shot, 720)" sizes="300px"
+                     width="1040" height="2203"
                      loading="lazy" decoding="async" alt="">
               </li>
             }
@@ -140,7 +142,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ What it finds — eight live miniatures ══ -->
-    <section class="section section--deep finds" id="finds">
+    <section class="section section--deep finds cv" id="finds">
       <div class="container">
         <div class="head head--center" appReveal>
           <span class="kicker" style="--tone: var(--rose)">{{ i18n.t('ما الذي يجده', 'What it finds') }}</span>
@@ -228,7 +230,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ Features bento ══ -->
-    <section class="section" id="features">
+    <section class="section cv" id="features">
       <div class="container">
         <div class="head head--split" appReveal>
           <span class="kicker" style="--tone: var(--blue)">{{ i18n.t('المميزات', 'Features') }}</span>
@@ -295,7 +297,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ Inside the app — 3D ring ══ -->
-    <section class="section section--deep gallery" id="screens" aria-labelledby="gallery-title">
+    <section class="section section--deep gallery cv" id="screens" aria-labelledby="gallery-title">
       <div class="container">
         <div class="head head--center" appReveal>
           <span class="kicker" style="--tone: var(--violet)">{{ i18n.t('من داخل التطبيق', 'Inside the app') }}</span>
@@ -306,7 +308,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ How it works ══ -->
-    <section class="section how" id="how">
+    <section class="section how cv" id="how">
       <div class="container">
         <div class="head head--center" appReveal>
           <span class="kicker" style="--tone: var(--green)">{{ i18n.t('كيف يعمل', 'How it works') }}</span>
@@ -330,7 +332,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     <app-privacy-panel />
 
     <!-- ══ Plans ══ -->
-    <section class="section" id="plans">
+    <section class="section cv" id="plans">
       <div class="container">
         <div class="head head--center" appReveal>
           <span class="kicker" style="--tone: var(--amber)">{{ i18n.t('الأسعار', 'Pricing') }}</span>
@@ -389,7 +391,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ Free vs Pro ══ -->
-    <section class="section section--deep" id="compare">
+    <section class="section section--deep cv" id="compare">
       <div class="container container--narrow">
         <div class="head head--center" appReveal>
           <span class="kicker" style="--tone: var(--blue)">{{ i18n.t('المقارنة', 'Compare') }}</span>
@@ -433,7 +435,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ FAQ ══ -->
-    <section class="section" id="faq">
+    <section class="section cv" id="faq">
       <div class="container faq-wrap">
         <div class="head faq-wrap__head" appReveal>
           <span class="kicker" style="--tone: var(--sky)">{{ i18n.t('الأسئلة الشائعة', 'FAQ') }}</span>
@@ -455,10 +457,9 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
     </section>
 
     <!-- ══ Closing CTA — the kept library, floating around the ask ══ -->
-    <section class="section--tight cta">
+    <section class="section--tight cta cv">
       <div class="container">
         <div class="cta__panel" appReveal>
-          <span class="cta__rays" aria-hidden="true"></span>
           <div class="cta__photos" aria-hidden="true">
             @for (p of ctaPhotos; track p.src; let i = $index) {
               <figure class="cta__photo" [class.cta__photo--side]="p.side"
@@ -468,13 +469,7 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
             }
           </div>
           <div class="cta__body">
-            <div class="cta__icon" aria-hidden="true">
-              <svg class="cta__gauge" viewBox="0 0 200 200">
-                <circle class="cta__gauge-track" cx="100" cy="100" r="88"/>
-                <circle class="cta__gauge-arc" cx="100" cy="100" r="88" transform="rotate(-90 100 100)"/>
-              </svg>
-              <img src="icon-192.png" width="112" height="112" alt="">
-            </div>
+            <img class="cta__icon" src="icon-192.png" width="112" height="112" alt="" aria-hidden="true">
             <h2 class="h2">{{ i18n.t('جاهز تستعيد مساحتك؟', 'Ready to reclaim your space?') }}</h2>
             <p class="lede">{{ i18n.t('نزّل CleanSpace وابدأ التنظيف اليوم.', 'Download CleanSpace and start cleaning today.') }}</p>
             <div class="cta__badges">

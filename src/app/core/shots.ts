@@ -34,6 +34,21 @@ export class Shots {
   }
 
   /**
+   * Width candidates for the same frame: 480 and 720 px copies sit beside the
+   * 1040 px original (public/screens/480, /720). A decoded 1040 px frame costs
+   * ~9 MB of memory, so letting the browser pick the size it actually draws is
+   * what keeps the page under mobile Safari's per-tab limit. `max` caps the
+   * largest candidate for places that never need the full frame.
+   */
+  srcset(name: string, max: 720 | 1040 = 1040): string {
+    const { lang, scheme } = this.variant();
+    const file = `${name}_${lang}_${scheme}.webp`;
+    const sets = [`screens/480/${file} 480w`, `screens/720/${file} 720w`];
+    if (max === 1040) sets.push(`screens/${file} 1040w`);
+    return sets.join(', ');
+  }
+
+  /**
    * Figures printed on the home-screen capture. All four captures came from
    * different scan runs, so anything that magnifies a number from the frame
    * must follow the exact frame shown, not just its language.

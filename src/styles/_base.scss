@@ -41,6 +41,12 @@ ul, ol { list-style: none; }
 
 section[id] { scroll-margin-top: 92px; }
 
+/* Below-the-fold sections skip rendering (and their animations stop painting)
+   until they approach the viewport. It is the single biggest lever on mobile
+   Safari, which kills a tab outright once it runs out of memory. `auto` makes
+   the browser remember each section's real height once it has been seen. */
+.cv { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+
 /* ---- Type ------------------------------------------------------------------ */
 h1, h2, h3, h4 {
   font-family: var(--font-display);

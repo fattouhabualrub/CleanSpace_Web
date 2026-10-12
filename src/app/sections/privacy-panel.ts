@@ -53,7 +53,7 @@ import { RevealDirective } from '../directives/reveal';
           <div class="pv__phone" [class.is-airplane]="airplane()">
             <span class="pv__island" aria-hidden="true"></span>
             <div class="pv__screen">
-              <img class="pv__wall" src="tiles/lg/aurora.webp" alt="" aria-hidden="true">
+              <img class="pv__wall" src="tiles/lg/aurora-cc.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
 
               <div class="pv__status" aria-hidden="true">
                 <span>9:41</span>

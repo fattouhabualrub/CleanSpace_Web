@@ -28,7 +28,8 @@ import { prefersReducedMotion } from '../directives/motion';
       <div class="orbit__ring" #ring [style.--n]="frames.length">
         @for (f of frames; track f; let i = $index) {
           <figure class="orbit__item" [style.--i]="i">
-            <img [src]="shots.src(f)" width="1040" height="2203" loading="lazy" decoding="async" alt="" draggable="false">
+            <img [src]="shots.src(f)" [attr.srcset]="shots.srcset(f, 720)" sizes="(max-width: 700px) 150px, 210px"
+                 width="1040" height="2203" loading="lazy" decoding="async" alt="" draggable="false">
           </figure>
         }
       </div>
@@ -61,7 +62,8 @@ export class ScreenOrbitComponent {
     const ring = this.ring().nativeElement;
     const rtl = this.i18n.isRTL();
 
-    const IDLE = rtl ? 0.045 : -0.045;  // deg per ms of drift
+    // 12°/s — one full turn every 30 s, so each frame lingers ~2.5 s in front.
+    const IDLE = rtl ? 0.012 : -0.012;  // deg per ms of drift
     let angle = 0, velocity = IDLE, raf = 0, last = 0, visible = false;
     let dragging = false, lastX = 0, lastMove = 0;
 
@@ -108,7 +110,7 @@ export class ScreenOrbitComponent {
     const up = () => {
       dragging = false;
       host.classList.remove('is-grabbing');
-      velocity = Math.max(-0.8, Math.min(0.8, velocity));
+      velocity = Math.max(-0.4, Math.min(0.4, velocity));
     };
     host.addEventListener('pointerdown', down);
     host.addEventListener('pointermove', move);
