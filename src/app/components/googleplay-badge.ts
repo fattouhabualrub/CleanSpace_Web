@@ -25,11 +25,11 @@ import { I18n } from '../services/i18n';
 export class GooglePlayBadgeComponent {
   private readonly i18n = inject(I18n);
 
-  /** Keep a valid official English badge where localized artwork is not bundled. */
+  /** Google publishes no Kurdish badge, so ckb uses the official English one;
+   *  zh-Hant uses Google's zh-tw artwork. */
   readonly src = computed(() => {
     const lang = this.i18n.lang();
-    const badgeLang = ['ckb', 'ko', 'pl', 'vi', 'zh-Hant'].includes(lang) ? 'en' : lang;
-    return `badges/gplay-${badgeLang}.png`;
+    return `badges/gplay-${lang === 'ckb' ? 'en' : lang}.png`;
   });
 
   /** Kept short: a longer line makes this column wider than the badge, which
