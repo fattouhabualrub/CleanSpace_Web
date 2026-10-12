@@ -1,6 +1,6 @@
 // AUTO-GENERATED — do not edit by hand. Run `node scripts/i18n/build.js` to regenerate.
 // Maps each non-ar/en language code to { <English source string>: <translation> }.
-// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 327 catalog strings.
+// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 330 catalog strings.
 export const TRANSLATIONS: Record<string, Record<string, string>> = {
   "de": {
     "FAQ": "FAQ",
@@ -329,7 +329,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Mit {v} von 5 im App Store bewertet ({n} Bewertungen)",
     "Airplane mode": "Flugmodus",
     "Mobile data": "Mobile Daten",
-    "Try it: turn on airplane mode": "Probier es: Flugmodus einschalten"
+    "Try it: turn on airplane mode": "Probier es: Flugmodus einschalten",
+    "In numbers": "In Zahlen",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikate, ähnliche Fotos, Serienbilder, unscharfe Fotos, Screenshots, große Videos und mehr.",
+    "Delete your first 100 MB for free — no subscription needed.": "Lösche die ersten 100 MB kostenlos – ganz ohne Abo."
   },
   "es": {
     "FAQ": "Preguntas frecuentes",
@@ -658,7 +661,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Valorada con {v} de 5 en el App Store ({n} valoraciones)",
     "Airplane mode": "Modo avión",
     "Mobile data": "Datos móviles",
-    "Try it: turn on airplane mode": "Pruébalo: activa el modo avión"
+    "Try it: turn on airplane mode": "Pruébalo: activa el modo avión",
+    "In numbers": "En cifras",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicados, fotos parecidas, ráfagas, fotos borrosas, capturas, vídeos grandes y más.",
+    "Delete your first 100 MB for free — no subscription needed.": "Borra tus primeros 100 MB gratis, sin suscripción."
   },
   "fr": {
     "FAQ": "FAQ",
@@ -987,7 +993,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Noté {v} sur 5 sur l’App Store ({n} notes)",
     "Airplane mode": "Mode Avion",
     "Mobile data": "Données cellulaires",
-    "Try it: turn on airplane mode": "Essayez : activez le mode Avion"
+    "Try it: turn on airplane mode": "Essayez : activez le mode Avion",
+    "In numbers": "En chiffres",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Doublons, photos similaires, rafales, photos floues, captures d’écran, grosses vidéos et plus.",
+    "Delete your first 100 MB for free — no subscription needed.": "Supprimez vos 100 premiers Mo gratuitement — sans abonnement."
   },
   "it": {
     "FAQ": "FAQ",
@@ -1316,7 +1325,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Valutata {v} su 5 nell’App Store ({n} valutazioni)",
     "Airplane mode": "Modalità aereo",
     "Mobile data": "Dati cellulare",
-    "Try it: turn on airplane mode": "Prova: attiva la modalità aereo"
+    "Try it: turn on airplane mode": "Prova: attiva la modalità aereo",
+    "In numbers": "In numeri",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicati, foto simili, raffiche, foto sfocate, screenshot, video pesanti e altro.",
+    "Delete your first 100 MB for free — no subscription needed.": "Elimina i primi 100 MB gratis, senza abbonamento."
   },
   "nl": {
     "FAQ": "Veelgestelde vragen",
@@ -1645,7 +1657,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Beoordeeld met {v} van 5 in de App Store ({n} beoordelingen)",
     "Airplane mode": "Vliegtuigmodus",
     "Mobile data": "Mobiele data",
-    "Try it: turn on airplane mode": "Probeer het: zet vliegtuigmodus aan"
+    "Try it: turn on airplane mode": "Probeer het: zet vliegtuigmodus aan",
+    "In numbers": "In cijfers",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicaten, vergelijkbare foto’s, burstfoto’s, onscherpe foto’s, screenshots, grote video’s en meer.",
+    "Delete your first 100 MB for free — no subscription needed.": "Verwijder je eerste 100 MB gratis — zonder abonnement."
   },
   "pl": {
     "FAQ": "FAQ",
@@ -1974,7 +1989,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Ocena {v} na 5 w App Store ({n} ocen)",
     "Airplane mode": "Tryb samolotowy",
     "Mobile data": "Dane komórkowe",
-    "Try it: turn on airplane mode": "Spróbuj: włącz tryb samolotowy"
+    "Try it: turn on airplane mode": "Spróbuj: włącz tryb samolotowy",
+    "In numbers": "W liczbach",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikaty, podobne zdjęcia, serie, nieostre zdjęcia, zrzuty ekranu, duże filmy i nie tylko.",
+    "Delete your first 100 MB for free — no subscription needed.": "Usuń pierwsze 100 MB za darmo — bez subskrypcji."
   },
   "pt-BR": {
     "FAQ": "Perguntas frequentes",
@@ -2303,7 +2321,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Avaliado com {v} de 5 na App Store ({n} avaliações)",
     "Airplane mode": "Modo Avião",
     "Mobile data": "Dados celulares",
-    "Try it: turn on airplane mode": "Experimente: ative o Modo Avião"
+    "Try it: turn on airplane mode": "Experimente: ative o Modo Avião",
+    "In numbers": "Em números",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicadas, fotos parecidas, rajadas, fotos desfocadas, capturas de tela, vídeos grandes e mais.",
+    "Delete your first 100 MB for free — no subscription needed.": "Apague seus primeiros 100 MB de graça — sem assinatura."
   },
   "ru": {
     "FAQ": "Вопросы и ответы",
@@ -2632,7 +2653,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Оценка {v} из 5 в App Store ({n} оценок)",
     "Airplane mode": "Авиарежим",
     "Mobile data": "Сотовые данные",
-    "Try it: turn on airplane mode": "Попробуйте: включите авиарежим"
+    "Try it: turn on airplane mode": "Попробуйте: включите авиарежим",
+    "In numbers": "В цифрах",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Дубликаты, похожие фото, серии, размытые снимки, скриншоты, большие видео и не только.",
+    "Delete your first 100 MB for free — no subscription needed.": "Удалите первые 100 МБ бесплатно — без подписки."
   },
   "tr": {
     "FAQ": "SSS",
@@ -2961,7 +2985,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store’da 5 üzerinden {v} puan ({n} değerlendirme)",
     "Airplane mode": "Uçak modu",
     "Mobile data": "Hücresel veri",
-    "Try it: turn on airplane mode": "Deneyin: uçak modunu açın"
+    "Try it: turn on airplane mode": "Deneyin: uçak modunu açın",
+    "In numbers": "Rakamlarla",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Kopyalar, benzer fotoğraflar, seri çekimler, bulanık fotoğraflar, ekran görüntüleri, büyük videolar ve dahası.",
+    "Delete your first 100 MB for free — no subscription needed.": "İlk 100 MB’ı ücretsiz silin — abonelik gerekmez."
   },
   "id": {
     "FAQ": "FAQ",
@@ -3290,7 +3317,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Dinilai {v} dari 5 di App Store ({n} penilaian)",
     "Airplane mode": "Mode pesawat",
     "Mobile data": "Data seluler",
-    "Try it: turn on airplane mode": "Coba: nyalakan mode pesawat"
+    "Try it: turn on airplane mode": "Coba: nyalakan mode pesawat",
+    "In numbers": "Dalam angka",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikat, foto mirip, burst, foto buram, tangkapan layar, video besar, dan lainnya.",
+    "Delete your first 100 MB for free — no subscription needed.": "Hapus 100 MB pertama Anda gratis — tanpa langganan."
   },
   "vi": {
     "FAQ": "Câu hỏi thường gặp",
@@ -3619,7 +3649,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "Được đánh giá {v}/5 trên App Store ({n} lượt đánh giá)",
     "Airplane mode": "Chế độ máy bay",
     "Mobile data": "Dữ liệu di động",
-    "Try it: turn on airplane mode": "Thử ngay: bật chế độ máy bay"
+    "Try it: turn on airplane mode": "Thử ngay: bật chế độ máy bay",
+    "In numbers": "Qua những con số",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Ảnh trùng, ảnh tương tự, ảnh chụp liên tiếp, ảnh mờ, ảnh màn hình, video lớn và hơn thế nữa.",
+    "Delete your first 100 MB for free — no subscription needed.": "Xóa 100 MB đầu tiên miễn phí — không cần đăng ký."
   },
   "hi": {
     "FAQ": "अक्सर पूछे जाने वाले प्रश्न",
@@ -3948,7 +3981,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store पर 5 में से {v} रेटिंग ({n} रेटिंग)",
     "Airplane mode": "हवाई जहाज़ मोड",
     "Mobile data": "मोबाइल डेटा",
-    "Try it: turn on airplane mode": "आज़माएँ: हवाई जहाज़ मोड चालू करें"
+    "Try it: turn on airplane mode": "आज़माएँ: हवाई जहाज़ मोड चालू करें",
+    "In numbers": "आँकड़ों में",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "डुप्लिकेट, मिलती-जुलती फोटो, बर्स्ट, धुंधली फोटो, स्क्रीनशॉट, बड़े वीडियो और भी बहुत कुछ।",
+    "Delete your first 100 MB for free — no subscription needed.": "पहले 100 MB मुफ़्त में हटाएँ — कोई सदस्यता नहीं चाहिए।"
   },
   "ja": {
     "FAQ": "よくある質問",
@@ -4277,7 +4313,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Storeで5点中{v}点の評価（{n}件）",
     "Airplane mode": "機内モード",
     "Mobile data": "モバイルデータ通信",
-    "Try it: turn on airplane mode": "試してみよう：機内モードをオン"
+    "Try it: turn on airplane mode": "試してみよう：機内モードをオン",
+    "In numbers": "数字で見る",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重複写真、似た写真、バースト、ピンぼけ写真、スクリーンショット、大きな動画など。",
+    "Delete your first 100 MB for free — no subscription needed.": "最初の100 MBは無料で削除 — サブスク不要。"
   },
   "ko": {
     "FAQ": "자주 묻는 질문",
@@ -4606,7 +4645,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 평점 5점 만점에 {v}점 (평가 {n}개)",
     "Airplane mode": "에어플레인 모드",
     "Mobile data": "셀룰러 데이터",
-    "Try it: turn on airplane mode": "해 보세요: 에어플레인 모드 켜기"
+    "Try it: turn on airplane mode": "해 보세요: 에어플레인 모드 켜기",
+    "In numbers": "숫자로 보기",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "중복 사진, 비슷한 사진, 연속 촬영, 흐린 사진, 스크린샷, 큰 동영상 등.",
+    "Delete your first 100 MB for free — no subscription needed.": "처음 100MB는 무료로 삭제하세요 — 구독이 필요 없습니다."
   },
   "zh-Hans": {
     "FAQ": "常见问题",
@@ -4935,7 +4977,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 评分 {v}/5（{n} 个评分）",
     "Airplane mode": "飞行模式",
     "Mobile data": "蜂窝数据",
-    "Try it: turn on airplane mode": "试试看：打开飞行模式"
+    "Try it: turn on airplane mode": "试试看：打开飞行模式",
+    "In numbers": "数据一览",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重复照片、相似照片、连拍、模糊照片、截图、大视频等。",
+    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免费删除——无需订阅。"
   },
   "zh-Hant": {
     "FAQ": "常見問題",
@@ -5264,7 +5309,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store 評分 {v}/5（{n} 則評分）",
     "Airplane mode": "飛航模式",
     "Mobile data": "行動數據",
-    "Try it: turn on airplane mode": "試試看：開啟飛航模式"
+    "Try it: turn on airplane mode": "試試看：開啟飛航模式",
+    "In numbers": "數據一覽",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重複照片、相似照片、連拍、模糊照片、截圖、大型影片等。",
+    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免費刪除——不需要訂閱。"
   },
   "fa": {
     "FAQ": "پرسش‌های متداول",
@@ -5593,7 +5641,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "امتیاز {v} از ۵ در App Store ({n} امتیاز)",
     "Airplane mode": "حالت هواپیما",
     "Mobile data": "داده تلفن همراه",
-    "Try it: turn on airplane mode": "امتحان کنید: حالت هواپیما را روشن کنید"
+    "Try it: turn on airplane mode": "امتحان کنید: حالت هواپیما را روشن کنید",
+    "In numbers": "به زبان اعداد",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "تکراری‌ها، عکس‌های مشابه، عکس‌های پشت‌سرهم، عکس‌های تار، اسکرین‌شات‌ها، ویدیوهای بزرگ و بیشتر.",
+    "Delete your first 100 MB for free — no subscription needed.": "۱۰۰ مگابایت اول را رایگان حذف کنید — بدون اشتراک."
   },
   "ur": {
     "FAQ": "عمومی سوالات",
@@ -5922,7 +5973,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "App Store پر 5 میں سے {v} ریٹنگ ({n} ریٹنگز)",
     "Airplane mode": "ایئرپلین موڈ",
     "Mobile data": "موبائل ڈیٹا",
-    "Try it: turn on airplane mode": "آزمائیں: ایئرپلین موڈ آن کریں"
+    "Try it: turn on airplane mode": "آزمائیں: ایئرپلین موڈ آن کریں",
+    "In numbers": "اعداد و شمار میں",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "ڈپلیکیٹ، ملتی جلتی تصاویر، برسٹ، دھندلی تصاویر، اسکرین شاٹس، بڑی ویڈیوز اور بہت کچھ۔",
+    "Delete your first 100 MB for free — no subscription needed.": "پہلے 100 MB مفت میں حذف کریں — کسی سبسکرپشن کی ضرورت نہیں۔"
   },
   "ckb": {
     "FAQ": "پرسیارە دووبارەکان",
@@ -6251,6 +6305,9 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Rated {v} out of 5 on the App Store ({n} ratings)": "هەڵسەنگاندنی {v} لە 5 لە App Store ({n} هەڵسەنگاندن)",
     "Airplane mode": "دۆخی فڕۆکە",
     "Mobile data": "داتای مۆبایل",
-    "Try it: turn on airplane mode": "تاقی بکەرەوە: دۆخی فڕۆکە هەڵبکە"
+    "Try it: turn on airplane mode": "تاقی بکەرەوە: دۆخی فڕۆکە هەڵبکە",
+    "In numbers": "بە ژمارە",
+    "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "دووبارەکان، وێنە هاوشێوەکان، زنجیرەوێنە، وێنە ناڕوونەکان، سکرینشۆت، ڤیدیۆ گەورەکان و زیاتر.",
+    "Delete your first 100 MB for free — no subscription needed.": "یەکەم ١٠٠ مێگابایت بێبەرامبەر بسڕەوە — بێ بەشداریکردن."
   }
 };

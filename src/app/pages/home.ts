@@ -73,25 +73,58 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
 
     <app-hero />
 
-    <!-- ══ Facts ══ — four honest numbers, no invented ratings or download counts. -->
-    <section class="facts" [attr.aria-label]="i18n.t('أرقام', 'Facts')">
-      <div class="container facts__row">
-        <div class="fact" style="--tone: var(--blue)" appReveal>
-          <b><span [appCountUp]="8"></span></b>
-          <span>{{ i18n.t('أنواع من الفوضى نفحصها', 'kinds of clutter scanned') }}</span>
-        </div>
-        <div class="fact" style="--tone: var(--green)" [appReveal]="80">
-          <b><span [appCountUp]="100"></span><small>MB</small></b>
-          <span>{{ i18n.t('تنظيف مجاني، بلا اشتراك', 'free to clean, no subscription') }}</span>
-        </div>
-        <div class="fact" style="--tone: var(--violet)" [appReveal]="160">
-          <b><span [appCountUp]="21"></span></b>
-          <span>{{ i18n.t('لغة مدعومة بالكامل', 'fully supported languages') }}</span>
-        </div>
-        <div class="fact" style="--tone: var(--amber)" [appReveal]="240">
-          <b><span>0</span></b>
-          <span>{{ i18n.t('صورة تُرفع إلى أي مكان', 'photos uploaded anywhere') }}</span>
-        </div>
+    <!-- ══ Facts ══ — four honest numbers, each with what it actually means.
+         No invented ratings or download counts. -->
+    <section class="facts" aria-labelledby="facts-title">
+      <div class="container">
+        <h2 class="facts__title" id="facts-title">
+          <span class="kicker" style="--tone: var(--blue)">{{ i18n.t('بالأرقام', 'In numbers') }}</span>
+        </h2>
+        <ul class="facts__row">
+          <li class="fact" style="--tone: var(--blue)" appReveal>
+            <span class="fact__ic" aria-hidden="true"><svg class="ico"><use href="#i-scan"/></svg></span>
+            <b class="fact__num"><span [appCountUp]="8"></span></b>
+            <h3>{{ i18n.t('أنواع من الفوضى يكتشفها', 'kinds of clutter scanned') }}</h3>
+            <p>{{ i18n.t('مكرر، متشابه، متتابع، غير واضح، سكرينشوت، فيديوهات كبيرة وأكثر.', 'Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.') }}</p>
+            <!-- The eight, as the same icons the category cards use further down. -->
+            <span class="fact__viz fact__kinds" aria-hidden="true">
+              @for (c of categories; track c.key) {
+                <i [style.--c]="c.tone"><svg class="ico"><use [attr.href]="'#i-' + c.icon"/></svg></i>
+              }
+            </span>
+          </li>
+          <li class="fact" style="--tone: var(--green)" [appReveal]="80">
+            <span class="fact__ic" aria-hidden="true"><svg class="ico"><use href="#i-sparkle"/></svg></span>
+            <b class="fact__num"><bdi dir="ltr"><span [appCountUp]="100"></span><small>MB</small></bdi></b>
+            <h3>{{ i18n.t('تنظيف مجاني بلا اشتراك', 'free to clean, no subscription') }}</h3>
+            <p>{{ i18n.t('احذف أول ١٠٠ ميغابايت مجاناً — بدون أي اشتراك.', 'Delete your first 100 MB for free — no subscription needed.') }}</p>
+            <!-- The free allowance as a bar that fills when the card scrolls in. -->
+            <span class="fact__viz fact__quota" aria-hidden="true">
+              <span class="fact__bar"><i></i></span>
+              <span class="fact__ends" dir="ltr"><span>0</span><span>100 MB</span></span>
+            </span>
+          </li>
+          <li class="fact" style="--tone: var(--violet)" [appReveal]="160">
+            <span class="fact__ic" aria-hidden="true"><svg class="ico"><use href="#i-globe"/></svg></span>
+            <b class="fact__num"><span [appCountUp]="21"></span></b>
+            <h3>{{ i18n.t('لغة مدعومة بالكامل', 'fully supported languages') }}</h3>
+            <p>{{ i18n.t('واجهة كاملة بلغتك — بما فيها الكردية والعربية والفارسية.', 'A fully localized interface in your language — including Kurdish, Arabic and Persian.') }}</p>
+            <span class="fact__viz fact__langs" aria-hidden="true">
+              @for (f of flagSample; track f) { <i>{{ f }}</i> }
+              <b dir="ltr">+{{ i18n.languages.length - flagSample.length }}</b>
+            </span>
+          </li>
+          <li class="fact" style="--tone: var(--amber)" [appReveal]="240">
+            <span class="fact__ic" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
+            <b class="fact__num"><span>0</span></b>
+            <h3>{{ i18n.t('صورة تغادر جهازك', 'photos uploaded anywhere') }}</h3>
+            <p>{{ i18n.t('كل المعالجة على جهازك — لا يُرفع أي شيء إلى أي خادم.', 'Everything runs on-device — nothing is uploaded anywhere.') }}</p>
+            <!-- An upload cloud, struck through. -->
+            <span class="fact__viz fact__zero" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.5-9 6 6 0 0 1 11.5 1.5A3.75 3.75 0 0 1 17.5 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 20v-7m0 0-2.5 2.5M12 13l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path class="fact__slash" d="M4 4l16 16" fill="none" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </span>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -567,6 +600,9 @@ export class HomeComponent {
   ];
 
   /** Private family moments — exactly what people move into a vault. */
+  /** A handful of flags for the languages card — ckb has no emoji flag, so it is skipped here. */
+  readonly flagSample = this.i18n.languages.filter((l) => l.flag).slice(0, 6).map((l) => l.flag);
+
   readonly vaultTiles = ['baby', 'kids-hug', 'friends', 'woman-smile', 'birthday', 'kid-curls'];
   /** The history miniature's 14 days — a shape, not data. */
   readonly historyBars = [0.22, 0.38, 0.3, 0.55, 0.42, 0.18, 0.64, 0.48, 0.7, 0.36, 0.58, 0.82, 0.44, 0.96];
