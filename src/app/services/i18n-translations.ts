@@ -1,6 +1,6 @@
 // AUTO-GENERATED — do not edit by hand. Run `node scripts/i18n/build.js` to regenerate.
 // Maps each non-ar/en language code to { <English source string>: <translation> }.
-// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 330 catalog strings.
+// Missing keys fall back to English at runtime (see I18n.t). 19 languages; 333 catalog strings.
 export const TRANSLATIONS: Record<string, Record<string, string>> = {
   "de": {
     "FAQ": "FAQ",
@@ -332,7 +332,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Probier es: Flugmodus einschalten",
     "In numbers": "In Zahlen",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikate, ähnliche Fotos, Serienbilder, unscharfe Fotos, Screenshots, große Videos und mehr.",
-    "Delete your first 100 MB for free — no subscription needed.": "Lösche die ersten 100 MB kostenlos – ganz ohne Abo."
+    "Delete your first 100 MB for free — no subscription needed.": "Lösche die ersten 100 MB kostenlos – ganz ohne Abo.",
+    "Empty the trash to free {n} MB": "Papierkorb leeren und {n} MB freigeben",
+    "Delete a photo": "Foto löschen",
+    "Empty the trash": "Papierkorb leeren"
   },
   "es": {
     "FAQ": "Preguntas frecuentes",
@@ -664,7 +667,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Pruébalo: activa el modo avión",
     "In numbers": "En cifras",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicados, fotos parecidas, ráfagas, fotos borrosas, capturas, vídeos grandes y más.",
-    "Delete your first 100 MB for free — no subscription needed.": "Borra tus primeros 100 MB gratis, sin suscripción."
+    "Delete your first 100 MB for free — no subscription needed.": "Borra tus primeros 100 MB gratis, sin suscripción.",
+    "Empty the trash to free {n} MB": "Vacía la papelera para liberar {n} MB",
+    "Delete a photo": "Borra una foto",
+    "Empty the trash": "Vacía la papelera"
   },
   "fr": {
     "FAQ": "FAQ",
@@ -996,7 +1002,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Essayez : activez le mode Avion",
     "In numbers": "En chiffres",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Doublons, photos similaires, rafales, photos floues, captures d’écran, grosses vidéos et plus.",
-    "Delete your first 100 MB for free — no subscription needed.": "Supprimez vos 100 premiers Mo gratuitement — sans abonnement."
+    "Delete your first 100 MB for free — no subscription needed.": "Supprimez vos 100 premiers Mo gratuitement — sans abonnement.",
+    "Empty the trash to free {n} MB": "Videz la corbeille pour libérer {n} Mo",
+    "Delete a photo": "Supprimez une photo",
+    "Empty the trash": "Videz la corbeille"
   },
   "it": {
     "FAQ": "FAQ",
@@ -1328,7 +1337,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Prova: attiva la modalità aereo",
     "In numbers": "In numeri",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicati, foto simili, raffiche, foto sfocate, screenshot, video pesanti e altro.",
-    "Delete your first 100 MB for free — no subscription needed.": "Elimina i primi 100 MB gratis, senza abbonamento."
+    "Delete your first 100 MB for free — no subscription needed.": "Elimina i primi 100 MB gratis, senza abbonamento.",
+    "Empty the trash to free {n} MB": "Svuota il cestino per liberare {n} MB",
+    "Delete a photo": "Elimina una foto",
+    "Empty the trash": "Svuota il cestino"
   },
   "nl": {
     "FAQ": "Veelgestelde vragen",
@@ -1660,7 +1672,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Probeer het: zet vliegtuigmodus aan",
     "In numbers": "In cijfers",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicaten, vergelijkbare foto’s, burstfoto’s, onscherpe foto’s, screenshots, grote video’s en meer.",
-    "Delete your first 100 MB for free — no subscription needed.": "Verwijder je eerste 100 MB gratis — zonder abonnement."
+    "Delete your first 100 MB for free — no subscription needed.": "Verwijder je eerste 100 MB gratis — zonder abonnement.",
+    "Empty the trash to free {n} MB": "Leeg de prullenbak om {n} MB vrij te maken",
+    "Delete a photo": "Verwijder een foto",
+    "Empty the trash": "Leeg de prullenbak"
   },
   "pl": {
     "FAQ": "FAQ",
@@ -1992,7 +2007,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Spróbuj: włącz tryb samolotowy",
     "In numbers": "W liczbach",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikaty, podobne zdjęcia, serie, nieostre zdjęcia, zrzuty ekranu, duże filmy i nie tylko.",
-    "Delete your first 100 MB for free — no subscription needed.": "Usuń pierwsze 100 MB za darmo — bez subskrypcji."
+    "Delete your first 100 MB for free — no subscription needed.": "Usuń pierwsze 100 MB za darmo — bez subskrypcji.",
+    "Empty the trash to free {n} MB": "Opróżnij kosz, aby zwolnić {n} MB",
+    "Delete a photo": "Usuń zdjęcie",
+    "Empty the trash": "Opróżnij kosz"
   },
   "pt-BR": {
     "FAQ": "Perguntas frequentes",
@@ -2324,7 +2342,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Experimente: ative o Modo Avião",
     "In numbers": "Em números",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplicadas, fotos parecidas, rajadas, fotos desfocadas, capturas de tela, vídeos grandes e mais.",
-    "Delete your first 100 MB for free — no subscription needed.": "Apague seus primeiros 100 MB de graça — sem assinatura."
+    "Delete your first 100 MB for free — no subscription needed.": "Apague seus primeiros 100 MB de graça — sem assinatura.",
+    "Empty the trash to free {n} MB": "Esvazie a lixeira para liberar {n} MB",
+    "Delete a photo": "Apague uma foto",
+    "Empty the trash": "Esvazie a lixeira"
   },
   "ru": {
     "FAQ": "Вопросы и ответы",
@@ -2656,7 +2677,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Попробуйте: включите авиарежим",
     "In numbers": "В цифрах",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Дубликаты, похожие фото, серии, размытые снимки, скриншоты, большие видео и не только.",
-    "Delete your first 100 MB for free — no subscription needed.": "Удалите первые 100 МБ бесплатно — без подписки."
+    "Delete your first 100 MB for free — no subscription needed.": "Удалите первые 100 МБ бесплатно — без подписки.",
+    "Empty the trash to free {n} MB": "Очистите корзину, чтобы освободить {n} МБ",
+    "Delete a photo": "Удалите фото",
+    "Empty the trash": "Очистите корзину"
   },
   "tr": {
     "FAQ": "SSS",
@@ -2988,7 +3012,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Deneyin: uçak modunu açın",
     "In numbers": "Rakamlarla",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Kopyalar, benzer fotoğraflar, seri çekimler, bulanık fotoğraflar, ekran görüntüleri, büyük videolar ve dahası.",
-    "Delete your first 100 MB for free — no subscription needed.": "İlk 100 MB’ı ücretsiz silin — abonelik gerekmez."
+    "Delete your first 100 MB for free — no subscription needed.": "İlk 100 MB’ı ücretsiz silin — abonelik gerekmez.",
+    "Empty the trash to free {n} MB": "{n} MB boşaltmak için çöp kutusunu boşaltın",
+    "Delete a photo": "Bir fotoğraf silin",
+    "Empty the trash": "Çöp kutusunu boşaltın"
   },
   "id": {
     "FAQ": "FAQ",
@@ -3320,7 +3347,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Coba: nyalakan mode pesawat",
     "In numbers": "Dalam angka",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Duplikat, foto mirip, burst, foto buram, tangkapan layar, video besar, dan lainnya.",
-    "Delete your first 100 MB for free — no subscription needed.": "Hapus 100 MB pertama Anda gratis — tanpa langganan."
+    "Delete your first 100 MB for free — no subscription needed.": "Hapus 100 MB pertama Anda gratis — tanpa langganan.",
+    "Empty the trash to free {n} MB": "Kosongkan sampah untuk membebaskan {n} MB",
+    "Delete a photo": "Hapus satu foto",
+    "Empty the trash": "Kosongkan sampah"
   },
   "vi": {
     "FAQ": "Câu hỏi thường gặp",
@@ -3652,7 +3682,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "Thử ngay: bật chế độ máy bay",
     "In numbers": "Qua những con số",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "Ảnh trùng, ảnh tương tự, ảnh chụp liên tiếp, ảnh mờ, ảnh màn hình, video lớn và hơn thế nữa.",
-    "Delete your first 100 MB for free — no subscription needed.": "Xóa 100 MB đầu tiên miễn phí — không cần đăng ký."
+    "Delete your first 100 MB for free — no subscription needed.": "Xóa 100 MB đầu tiên miễn phí — không cần đăng ký.",
+    "Empty the trash to free {n} MB": "Dọn thùng rác để giải phóng {n} MB",
+    "Delete a photo": "Xóa một ảnh",
+    "Empty the trash": "Dọn thùng rác"
   },
   "hi": {
     "FAQ": "अक्सर पूछे जाने वाले प्रश्न",
@@ -3984,7 +4017,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "आज़माएँ: हवाई जहाज़ मोड चालू करें",
     "In numbers": "आँकड़ों में",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "डुप्लिकेट, मिलती-जुलती फोटो, बर्स्ट, धुंधली फोटो, स्क्रीनशॉट, बड़े वीडियो और भी बहुत कुछ।",
-    "Delete your first 100 MB for free — no subscription needed.": "पहले 100 MB मुफ़्त में हटाएँ — कोई सदस्यता नहीं चाहिए।"
+    "Delete your first 100 MB for free — no subscription needed.": "पहले 100 MB मुफ़्त में हटाएँ — कोई सदस्यता नहीं चाहिए।",
+    "Empty the trash to free {n} MB": "{n} MB खाली करने के लिए ट्रैश खाली करें",
+    "Delete a photo": "एक फोटो हटाएँ",
+    "Empty the trash": "ट्रैश खाली करें"
   },
   "ja": {
     "FAQ": "よくある質問",
@@ -4316,7 +4352,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "試してみよう：機内モードをオン",
     "In numbers": "数字で見る",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重複写真、似た写真、バースト、ピンぼけ写真、スクリーンショット、大きな動画など。",
-    "Delete your first 100 MB for free — no subscription needed.": "最初の100 MBは無料で削除 — サブスク不要。"
+    "Delete your first 100 MB for free — no subscription needed.": "最初の100 MBは無料で削除 — サブスク不要。",
+    "Empty the trash to free {n} MB": "ゴミ箱を空にして{n} MBを解放",
+    "Delete a photo": "写真を削除",
+    "Empty the trash": "ゴミ箱を空にする"
   },
   "ko": {
     "FAQ": "자주 묻는 질문",
@@ -4648,7 +4687,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "해 보세요: 에어플레인 모드 켜기",
     "In numbers": "숫자로 보기",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "중복 사진, 비슷한 사진, 연속 촬영, 흐린 사진, 스크린샷, 큰 동영상 등.",
-    "Delete your first 100 MB for free — no subscription needed.": "처음 100MB는 무료로 삭제하세요 — 구독이 필요 없습니다."
+    "Delete your first 100 MB for free — no subscription needed.": "처음 100MB는 무료로 삭제하세요 — 구독이 필요 없습니다.",
+    "Empty the trash to free {n} MB": "휴지통을 비워 {n}MB 확보하기",
+    "Delete a photo": "사진 삭제하기",
+    "Empty the trash": "휴지통 비우기"
   },
   "zh-Hans": {
     "FAQ": "常见问题",
@@ -4980,7 +5022,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "试试看：打开飞行模式",
     "In numbers": "数据一览",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重复照片、相似照片、连拍、模糊照片、截图、大视频等。",
-    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免费删除——无需订阅。"
+    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免费删除——无需订阅。",
+    "Empty the trash to free {n} MB": "清空回收站，释放 {n} MB",
+    "Delete a photo": "删除一张照片",
+    "Empty the trash": "清空回收站"
   },
   "zh-Hant": {
     "FAQ": "常見問題",
@@ -5312,7 +5357,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "試試看：開啟飛航模式",
     "In numbers": "數據一覽",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "重複照片、相似照片、連拍、模糊照片、截圖、大型影片等。",
-    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免費刪除——不需要訂閱。"
+    "Delete your first 100 MB for free — no subscription needed.": "前 100 MB 免費刪除——不需要訂閱。",
+    "Empty the trash to free {n} MB": "清空垃圾桶，釋放 {n} MB",
+    "Delete a photo": "刪除一張照片",
+    "Empty the trash": "清空垃圾桶"
   },
   "fa": {
     "FAQ": "پرسش‌های متداول",
@@ -5644,7 +5692,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "امتحان کنید: حالت هواپیما را روشن کنید",
     "In numbers": "به زبان اعداد",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "تکراری‌ها، عکس‌های مشابه، عکس‌های پشت‌سرهم، عکس‌های تار، اسکرین‌شات‌ها، ویدیوهای بزرگ و بیشتر.",
-    "Delete your first 100 MB for free — no subscription needed.": "۱۰۰ مگابایت اول را رایگان حذف کنید — بدون اشتراک."
+    "Delete your first 100 MB for free — no subscription needed.": "۱۰۰ مگابایت اول را رایگان حذف کنید — بدون اشتراک.",
+    "Empty the trash to free {n} MB": "سطل زباله را خالی کنید تا {n} مگابایت آزاد شود",
+    "Delete a photo": "یک عکس حذف کنید",
+    "Empty the trash": "سطل زباله را خالی کنید"
   },
   "ur": {
     "FAQ": "عمومی سوالات",
@@ -5976,7 +6027,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "آزمائیں: ایئرپلین موڈ آن کریں",
     "In numbers": "اعداد و شمار میں",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "ڈپلیکیٹ، ملتی جلتی تصاویر، برسٹ، دھندلی تصاویر، اسکرین شاٹس، بڑی ویڈیوز اور بہت کچھ۔",
-    "Delete your first 100 MB for free — no subscription needed.": "پہلے 100 MB مفت میں حذف کریں — کسی سبسکرپشن کی ضرورت نہیں۔"
+    "Delete your first 100 MB for free — no subscription needed.": "پہلے 100 MB مفت میں حذف کریں — کسی سبسکرپشن کی ضرورت نہیں۔",
+    "Empty the trash to free {n} MB": "{n} MB خالی کرنے کے لیے ردی خالی کریں",
+    "Delete a photo": "ایک تصویر حذف کریں",
+    "Empty the trash": "ردی خالی کریں"
   },
   "ckb": {
     "FAQ": "پرسیارە دووبارەکان",
@@ -6308,6 +6362,9 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     "Try it: turn on airplane mode": "تاقی بکەرەوە: دۆخی فڕۆکە هەڵبکە",
     "In numbers": "بە ژمارە",
     "Duplicates, look-alikes, bursts, blurry shots, screenshots, big videos and more.": "دووبارەکان، وێنە هاوشێوەکان، زنجیرەوێنە، وێنە ناڕوونەکان، سکرینشۆت، ڤیدیۆ گەورەکان و زیاتر.",
-    "Delete your first 100 MB for free — no subscription needed.": "یەکەم ١٠٠ مێگابایت بێبەرامبەر بسڕەوە — بێ بەشداریکردن."
+    "Delete your first 100 MB for free — no subscription needed.": "یەکەم ١٠٠ مێگابایت بێبەرامبەر بسڕەوە — بێ بەشداریکردن.",
+    "Empty the trash to free {n} MB": "سەبەتە بەتاڵ بکە بۆ ئازادکردنی {n} MB",
+    "Delete a photo": "وێنەیەک بسڕەوە",
+    "Empty the trash": "سەبەتە بەتاڵ بکە"
   }
 };

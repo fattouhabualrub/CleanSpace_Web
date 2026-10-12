@@ -40,16 +40,33 @@ interface Decision { photo: Photo; verdict: Verdict; emptied: boolean }
           <h2 class="h2">{{ i18n.t('جرّبه هنا مباشرة', 'Try it right here') }}</h2>
           <p class="lede">{{ i18n.t('راجع صورك بسرعة — اسحب للاحتفاظ أو الحذف، مع سلة تراجع.', 'Review fast — swipe to keep or delete, with an undo bin.') }}</p>
 
-          <dl class="sw__stats" aria-live="polite">
-            <div class="sw__stat">
-              <dt>{{ i18n.t('في سلة المحذوفات', 'in the trash') }}</dt>
-              <dd><b>{{ trash().length }}</b><small>{{ trashMb() }} MB</small></dd>
+          <!-- Trash → freed, as a flow: deleting fills the trash; emptying it is
+               what frees space, so that step gets a button of its own here. -->
+          <div class="sw__stats" aria-live="polite">
+            <div class="sw__stat sw__stat--trash" [class.is-full]="trash().length > 0">
+              <span class="sw__stat-label">{{ i18n.t('في سلة المحذوفات', 'in the trash') }}</span>
+              <span class="sw__stat-val"><b>{{ trash().length }}</b><small>{{ trashMb() }} MB</small></span>
             </div>
-            <div class="sw__stat sw__stat--freed">
-              <dt>{{ i18n.t('مساحة تم تحريرها', 'Space freed') }}</dt>
-              <dd><b>{{ freedMb() }}</b><small>MB</small></dd>
+            <span class="sw__flow" [class.is-live]="trash().length > 0" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="sw__stat sw__stat--freed" [class.is-ready]="trash().length > 0" [class.is-pop]="pop()">
+              <span class="sw__stat-label">{{ i18n.t('مساحة تم تحريرها', 'Space freed') }}</span>
+              <span class="sw__stat-val"><b>{{ freedShown().toFixed(1) }}</b><small>MB</small></span>
             </div>
-          </dl>
+          </div>
+          @if (trash().length) {
+            <button type="button" class="btn btn--primary sw__free" (click)="emptyTrash()">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {{ emptyLabel() }}
+            </button>
+          } @else if (!freedMb()) {
+            <p class="sw__guide">
+              <span class="sw__guide-step">1</span>{{ i18n.t('احذف صورة', 'Delete a photo') }}
+              <span class="sw__guide-sep" aria-hidden="true"></span>
+              <span class="sw__guide-step">2</span>{{ i18n.t('أفرغ السلة', 'Empty the trash') }}
+            </p>
+          }
 
           <p class="sw__keys" aria-hidden="true">
             <kbd>←</kbd> {{ i18n.t('حذف', 'Delete') }}
@@ -82,7 +99,11 @@ interface Decision { photo: Photo; verdict: Verdict; emptied: boolean }
                     </span>
                     <b>{{ i18n.t('كل شيء نظيف!', 'All clean!') }}</b>
                     <span>{{ freedMb() + trashMb() }} MB</span>
-                    <button type="button" class="btn btn--primary btn--sm" (click)="reset()">{{ i18n.t('ابدأ من جديد', 'Start over') }}</button>
+                    @if (trash().length) {
+                      <button type="button" class="btn btn--primary btn--sm" (click)="emptyTrash()">{{ emptyLabel() }}</button>
+                    } @else {
+                      <button type="button" class="btn btn--primary btn--sm" (click)="reset()">{{ i18n.t('ابدأ من جديد', 'Start over') }}</button>
+                    }
                   </div>
                 }
                 @for (p of visible(); track p.id; let i = $index) {
@@ -219,11 +240,39 @@ export class SwipeDemoComponent {
     this.index.update((i) => i - 1);
   }
 
+  /** The freed figure as shown — it counts up when the trash is emptied. */
+  readonly freedShown = signal(0);
+  /** Briefly true after emptying, to flash the freed card. */
+  readonly pop = signal(false);
+  private countRaf = 0;
+
+  emptyLabel(): string {
+    return this.i18n
+      .t('أفرغ السلة لتحرير {n} MB', 'Empty the trash to free {n} MB')
+      .replace('{n}', String(this.trashMb()));
+  }
+
   emptyTrash(): void {
+    const from = this.freedShown();
     this.history.update((h) => h.map((d) => (d.verdict === 'delete' ? { ...d, emptied: true } : d)));
+    const to = this.freedMb();
+    this.pop.set(true);
+    setTimeout(() => this.pop.set(false), 900);
+
+    const win = this.doc.defaultView;
+    if (!win || prefersReducedMotion(this.doc)) { this.freedShown.set(to); return; }
+    win.cancelAnimationFrame(this.countRaf);
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - t0) / 800);
+      this.freedShown.set(round1(from + (to - from) * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) this.countRaf = win.requestAnimationFrame(tick);
+    };
+    this.countRaf = win.requestAnimationFrame(tick);
   }
 
   reset(): void {
+    this.freedShown.set(0);
     this.returning.set(null);
     this.history.set([]);
     this.index.set(0);
