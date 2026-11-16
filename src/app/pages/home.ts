@@ -506,7 +506,8 @@ interface TourStep { shot: string; icon: string; tone: string; arT: string; enT:
             <h2 class="h2">{{ i18n.t('جاهز تستعيد مساحتك؟', 'Ready to reclaim your space?') }}</h2>
             <p class="lede">{{ i18n.t('نزّل CleanSpace وابدأ التنظيف اليوم.', 'Download CleanSpace and start cleaning today.') }}</p>
             <div class="cta__badges">
-              <app-appstore-badge placement="home_cta_band" />
+              <!-- Shown next to Google Play: Apple requires its preferred black badge here. -->
+              <app-appstore-badge placement="home_cta_band" tone="black" />
               <app-googleplay-badge />
             </div>
             <span class="cta__note">{{ i18n.t('لـ iPhone • iOS 16 وأحدث', 'For iPhone • iOS 16 and later') }}</span>

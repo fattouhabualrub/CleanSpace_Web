@@ -107,12 +107,15 @@ export class GoogleAnalyticsService {
    * page's automatic hand-off — so auto-redirects can be included or excluded in
    * GA without needing a second event name.
    */
-  downloadClick(placement: string, trigger: 'click' | 'auto' = 'click'): void {
+  downloadClick(placement: string, trigger: 'click' | 'auto' = 'click', extra?: GtagParams): void {
     this.event('download_click', {
       store: 'app_store',
       placement,
       trigger,
       language: this.i18n.lang(),
+      // Sent as a beacon so the hit survives the hand-off to the App Store.
+      transport_type: 'beacon',
+      ...extra,
     });
   }
 

@@ -9,7 +9,14 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18n } from '../services/i18n';
-import { APP_STORE_URL, detectPlatform, type Platform } from '../services/app-links';
+import {
+  APP_STORE_URL,
+  detectInAppBrowser,
+  detectPlatform,
+  storeUrlFor,
+  type InAppBrowser,
+  type Platform,
+} from '../services/app-links';
 import { AppStoreBadgeComponent } from '../components/appstore-badge';
 import { StorageBarComponent } from '../components/storage-bar';
 import { GoogleAnalyticsService } from '../core/services/google-analytics.service';
@@ -53,6 +60,13 @@ import { MIN_RATINGS_SHOWN } from '../core/seo/structured-data.service';
               {{ i18n.t('لحظة واحدة. إن لم يُفتح تلقائياً فسيظهر لك زر.',
                         'One moment. If it does not open on its own, a button will appear.') }}
             </p>
+          } @else if (platform() === 'ios' && tapOnly()) {
+            <!-- Messenger's browser ignores the automatic hand-off, so ask for the tap
+                 straight away instead of making the visitor wait for a fallback. -->
+            <p class="dl__lede">
+              {{ i18n.t('اضغط على الزر لتحميل CleanSpace من App Store.',
+                        'Tap below to get CleanSpace on the App Store.') }}
+            </p>
           } @else if (platform() === 'ios') {
             <p class="dl__lede">
               {{ i18n.t('لم يُفتح App Store تلقائياً؟ اضغط الزر أدناه.',
@@ -72,13 +86,13 @@ import { MIN_RATINGS_SHOWN } from '../core/seo/structured-data.service';
 
           @if (!redirecting()) {
             @if (platform() === 'ios') {
-              <a class="btn btn--primary btn--block dl__cta" [href]="APP_STORE_URL" rel="noopener"
-                 (click)="analytics.downloadClick('download_page_fallback')">
-                <svg class="ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="currentColor" stroke="none" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.51 4.09l-.02-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                </svg>
-                {{ i18n.t('افتح App Store', 'Open the App Store') }}
-              </a>
+              <!-- Apple's official badge (not a home-made button), opening the store in
+                   the same tab, with this visit's campaign link and GA params. -->
+              <div class="dl__badges dl__cta">
+                <app-appstore-badge size="lg" [eager]="true" [newTab]="false"
+                                    [placement]="tapOnly() ? 'download_page_tap' : 'download_page_fallback'"
+                                    [href]="storeUrl()" [extra]="trackParams()" />
+              </div>
             } @else if (platform() === 'desktop') {
               <!-- On a computer the app can't be installed here, so the fastest
                    path is the phone in the visitor's pocket: scan, land on the
@@ -92,12 +106,12 @@ import { MIN_RATINGS_SHOWN } from '../core/seo/structured-data.service';
                 <div class="dl__scan-txt">
                   <b>{{ i18n.t('امسح الرمز بكاميرا آيفونك', 'Scan with your iPhone camera') }}</b>
                   <span>{{ i18n.t('سيفتح CleanSpace على App Store مباشرة.', 'It opens CleanSpace on the App Store.') }}</span>
-                  <app-appstore-badge placement="download_page_desktop" />
+                  <app-appstore-badge placement="download_page_desktop" [href]="storeUrl()" [extra]="trackParams()" />
                 </div>
               </div>
             } @else {
               <div class="dl__badges">
-                <app-appstore-badge placement="download_page_android" />
+                <app-appstore-badge placement="download_page_android" [href]="storeUrl()" [extra]="trackParams()" />
               </div>
             }
           }
@@ -126,10 +140,24 @@ export class DownloadPageComponent implements OnInit, OnDestroy {
   i18n = inject(I18n);
   readonly analytics = inject(GoogleAnalyticsService);
 
-  readonly APP_STORE_URL = APP_STORE_URL;
   readonly rating = APP_RATING;
   readonly minRatings = MIN_RATINGS_SHOWN;
   readonly platform = signal<Platform>('desktop');
+
+  /** The store link for this visit: a campaign link when ?ct= is present (see storeUrlFor). */
+  readonly storeUrl = signal(APP_STORE_URL);
+  /** The app whose built-in browser we're in, if any (Instagram, Messenger, …). */
+  readonly inApp = signal<InAppBrowser>(null);
+  /** Browsers that ignore the automatic hand-off: show the button at once. */
+  readonly tapOnly = computed(() => this.inApp() === 'messenger');
+  private readonly campaign = signal<string | null>(null);
+
+  /** Extra GA4 params so ad traffic can be split by campaign and by in-app browser.
+   *  A computed (stable object) because it is bound into the badge's input. */
+  readonly trackParams = computed(() => ({
+    campaign_token: this.campaign() ?? '(none)',
+    in_app: this.inApp() ?? 'none',
+  }));
 
   ratingLabel(): string {
     return this.i18n
@@ -153,17 +181,26 @@ export class DownloadPageComponent implements OnInit, OnDestroy {
     const platform = detectPlatform();
     this.platform.set(platform);
 
+    // ?ct=<campaign> (e.g. from an ad) turns the store link into an App Store
+    // Connect campaign link, so downloads are counted per campaign.
+    const params = new URLSearchParams(window.location.search);
+    this.campaign.set(params.get('ct'));
+    this.storeUrl.set(storeUrlFor(this.campaign()));
+    this.inApp.set(detectInAppBrowser());
+
     // iOS is the only platform with a live store link, so it's the only one we redirect.
     if (platform !== 'ios') return;
-    const target = APP_STORE_URL;
+    // Messenger ignores the automatic hand-off: the button is shown straight away instead.
+    if (this.tapOnly()) return;
+    const target = this.storeUrl();
 
     this.attempting.set(true);
     // Most iOS visitors never see a button — they're handed straight to the store —
     // so without this the page's real conversions would go uncounted. Sent before
     // navigating, and tagged trigger:'auto' so it can be split from real taps.
     // Scans of the desktop QR code arrive with ?ref=qr, so they can be counted apart.
-    const viaQr = new URLSearchParams(window.location.search).get('ref') === 'qr';
-    this.analytics.downloadClick(viaQr ? 'download_page_qr' : 'download_page_auto', 'auto');
+    const viaQr = params.get('ref') === 'qr';
+    this.analytics.downloadClick(viaQr ? 'download_page_qr' : 'download_page_auto', 'auto', this.trackParams());
     // Hand off immediately — no delay, no intermediate paint the visitor has to sit
     // through. The "opening…" state below only ever shows if the browser is slow to
     // act on this or ignores it outright.

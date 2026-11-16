@@ -20,6 +20,14 @@ export const environment = {
    */
   appStoreUrl: 'https://apps.apple.com/app/id6790139624',
 
+  /**
+   * App Store Connect "provider token" (the `pt` in an App Analytics campaign
+   * link). With it, /download?ct=<campaign> hands the visitor to a campaign link
+   * so App Store Connect can count the downloads per campaign. Empty = campaign
+   * links are off and every visitor gets the plain store URL above.
+   */
+  appStoreProviderToken: '122535010',
+
   /** Locale used for x-default and for bare URLs with no saved preference. */
   defaultLocale: 'en',
 

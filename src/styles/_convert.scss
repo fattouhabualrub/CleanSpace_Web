@@ -172,9 +172,10 @@ tbody tr:hover .compare__label, tbody tr:hover .compare__cell:not(.compare__cell
 .cta__panel .lede { color: rgba(255, 255, 255, 0.92); }
 .cta__badges { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px 10px; margin-top: 6px; }
 .cta__note { color: rgba(255, 255, 255, 0.8); font-size: 13.5px; }
-/* On the blue panel Apple's white badge is the right variant in both themes. */
-.cta__panel .appstore-badge__img--black { display: none !important; }
-.cta__panel .appstore-badge__img--white { display: block !important; }
+/* Google Play's badge sits beside it here, and Apple's guidelines then require
+   the preferred black badge (never the white alternative), in both themes. */
+.cta__panel .appstore-badge__img--black { display: block !important; }
+.cta__panel .appstore-badge__img--white { display: none !important; }
 .cta__panel .gplay__soon { color: rgba(255, 255, 255, 0.85); }
 .cta__panel .gplay__soon::before { background: #FFD60A; }
 .cta__panel .gplay__img { opacity: 0.95; }

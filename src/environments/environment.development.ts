@@ -13,6 +13,7 @@ export const environment = {
 
   appStoreId: '6790139624',
   appStoreUrl: 'https://apps.apple.com/app/id6790139624',
+  appStoreProviderToken: '',
 
   defaultLocale: 'en',
 
