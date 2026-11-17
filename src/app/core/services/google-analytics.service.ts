@@ -113,8 +113,6 @@ export class GoogleAnalyticsService {
       placement,
       trigger,
       language: this.i18n.lang(),
-      // Sent as a beacon so the hit survives the hand-off to the App Store.
-      transport_type: 'beacon',
       ...extra,
     });
   }
