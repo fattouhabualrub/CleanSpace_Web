@@ -40,7 +40,9 @@ export function detectInAppBrowser(): InAppBrowser {
   if (typeof navigator === 'undefined') return null;
   const ua = navigator.userAgent || '';
   if (/Instagram/i.test(ua)) return 'instagram';
-  if (/MessengerForiOS|FB_IAB\/MESSENGER|\bMessenger\b/i.test(ua)) return 'messenger';
+  // Any "Messenger" token: MessengerForiOS, MessengerLiteForiOS (current iOS app,
+  // which the narrower match missed and logged as plain Facebook), FB_IAB/MESSENGER.
+  if (/Messenger|FB_IAB\/MESSENGER/i.test(ua)) return 'messenger';
   if (/FBAN|FBAV|FBIOS|FB_IAB/i.test(ua)) return 'facebook';
   if (/Snapchat|TikTok|musical_ly|BytedanceWebview|Twitter|Line\/|WhatsApp/i.test(ua)) return 'other';
   return null;

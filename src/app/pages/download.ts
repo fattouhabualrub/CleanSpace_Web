@@ -148,8 +148,13 @@ export class DownloadPageComponent implements OnInit, OnDestroy {
   readonly storeUrl = signal(APP_STORE_URL);
   /** The app whose built-in browser we're in, if any (Instagram, Messenger, …). */
   readonly inApp = signal<InAppBrowser>(null);
-  /** Browsers that ignore the automatic hand-off: show the button at once. */
-  readonly tapOnly = computed(() => this.inApp() === 'messenger');
+  /**
+   * Meta's own in-app browsers: show the badge at once instead of an "Opening…"
+   * spinner. Messenger never follows the automatic hand-off; whether Facebook's
+   * browser does is not something we can rely on, so it gets the badge too (and
+   * we still try the redirect underneath it — see ngOnInit).
+   */
+  readonly tapOnly = computed(() => this.inApp() === 'messenger' || this.inApp() === 'facebook');
   private readonly campaign = signal<string | null>(null);
 
   /** Extra GA4 params so ad traffic can be split by campaign and by in-app browser.
@@ -190,11 +195,13 @@ export class DownloadPageComponent implements OnInit, OnDestroy {
 
     // iOS is the only platform with a live store link, so it's the only one we redirect.
     if (platform !== 'ios') return;
-    // Messenger ignores the automatic hand-off: the button is shown straight away instead.
-    if (this.tapOnly()) return;
+    // Messenger ignores the automatic hand-off: the badge is shown straight away instead.
+    if (this.inApp() === 'messenger') return;
     const target = this.storeUrl();
 
-    this.attempting.set(true);
+    // Facebook's browser: the badge is already on screen (tapOnly), so no spinner —
+    // but the hand-off is still tried, in case this version of the app follows it.
+    if (!this.tapOnly()) this.attempting.set(true);
     // Most iOS visitors never see a button — they're handed straight to the store —
     // so without this the page's real conversions would go uncounted. Sent before
     // navigating, and tagged trigger:'auto' so it can be split from real taps.
@@ -205,6 +212,7 @@ export class DownloadPageComponent implements OnInit, OnDestroy {
     // through. The "opening…" state below only ever shows if the browser is slow to
     // act on this or ignores it outright.
     window.location.href = target;
+    if (this.tapOnly()) return;
     // If we're still here after this, the hand-off didn't take — show the button.
     this.timers.push(window.setTimeout(() => this.giveUp(), 1800));
     // Returning from the store restores this page from bfcache; don't re-fire.
